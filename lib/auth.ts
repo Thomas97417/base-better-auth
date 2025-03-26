@@ -1,14 +1,36 @@
 import { betterAuth } from "better-auth";
-import Database from "better-sqlite3";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { prisma } from "./prisma";
+import { resend } from "./resend";
+import { nextCookies } from "better-auth/next-js";
 
 export const auth = betterAuth({
-  database: new Database("./sqlite.db"),
+  database: prismaAdapter(prisma, {
+    provider: "postgresql",
+  }),
   emailAndPassword: {
     enabled: true,
     autoSignIn: false,
+    async sendResetPassword(data) {
+      // Send an email to the user with a link to reset their password
+
+      await resend.emails.send({
+        from: "noreply@example.com",
+        to: data.user.email,
+        subject: "Reset Password",
+        html: `Reset password : ${data.url}`,
+      });
+    },
   },
-  session: {
-    expiresIn: 60 * 60 * 24 * 7, // 7 days
-    updateAge: 60 * 60 * 24, // 1 day (every 1 day the session expiration is updated)
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+    },
   },
+  plugins: [nextCookies()],
 });

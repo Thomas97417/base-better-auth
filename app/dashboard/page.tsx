@@ -1,17 +1,22 @@
 import SignOutButton from "@/components/SignOutButton";
-import { getRequiredSession } from "@/lib/session";
+import { getUser } from "@/lib/auth-session";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 export default async function Dashboard() {
-  const { user } = await getRequiredSession();
+  const user = await getUser();
+
+  if (!user) {
+    redirect("/");
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen w-full">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <div className="bg-white shadow rounded-lg p-6">
             <div className="flex items-center space-x-4">
-              {user.image && (
+              {user?.image && (
                 <Image
                   src={user.image}
                   alt={user.name || "Profile"}
@@ -22,9 +27,9 @@ export default async function Dashboard() {
               )}
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">
-                  Welcome, {user.name || "User"}
+                  Welcome, {user?.name || "User"}
                 </h2>
-                <p className="text-gray-600">{user.email}</p>
+                <p className="text-gray-600">{user?.email}</p>
               </div>
             </div>
 
