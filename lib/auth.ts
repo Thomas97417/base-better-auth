@@ -1,8 +1,8 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { nextCookies } from "better-auth/next-js";
 import { prisma } from "./prisma";
 import { resend } from "./resend";
-import { nextCookies } from "better-auth/next-js";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -11,11 +11,12 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     autoSignIn: false,
+    minPasswordLength: 8,
+    maxPasswordLength: 20,
     async sendResetPassword(data) {
       // Send an email to the user with a link to reset their password
-
       await resend.emails.send({
-        from: "noreply@example.com",
+        from: "onboarding@resend.dev",
         to: data.user.email,
         subject: "Reset Password",
         html: `Reset password : ${data.url}`,
