@@ -1,6 +1,8 @@
-import SignOutButton from "@/components/SignOutButton";
+import Avatar from "@/components/Avatar";
+import CardWrapper from "@/components/card-wrapper";
+import { Button } from "@/components/ui/button";
 import { getUser } from "@/lib/auth-session";
-import Image from "next/image";
+import { Activity, Settings, Shield, User } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -14,50 +16,96 @@ export default async function Dashboard() {
   return (
     <div className="min-h-screen w-full">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="bg-white shadow rounded-lg p-6">
-            <div className="flex items-center space-x-4">
-              {user?.image && (
-                <Image
-                  src={user.image}
-                  alt={user.name || "Profile"}
-                  className="h-12 w-12 rounded-full"
-                  width={48}
-                  height={48}
-                />
-              )}
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  Welcome, {user?.name || "User"}
-                </h2>
-                <p className="text-gray-600">{user?.email}</p>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <h3 className="text-lg font-medium text-gray-900">
-                Your Dashboard
-              </h3>
-              <div className="mt-4">
-                {/* Add your dashboard content here */}
-                <p className="text-gray-600">
-                  This is your personal dashboard.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <div className="flex space-x-4">
-                <Link
-                  href="/dashboard/profile"
-                  className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors"
-                >
-                  Profile Settings
-                </Link>
-                <SignOutButton />
-              </div>
+        {/* Welcome Card */}
+        <CardWrapper
+          cardTitle="Welcome Back!"
+          cardDescription="Here's an overview of your account"
+          className="w-full mb-6"
+        >
+          <div className="flex items-center space-x-4">
+            <Avatar
+              src={user.image || null}
+              name={user.name || null}
+              size={64}
+            />
+            <div>
+              <h2 className="text-2xl font-bold">{user.name || "User"}</h2>
+              <p className="text-muted-foreground">{user.email}</p>
             </div>
           </div>
+        </CardWrapper>
+
+        {/* Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Profile Card */}
+          <CardWrapper
+            cardTitle="Profile Settings"
+            cardDescription="Manage your personal information"
+            cardFooterLink="/dashboard/profile"
+            cardFooterLinkTitle="Edit Profile"
+            className="w-full"
+          >
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <User className="w-5 h-5 text-primary" />
+                <span>Update your profile details</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Settings className="w-5 h-5 text-primary" />
+                <span>Customize your preferences</span>
+              </div>
+            </div>
+          </CardWrapper>
+
+          {/* Security Card */}
+          <CardWrapper
+            cardTitle="Security"
+            cardDescription="Manage your account security"
+            cardFooterLink="/dashboard/profile/change-password"
+            cardFooterLinkTitle="Change Password"
+            className="w-full"
+          >
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Shield className="w-5 h-5 text-primary" />
+                <span>Update your password</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Activity className="w-5 h-5 text-primary" />
+                <span>View login activity</span>
+              </div>
+            </div>
+          </CardWrapper>
+
+          {/* Quick Actions Card */}
+          <CardWrapper
+            cardTitle="Quick Actions"
+            cardDescription="Common tasks and actions"
+            className="w-full"
+          >
+            <div className="space-y-4">
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                asChild
+              >
+                <Link href="/dashboard/profile">
+                  <User className="mr-2 h-4 w-4" />
+                  Edit Profile
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                asChild
+              >
+                <Link href="/dashboard/profile/change-password">
+                  <Shield className="mr-2 h-4 w-4" />
+                  Change Password
+                </Link>
+              </Button>
+            </div>
+          </CardWrapper>
         </div>
       </div>
     </div>

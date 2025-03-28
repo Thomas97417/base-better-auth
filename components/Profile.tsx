@@ -1,7 +1,7 @@
 "use client";
 
 import { UserType } from "@/utils/types/UserType";
-import PasswordChangeForm from "./PasswordChangeForm";
+import PasswordChangeCard from "./PasswordChangeCard";
 import ProfileInfoForm from "./ProfileInfoForm";
 
 export default function Profile({ user }: { user: UserType }) {
@@ -9,7 +9,7 @@ export default function Profile({ user }: { user: UserType }) {
     <div className="min-h-screen w-full">
       <div className="max-w-3xl mx-auto py-6 sm:px-6 lg:px-8 space-y-6">
         <ProfileInfoForm user={user} />
-        <PasswordChangeForm />
+        <PasswordChangeCard />
       </div>
     </div>
   );

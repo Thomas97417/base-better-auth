@@ -1,5 +1,5 @@
+import { CardWrapperType } from "@/utils/types/CardWrapperType";
 import Link from "next/link";
-import React from "react";
 import {
   Card,
   CardContent,
@@ -8,16 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-
-interface CardWrapperType {
-  children: React.ReactNode;
-  cardTitle: string;
-  cardDescription: string;
-  cardFooterLinkTitle?: string;
-  cardFooterDescription?: string;
-  cardFooterLink?: string;
-  className?: string;
-}
 
 const CardWrapper = ({
   children,

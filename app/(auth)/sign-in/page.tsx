@@ -1,5 +1,6 @@
 "use client";
 
+import FormError from "@/components/form-error";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,17 +12,17 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuthState } from "@/hooks/useAuthState";
 import { signIn } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { toast } from "sonner";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { loading, setLoading, error, setError } = useAuthState();
 
   return (
     <Card className="w-full max-w-md">
@@ -85,12 +86,14 @@ export default function SignIn() {
                 }
               );
               if (error) {
-                toast.error(error.message);
+                setError(error.message);
               }
             }}
           >
             {loading ? <Loader2 size={16} className="animate-spin" /> : "Login"}
           </Button>
+
+          <FormError message={error} />
 
           <div
             className={cn(

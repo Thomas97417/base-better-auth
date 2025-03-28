@@ -83,7 +83,7 @@ export default function ProfileInfoForm({ user }: { user: UserType }) {
       if (updatedUser.image) {
         setImagePreview(updatedUser.image);
       }
-      setSuccess("Profile information updated successfully");
+      setSuccess("Profile information updated.");
     } catch (error) {
       console.error(error);
       setError("Failed to update profile information");
@@ -141,7 +141,7 @@ export default function ProfileInfoForm({ user }: { user: UserType }) {
               <div className="absolute -top-2 -right-2 group/delete">
                 <button
                   type="button"
-                  className="p-1 bg-white rounded-full shadow-md group-hover/delete:bg-gray-100 hover:cursor-pointer"
+                  className="p-1 bg-white dark:bg-gray-800 rounded-full shadow-md group-hover/delete:bg-gray-100 dark:group-hover/delete:bg-gray-700 hover:cursor-pointer"
                   onClick={() => {
                     setImage(null);
                     setImagePreview(null);

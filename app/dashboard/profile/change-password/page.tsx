@@ -1,26 +1,28 @@
 import ChangePasswordForm from "@/components/ChangePasswordForm";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getUser } from "@/lib/auth-session";
-import { redirect } from "next/navigation";
+import CardWrapper from "@/components/card-wrapper";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 export default async function ChangePasswordPage() {
-  const user = await getUser();
-  if (!user) {
-    redirect("/");
-  }
   return (
     <div className="min-h-screen w-full">
       <div className="max-w-md mx-auto py-6 sm:px-6 lg:px-8">
-        <Card className="bg-white shadow rounded-lg">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold">
-              Change Password
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ChangePasswordForm />
-          </CardContent>
-        </Card>
+        <div className="mb-6">
+          <Link
+            href="/dashboard/profile"
+            className="text-sm text-muted-foreground hover:text-primary flex items-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Profile
+          </Link>
+        </div>
+        <CardWrapper
+          cardTitle="Change Password"
+          cardDescription="Update your account password"
+          className="w-full"
+        >
+          <ChangePasswordForm />
+        </CardWrapper>
       </div>
     </div>
   );
