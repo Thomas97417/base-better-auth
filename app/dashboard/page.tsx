@@ -1,6 +1,7 @@
 import SignOutButton from "@/components/SignOutButton";
 import { getUser } from "@/lib/auth-session";
 import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function Dashboard() {
@@ -46,7 +47,15 @@ export default async function Dashboard() {
             </div>
 
             <div className="mt-6">
-              <SignOutButton />
+              <div className="flex space-x-4">
+                <Link
+                  href="/dashboard/profile"
+                  className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors"
+                >
+                  Profile Settings
+                </Link>
+                <SignOutButton />
+              </div>
             </div>
           </div>
         </div>

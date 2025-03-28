@@ -1,7 +1,7 @@
 "use client";
-import { ResetPasswordSchema } from "@/helpers/zod/reset-password-schema";
 import { useAuthState } from "@/hooks/useAuthState";
 import { authClient } from "@/lib/auth-client";
+import { ResetPasswordSchema } from "@/utils/zod/reset-password-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";

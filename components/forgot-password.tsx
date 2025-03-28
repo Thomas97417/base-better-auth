@@ -1,7 +1,7 @@
 "use client";
-import { ForgotPasswordSchema } from "@/helpers/zod/forgot-password-schema";
 import { useAuthState } from "@/hooks/useAuthState";
 import { authClient } from "@/lib/auth-client";
+import { ForgotPasswordSchema } from "@/utils/zod/forgot-password-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -73,9 +73,8 @@ const ForgotPassword = () => {
     <CardWrapper
       cardTitle="Forgot Password"
       cardDescription="Enter your email to send link to reset password"
-      cardFooterDescription="Remember your password?"
       cardFooterLink="/sign-in"
-      cardFooterLinkTitle="Sign in"
+      cardFooterLinkTitle="Remember your password? Sign in"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -99,7 +98,11 @@ const ForgotPassword = () => {
           />
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button disabled={loading} type="submit" className="w-full">
+          <Button
+            disabled={loading}
+            type="submit"
+            className="w-full hover:cursor-pointer"
+          >
             Submit
           </Button>
         </form>

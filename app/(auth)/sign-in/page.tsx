@@ -70,7 +70,7 @@ export default function SignIn() {
 
           <Button
             type="submit"
-            className="w-full"
+            className="w-full hover:cursor-pointer"
             disabled={loading}
             onClick={async () => {
               const { error } = await signIn.email(
