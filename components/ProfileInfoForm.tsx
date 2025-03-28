@@ -78,8 +78,9 @@ export default function ProfileInfoForm({ user }: { user: UserType }) {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Profile Image Section */}
         <div className="flex items-center space-x-4">
-          <div className="relative group">
-            <div className="relative w-16 h-16">
+          <div className="relative">
+            {/* Image Container */}
+            <div className="relative w-16 h-16 group/image">
               {imagePreview ? (
                 <div className="w-full h-full overflow-hidden">
                   <Image
@@ -100,7 +101,7 @@ export default function ProfileInfoForm({ user }: { user: UserType }) {
               {/* Overlay with plus button */}
               <label
                 htmlFor="profile-image"
-                className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer z-10"
+                className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover/image:opacity-100 transition-opacity cursor-pointer"
               >
                 <Plus className="w-6 h-6 text-white" />
                 <Input
@@ -113,18 +114,20 @@ export default function ProfileInfoForm({ user }: { user: UserType }) {
               </label>
             </div>
 
+            {/* Delete Button */}
             {imagePreview && (
-              <button
-                type="button"
-                className="absolute -top-2 -right-2 p-1 bg-white rounded-full shadow-md hover:bg-gray-100 hover:cursor-pointer z-20 group/item"
-                onMouseOver={(e) => e.stopPropagation()}
-                onClick={() => {
-                  setImage(null);
-                  setImagePreview(null);
-                }}
-              >
-                <X className="w-4 h-4" />
-              </button>
+              <div className="absolute -top-2 -right-2 group/delete">
+                <button
+                  type="button"
+                  className="p-1 bg-white rounded-full shadow-md group-hover/delete:bg-gray-100 hover:cursor-pointer"
+                  onClick={() => {
+                    setImage(null);
+                    setImagePreview(null);
+                  }}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             )}
           </div>
         </div>
