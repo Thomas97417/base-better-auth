@@ -38,17 +38,37 @@ export default function ProfileInfoForm({ user }: { user: UserType }) {
     e.preventDefault();
     setLoading(true);
     try {
+      // Créer un objet avec uniquement les champs modifiés
+      const updateData: {
+        id: string | undefined;
+        name?: string;
+        email?: string;
+        image?: string;
+      } = {
+        id: user?.id,
+      };
+
+      // Vérifier si le nom a été modifié
+      if (name !== user?.name) {
+        updateData.name = name;
+      }
+
+      // Vérifier si l'email a été modifié
+      if (email !== user?.email) {
+        updateData.email = email;
+      }
+
+      // Ajouter l'image uniquement si une nouvelle a été sélectionnée
+      if (image) {
+        updateData.image = await convertImageToBase64(image);
+      }
+
       const response = await fetch("/api/user/update-info", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          id: user?.id,
-          name,
-          email,
-          image: image ? await convertImageToBase64(image) : null,
-        }),
+        body: JSON.stringify(updateData),
       });
 
       if (!response.ok) {
@@ -56,6 +76,8 @@ export default function ProfileInfoForm({ user }: { user: UserType }) {
       }
 
       const updatedUser = await response.json();
+
+      // Mettre à jour les états locaux avec les nouvelles valeurs
       setName(updatedUser.name);
       setEmail(updatedUser.email);
       if (updatedUser.image) {
