@@ -1,13 +1,13 @@
 import Image from "next/image";
 
-interface AvatarProps {
+type AvatarProps = {
   src: string | null;
-  name: string | null;
+  fullName: string | null;
   size?: number;
-}
+};
 
-export default function Avatar({ src, name, size = 48 }: AvatarProps) {
-  const initial = name?.charAt(0).toUpperCase() || "?";
+export default function Avatar({ src, fullName, size = 48 }: AvatarProps) {
+  const initial = fullName?.charAt(0).toUpperCase() || "?";
   const colors = [
     "bg-violet-500", // Violet
     "bg-emerald-500", // Émeraude
@@ -26,7 +26,7 @@ export default function Avatar({ src, name, size = 48 }: AvatarProps) {
       <div className="relative" style={{ width: size, height: size }}>
         <Image
           src={src}
-          alt={name || "Profile"}
+          alt={fullName || "Profile"}
           className="rounded-full object-cover"
           fill
         />

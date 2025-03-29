@@ -46,7 +46,7 @@ export default function Navbar({ user }: { user?: UserType }) {
               <DropdownMenuTrigger className="flex items-center space-x-2 hover:cursor-pointer outline-none">
                 <Avatar
                   src={user?.image || null}
-                  name={user?.name || null}
+                  fullName={user?.fullName || null}
                   size={40}
                 />
               </DropdownMenuTrigger>
@@ -54,7 +54,7 @@ export default function Navbar({ user }: { user?: UserType }) {
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">
-                      {user?.name}
+                      {user?.fullName}
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">
                       {user?.email}

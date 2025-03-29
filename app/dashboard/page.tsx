@@ -25,11 +25,11 @@ export default async function Dashboard() {
           <div className="flex items-center space-x-4">
             <Avatar
               src={user.image || null}
-              name={user.name || null}
+              fullName={user.fullName || null}
               size={64}
             />
             <div>
-              <h2 className="text-2xl font-bold">{user.name || "User"}</h2>
+              <h2 className="text-2xl font-bold">{user.fullName || "User"}</h2>
               <p className="text-muted-foreground">{user.email}</p>
             </div>
           </div>

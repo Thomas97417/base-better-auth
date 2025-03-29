@@ -4,14 +4,14 @@ import { NextResponse } from "next/server";
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
-    const { id, name, email, image } = body;
+    const { id, fullName, email, image } = body;
 
     const updatedUser = await db.user.update({
       where: {
         id: id,
       },
       data: {
-        name,
+        fullName,
         email,
         image,
       },

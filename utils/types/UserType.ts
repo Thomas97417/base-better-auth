@@ -1,7 +1,7 @@
 export type UserType =
   | {
       id: string;
-      name: string;
+      fullName: string;
       email: string;
       emailVerified: boolean;
       createdAt: Date;

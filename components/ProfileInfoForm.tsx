@@ -4,23 +4,50 @@ import Avatar from "@/components/Avatar";
 import CardWrapper from "@/components/card-wrapper";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useAuthState } from "@/hooks/useAuthState";
 import { convertImageToBase64 } from "@/lib/convert-image";
 import { UserType } from "@/utils/types/UserType";
+import { ProfileInformationSchema } from "@/utils/zod/profile-information-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import FormError from "./form-error";
 import { FormSuccess } from "./form-success";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
 
 export default function ProfileInfoForm({ user }: { user: UserType }) {
-  const { loading, setLoading, error, setError, success, setSuccess } =
-    useAuthState();
+  const {
+    loading,
+    setLoading,
+    error,
+    setError,
+    success,
+    setSuccess,
+    resetState,
+  } = useAuthState();
   const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [name, setName] = useState(user?.name || "");
-  const [email, setEmail] = useState(user?.email || "");
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    user?.image || null
+  );
+
+  const form = useForm<z.infer<typeof ProfileInformationSchema>>({
+    resolver: zodResolver(ProfileInformationSchema),
+    defaultValues: {
+      fullName: user?.fullName || "",
+      email: user?.email || "",
+      image: user?.image || "",
+    },
+  });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -34,31 +61,28 @@ export default function ProfileInfoForm({ user }: { user: UserType }) {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
+  const onSubmit = async (values: z.infer<typeof ProfileInformationSchema>) => {
     try {
-      // Créer un objet avec uniquement les champs modifiés
+      setLoading(true);
+      resetState();
+
       const updateData: {
         id: string | undefined;
-        name?: string;
+        fullName?: string;
         email?: string;
         image?: string;
       } = {
         id: user?.id,
       };
 
-      // Vérifier si le nom a été modifié
-      if (name !== user?.name) {
-        updateData.name = name;
+      if (values.fullName !== user?.fullName) {
+        updateData.fullName = values.fullName;
       }
 
-      // Vérifier si l'email a été modifié
-      if (email !== user?.email) {
-        updateData.email = email;
+      if (values.email !== user?.email) {
+        updateData.email = values.email;
       }
 
-      // Ajouter l'image uniquement si une nouvelle a été sélectionnée
       if (image) {
         updateData.image = await convertImageToBase64(image);
       }
@@ -76,19 +100,23 @@ export default function ProfileInfoForm({ user }: { user: UserType }) {
       }
 
       const updatedUser = await response.json();
+      form.reset({
+        fullName: updatedUser.fullName,
+        email: updatedUser.email,
+        image: updatedUser.image,
+      });
 
-      // Mettre à jour les états locaux avec les nouvelles valeurs
-      setName(updatedUser.name);
-      setEmail(updatedUser.email);
       if (updatedUser.image) {
         setImagePreview(updatedUser.image);
       }
+
       setSuccess("Profile information updated.");
     } catch (error) {
       console.error(error);
       setError("Failed to update profile information");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -97,103 +125,119 @@ export default function ProfileInfoForm({ user }: { user: UserType }) {
       cardDescription="Update your profile information"
       className="w-full shadow-none border-0"
     >
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Profile Image Section */}
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            {/* Image Container */}
-            <div className="relative w-16 h-16 group/image">
-              {imagePreview ? (
-                <div className="w-full h-full overflow-hidden">
-                  <Image
-                    src={imagePreview}
-                    alt="Profile preview"
-                    fill
-                    className="rounded-full object-cover"
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {/* Profile Image Section */}
+          <div className="flex items-center space-x-4">
+            <div className="relative">
+              {/* Image Container */}
+              <div className="relative w-16 h-16 group/image">
+                {imagePreview ? (
+                  <div className="w-full h-full overflow-hidden">
+                    <Image
+                      src={imagePreview}
+                      alt="Profile preview"
+                      fill
+                      className="rounded-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <Avatar
+                    src={user?.image || null}
+                    fullName={user?.fullName || null}
+                    size={64}
                   />
-                </div>
-              ) : (
-                <Avatar
-                  src={user?.image || null}
-                  name={user?.name || null}
-                  size={64}
-                />
-              )}
+                )}
 
-              {/* Overlay with plus button */}
-              <label
-                htmlFor="profile-image"
-                className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover/image:opacity-100 transition-opacity cursor-pointer"
-              >
-                <Plus className="w-6 h-6 text-white" />
-                <Input
-                  id="profile-image"
-                  type="file"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                />
-              </label>
-            </div>
-
-            {/* Delete Button */}
-            {imagePreview && (
-              <div className="absolute -top-2 -right-2 group/delete">
-                <button
-                  type="button"
-                  className="p-1 bg-white dark:bg-gray-800 rounded-full shadow-md group-hover/delete:bg-gray-100 dark:group-hover/delete:bg-gray-700 hover:cursor-pointer"
-                  onClick={() => {
-                    setImage(null);
-                    setImagePreview(null);
-                  }}
+                {/* Overlay with plus button */}
+                <label
+                  htmlFor="profile-image"
+                  className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover/image:opacity-100 transition-opacity cursor-pointer"
                 >
-                  <X className="w-4 h-4" />
-                </button>
+                  <Plus className="w-6 h-6 text-white" />
+                  <Input
+                    id="profile-image"
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    disabled={loading}
+                  />
+                </label>
               </div>
-            )}
+
+              {/* Delete Button */}
+              {imagePreview && imagePreview !== user?.image && (
+                <div className="absolute -top-2 -right-2 group/delete">
+                  <button
+                    type="button"
+                    className="p-1 bg-white dark:bg-gray-800 rounded-full shadow-md group-hover/delete:bg-gray-100 dark:group-hover/delete:bg-gray-700 hover:cursor-pointer"
+                    onClick={() => {
+                      setImage(null);
+                      setImagePreview(user?.image || null);
+                    }}
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Name Field */}
-        <div>
-          <Label htmlFor="name">Name</Label>
-          <Input
-            id="name"
-            type="text"
-            placeholder="Your name"
-            className="mt-1"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+          {/* Name Field */}
+          <FormField
+            control={form.control}
+            name="fullName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Your name"
+                    disabled={loading}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
 
-        {/* Email Field */}
-        <div>
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="your@email.com"
-            className="mt-1"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+          {/* Email Field */}
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="your@email.com"
+                    disabled={loading}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
 
-        <FormError message={error} />
-        <FormSuccess message={success} />
+          <FormError message={error} />
+          <FormSuccess message={success} />
 
-        {/* Save Button */}
-        <div className="flex justify-end">
-          <Button
-            type="submit"
-            disabled={loading}
-            className="hover:cursor-pointer"
-          >
-            {loading ? "Saving..." : "Save Changes"}
-          </Button>
-        </div>
-      </form>
+          {/* Save Button */}
+          <div className="flex justify-end">
+            <Button
+              type="submit"
+              disabled={loading}
+              className="hover:cursor-pointer"
+            >
+              {loading ? "Saving..." : "Save Changes"}
+            </Button>
+          </div>
+        </form>
+      </Form>
     </CardWrapper>
   );
 }
