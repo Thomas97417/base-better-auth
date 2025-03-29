@@ -2,35 +2,54 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useAuthState } from "@/hooks/useAuthState";
 import { authClient } from "@/lib/auth-client";
+import { ChangePasswordSchema } from "@/utils/zod/change-password-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyRound, Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import FormError from "./form-error";
 import { FormSuccess } from "./form-success";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
 
 export default function ChangePasswordForm() {
   const router = useRouter();
-  const { loading, setLoading, error, setError, success, setSuccess } =
-    useAuthState();
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const {
+    loading,
+    setLoading,
+    error,
+    setError,
+    success,
+    setSuccess,
+    resetState,
+  } = useAuthState();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const form = useForm<z.infer<typeof ChangePasswordSchema>>({
+    resolver: zodResolver(ChangePasswordSchema),
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    },
+  });
 
-    if (newPassword.length < 8) {
-      setError("Password must be at least 8 characters long");
-      return;
-    }
-
-    setLoading(true);
+  const onSubmit = async (values: z.infer<typeof ChangePasswordSchema>) => {
     try {
+      setLoading(true);
+      resetState();
+
       const response = await authClient.changePassword({
-        newPassword,
-        currentPassword: currentPassword,
+        newPassword: values.newPassword,
+        currentPassword: values.currentPassword,
         revokeOtherSessions: true,
       });
 
@@ -39,85 +58,107 @@ export default function ChangePasswordForm() {
       }
 
       setSuccess("Password updated !");
-      setCurrentPassword("");
-      setNewPassword("");
-      setError("");
+      form.reset();
     } catch (error) {
       console.error("Error updating password:", error);
       setError("Failed to update password...");
-      setSuccess("");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label
-            htmlFor="current-password"
-            className="text-sm font-medium flex items-center gap-2"
-          >
-            <KeyRound className="w-4 h-4 text-muted-foreground" />
-            Current Password
-          </Label>
-          <Input
-            id="current-password"
-            type="password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            placeholder="Enter your current password"
-            minLength={8}
-            required
-            className="w-full"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="space-y-4">
+          <FormField
+            control={form.control}
+            name="currentPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex items-center gap-2">
+                  <KeyRound className="w-4 h-4 text-muted-foreground" />
+                  Current Password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Enter your current password"
+                    disabled={loading}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="newPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex items-center gap-2">
+                  <Lock className="w-4 h-4 text-muted-foreground" />
+                  New Password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Enter your new password"
+                    disabled={loading}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirmNewPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex items-center gap-2">
+                  <Lock className="w-4 h-4 text-muted-foreground" />
+                  Confirm New Password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Confirm your new password"
+                    disabled={loading}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </div>
 
-        <div className="space-y-2">
-          <Label
-            htmlFor="new-password"
-            className="text-sm font-medium flex items-center gap-2"
+        <FormError message={error} />
+        <FormSuccess message={success} />
+
+        <div className="flex justify-between gap-4">
+          <Button
+            type="button"
+            variant="outline"
+            className="flex-1 hover:cursor-pointer"
+            onClick={() => router.push("/dashboard/profile")}
           >
-            <Lock className="w-4 h-4 text-muted-foreground" />
-            New Password
-          </Label>
-          <Input
-            id="new-password"
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="Enter your new password"
-            minLength={8}
-            required
-            className="w-full"
-          />
-          <p className="text-xs text-muted-foreground">
-            Password must be at least 8 characters long
-          </p>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={loading}
+            className="flex-1 hover:cursor-pointer"
+          >
+            {loading ? "Updating..." : "Update Password"}
+          </Button>
         </div>
-      </div>
-
-      <FormError message={error} />
-      <FormSuccess message={success} />
-
-      <div className="flex justify-between gap-4">
-        <Button
-          type="button"
-          variant="outline"
-          className="flex-1 hover:cursor-pointer"
-          onClick={() => router.push("/dashboard/profile")}
-        >
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          disabled={loading}
-          className="flex-1 hover:cursor-pointer"
-        >
-          {loading ? "Updating..." : "Update Password"}
-        </Button>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
 }
