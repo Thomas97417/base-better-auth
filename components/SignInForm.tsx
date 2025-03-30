@@ -21,6 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import { PasswordField } from "./ui/password-field";
 
 export default function SignInForm() {
   const { loading, setLoading, error, setError, resetState } = useAuthState();
@@ -84,32 +85,24 @@ export default function SignInForm() {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex items-center justify-between">
-                  <FormLabel>Password</FormLabel>
-                  <Link
-                    href="/forgot-password"
-                    className="text-xs text-muted-foreground hover:text-primary"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Enter your password"
-                    disabled={loading}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div>
+            <div className="flex items-center justify-between">
+              <FormLabel>Password</FormLabel>
+              <Link
+                href="/forgot-password"
+                className="text-xs text-muted-foreground hover:text-primary"
+              >
+                Forgot password?
+              </Link>
+            </div>
+            <PasswordField
+              control={form.control}
+              name="password"
+              label=""
+              placeholder="Enter your password"
+              disabled={loading}
+            />
+          </div>
         </div>
 
         <FormError message={error} />

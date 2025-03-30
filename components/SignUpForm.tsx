@@ -21,6 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import { PasswordField } from "./ui/password-field";
 
 export default function SignUpForm() {
   const [image, setImage] = useState<File | null>(null);
@@ -137,44 +138,20 @@ export default function SignUpForm() {
             )}
           />
 
-          <FormField
+          <PasswordField
             control={form.control}
             name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Enter your password"
-                    disabled={loading}
-                    autoComplete="new-password"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Password"
+            placeholder="Enter your password"
+            disabled={loading}
           />
 
-          <FormField
+          <PasswordField
             control={form.control}
             name="confirmPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Confirm your password"
-                    disabled={loading}
-                    autoComplete="new-password"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Confirm Password"
+            placeholder="Confirm your password"
+            disabled={loading}
           />
 
           <div className="space-y-2">

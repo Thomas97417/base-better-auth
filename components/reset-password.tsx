@@ -12,15 +12,8 @@ import CardWrapper from "./card-wrapper";
 import FormError from "./form-error";
 import { FormSuccess } from "./form-success";
 import { Button } from "./ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
+import { Form } from "./ui/form";
+import { PasswordField } from "./ui/password-field";
 
 const ResetPassword = () => {
   const searchParams = useSearchParams();
@@ -97,41 +90,17 @@ const ResetPassword = () => {
         >
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
+              <PasswordField
                 control={form.control}
                 name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>New Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={loading}
-                        type="password"
-                        placeholder="********"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="New Password"
+                disabled={loading}
               />
-              <FormField
+              <PasswordField
                 control={form.control}
                 name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirm New Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={loading}
-                        type="password"
-                        placeholder="********"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Confirm New Password"
+                disabled={loading}
               />
               <FormError message={error} />
               <FormSuccess message={success} />
