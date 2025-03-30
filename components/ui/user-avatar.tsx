@@ -1,12 +1,16 @@
 import Image from "next/image";
 
-type AvatarProps = {
+type UserAvatarProps = {
   src: string | null;
   fullName: string | null;
   size?: number;
 };
 
-export default function Avatar({ src, fullName, size = 48 }: AvatarProps) {
+export default function UserAvatar({
+  src,
+  fullName,
+  size = 48,
+}: UserAvatarProps) {
   const initial = fullName?.charAt(0).toUpperCase() || "?";
   const colors = [
     "bg-violet-500", // Violet

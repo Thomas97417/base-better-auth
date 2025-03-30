@@ -1,6 +1,6 @@
-import Avatar from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
 import CardWrapper from "@/components/ui/card-wrapper";
+import UserAvatar from "@/components/ui/user-avatar";
 import { getUser } from "@/lib/auth-session";
 import { Activity, Settings, Shield, User } from "lucide-react";
 import Link from "next/link";
@@ -23,7 +23,7 @@ export default async function Dashboard() {
           className="w-full mb-6"
         >
           <div className="flex items-center space-x-4">
-            <Avatar
+            <UserAvatar
               src={user.image || null}
               fullName={user.fullName || null}
               size={64}

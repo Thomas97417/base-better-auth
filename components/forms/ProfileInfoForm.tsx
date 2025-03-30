@@ -1,10 +1,11 @@
 "use client";
 
-import Avatar from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
 import CardWrapper from "@/components/ui/card-wrapper";
 import { Input } from "@/components/ui/input";
+import Avatar from "@/components/ui/user-avatar";
 import { useAuthState } from "@/hooks/useAuthState";
+import { useImageUpload } from "@/hooks/useImageUpload";
 import { convertImageToBase64 } from "@/lib/convert-image";
 import { UserType } from "@/utils/types/UserType";
 import { ProfileInformationSchema } from "@/utils/zod/profile-information-schema";
@@ -12,7 +13,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -37,10 +37,16 @@ export default function ProfileInfoForm({ user }: { user: UserType }) {
     setSuccess,
     resetState,
   } = useAuthState();
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(
-    user?.image || null
-  );
+
+  const {
+    image,
+    imagePreview,
+    handleImageChange,
+    resetImage,
+    setCustomPreview,
+  } = useImageUpload({
+    initialPreview: user?.image || null,
+  });
 
   const form = useForm<z.infer<typeof ProfileInformationSchema>>({
     resolver: zodResolver(ProfileInformationSchema),
@@ -50,18 +56,6 @@ export default function ProfileInfoForm({ user }: { user: UserType }) {
       image: user?.image || "",
     },
   });
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const onSubmit = async (values: z.infer<typeof ProfileInformationSchema>) => {
     try {
@@ -109,7 +103,7 @@ export default function ProfileInfoForm({ user }: { user: UserType }) {
       });
 
       if (updatedUser.image) {
-        setImagePreview(updatedUser.image);
+        setCustomPreview(updatedUser.image);
       }
 
       setSuccess("Profile information updated.");
@@ -175,10 +169,7 @@ export default function ProfileInfoForm({ user }: { user: UserType }) {
                   <button
                     type="button"
                     className="p-1 bg-white dark:bg-gray-800 rounded-full shadow-md group-hover/delete:bg-gray-100 dark:group-hover/delete:bg-gray-700 hover:cursor-pointer"
-                    onClick={() => {
-                      setImage(null);
-                      setImagePreview(user?.image || null);
-                    }}
+                    onClick={resetImage}
                   >
                     <X className="w-4 h-4" />
                   </button>

@@ -13,7 +13,7 @@ import { UserType } from "@/utils/types/UserType";
 import { User } from "lucide-react";
 import Link from "next/link";
 import { ModeToggle } from "./theme/ThemeToggle";
-import Avatar from "./UserAvatar";
+import UserAvatar from "./ui/user-avatar";
 
 export default function Navbar({ user }: { user?: UserType }) {
   const handleLogout = useLogout();
@@ -44,7 +44,7 @@ export default function Navbar({ user }: { user?: UserType }) {
           {user && (
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center space-x-2 hover:cursor-pointer outline-none">
-                <Avatar
+                <UserAvatar
                   src={user?.image || null}
                   fullName={user?.fullName || null}
                   size={40}

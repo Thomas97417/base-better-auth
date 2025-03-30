@@ -13,19 +13,21 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAuthState } from "@/hooks/useAuthState";
+import { useImageUpload } from "@/hooks/useImageUpload";
 import { signUp } from "@/lib/auth-client";
 import { convertImageToBase64 } from "@/lib/convert-image";
 import { SignUpSchema } from "@/utils/zod/sign-up-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, X } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export default function SignUpForm() {
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const router = useRouter();
+  const { image, imagePreview, handleImageChange, resetImage } =
+    useImageUpload();
   const { loading, setLoading, error, setError, resetState } = useAuthState();
 
   const form = useForm<z.infer<typeof SignUpSchema>>({
@@ -40,18 +42,6 @@ export default function SignUpForm() {
     },
   });
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const onSubmit = async (values: z.infer<typeof SignUpSchema>) => {
     try {
       if (values.password !== values.confirmPassword) {
@@ -64,7 +54,7 @@ export default function SignUpForm() {
         password: values.password,
         name: `${values.name} ${values.lastName}`,
         image: image ? await convertImageToBase64(image) : "",
-        callbackURL: "/dashboard",
+        callbackURL: "/sign-in",
         fetchOptions: {
           onResponse: () => setLoading(false),
           onRequest: () => {
@@ -72,7 +62,9 @@ export default function SignUpForm() {
             setLoading(true);
           },
           onError: (ctx) => setError(ctx.error.message),
-          // onSuccess: async () => router.push("/dashboard"),
+          onSuccess: () => {
+            router.push("/sign-in");
+          },
         },
       });
     } catch (error) {
@@ -177,13 +169,7 @@ export default function SignUpForm() {
                   disabled={loading}
                 />
                 {imagePreview && (
-                  <X
-                    className="cursor-pointer"
-                    onClick={() => {
-                      setImage(null);
-                      setImagePreview(null);
-                    }}
-                  />
+                  <X className="cursor-pointer" onClick={resetImage} />
                 )}
               </div>
             </div>
