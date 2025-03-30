@@ -11,6 +11,7 @@ import { ProfileInformationSchema } from "@/utils/zod/profile-information-schema
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, X } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -26,6 +27,7 @@ import {
 } from "./ui/form";
 
 export default function ProfileInfoForm({ user }: { user: UserType }) {
+  const router = useRouter();
   const {
     loading,
     setLoading,
@@ -111,6 +113,7 @@ export default function ProfileInfoForm({ user }: { user: UserType }) {
       }
 
       setSuccess("Profile information updated.");
+      router.refresh();
     } catch (error) {
       console.error(error);
       setError("Failed to update profile information");
