@@ -1,4 +1,9 @@
 "use client";
+import FormError from "@/components/forms/FormError";
+import { FormSuccess } from "@/components/forms/FormSuccess";
+import { Button } from "@/components/ui/button";
+import CardWrapper from "@/components/ui/card-wrapper";
+import { Form } from "@/components/ui/form";
 import { useAuthState } from "@/hooks/useAuthState";
 import { authClient } from "@/lib/auth-client";
 import { ResetPasswordSchema } from "@/utils/zod/reset-password-schema";
@@ -8,14 +13,9 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import CardWrapper from "./card-wrapper";
-import FormError from "./form-error";
-import { FormSuccess } from "./form-success";
-import { Button } from "./ui/button";
-import { Form } from "./ui/form";
-import { PasswordField } from "./ui/password-field";
+import { PasswordField } from "../fields/password-field";
 
-const ResetPassword = () => {
+const ResetPasswordForm = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const router = useRouter();
@@ -123,4 +123,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ResetPasswordForm;

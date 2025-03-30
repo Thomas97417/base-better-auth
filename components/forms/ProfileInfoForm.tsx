@@ -1,8 +1,8 @@
 "use client";
 
-import Avatar from "@/components/Avatar";
-import CardWrapper from "@/components/card-wrapper";
+import Avatar from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
+import CardWrapper from "@/components/ui/card-wrapper";
 import { Input } from "@/components/ui/input";
 import { useAuthState } from "@/hooks/useAuthState";
 import { convertImageToBase64 } from "@/lib/convert-image";
@@ -15,8 +15,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import FormError from "./form-error";
-import { FormSuccess } from "./form-success";
 import {
   Form,
   FormControl,
@@ -24,7 +22,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
+} from "../ui/form";
+import FormError from "./FormError";
+import { FormSuccess } from "./FormSuccess";
 
 export default function ProfileInfoForm({ user }: { user: UserType }) {
   const router = useRouter();

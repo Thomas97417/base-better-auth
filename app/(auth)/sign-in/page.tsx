@@ -1,7 +1,7 @@
 "use client";
 
-import CardWrapper from "@/components/card-wrapper";
-import SignInForm from "@/components/SignInForm";
+import SignInForm from "@/components/forms/auth/SignInForm";
+import CardWrapper from "@/components/ui/card-wrapper";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 

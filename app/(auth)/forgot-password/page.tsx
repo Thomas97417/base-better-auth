@@ -1,7 +1,7 @@
-import ForgotPassword from "@/components/forgot-password";
+import ForgotPasswordCard from "@/components/cards/ForgotPasswordCard";
 
 const ForgotPasswordPage = () => {
-  return <ForgotPassword />;
+  return <ForgotPasswordCard />;
 };
 
 export default ForgotPasswordPage;

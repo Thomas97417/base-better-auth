@@ -3,15 +3,15 @@
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Control, FieldValues, Path } from "react-hook-form";
-import { Button } from "./button";
+import { Button } from "../../ui/button";
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "./form";
-import { Input } from "./input";
+} from "../../ui/form";
+import { Input } from "../../ui/input";
 
 interface PasswordFieldProps<T extends FieldValues> {
   name: Path<T>;

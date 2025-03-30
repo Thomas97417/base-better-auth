@@ -1,5 +1,5 @@
-import ChangePasswordForm from "@/components/ChangePasswordForm";
-import CardWrapper from "@/components/card-wrapper";
+import ChangePasswordForm from "@/components/forms/auth/ChangePasswordForm";
+import CardWrapper from "@/components/ui/card-wrapper";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 

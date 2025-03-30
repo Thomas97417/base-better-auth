@@ -12,8 +12,8 @@ import { useLogout } from "@/hooks/useLogout";
 import { UserType } from "@/utils/types/UserType";
 import { User } from "lucide-react";
 import Link from "next/link";
-import Avatar from "./Avatar";
-import { ModeToggle } from "./ModeToggle";
+import { ModeToggle } from "./theme/ThemeToggle";
+import Avatar from "./UserAvatar";
 
 export default function Navbar({ user }: { user?: UserType }) {
   const handleLogout = useLogout();

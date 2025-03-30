@@ -1,6 +1,8 @@
 "use client";
 
+import { PasswordField } from "@/components/forms/fields/password-field";
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import { useAuthState } from "@/hooks/useAuthState";
 import { authClient } from "@/lib/auth-client";
 import { ChangePasswordSchema } from "@/utils/zod/change-password-schema";
@@ -8,10 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyRound, Lock } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import FormError from "./form-error";
-import { FormSuccess } from "./form-success";
-import { Form } from "./ui/form";
-import { PasswordField } from "./ui/password-field";
+import FormError from "../FormError";
+import { FormSuccess } from "../FormSuccess";
 
 export default function ChangePasswordForm() {
   const {

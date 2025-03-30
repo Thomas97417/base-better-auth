@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import CardWrapper from "./card-wrapper";
+import CardWrapper from "../ui/card-wrapper";
 
 export default function PasswordChangeCard() {
   const router = useRouter();

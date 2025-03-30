@@ -1,7 +1,16 @@
 "use client";
 
-import FormError from "@/components/form-error";
+import { PasswordField } from "@/components/forms/fields/password-field";
+import FormError from "@/components/forms/FormError";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAuthState } from "@/hooks/useAuthState";
 import { signUp } from "@/lib/auth-client";
@@ -13,15 +22,6 @@ import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
-import { PasswordField } from "./ui/password-field";
 
 export default function SignUpForm() {
   const [image, setImage] = useState<File | null>(null);

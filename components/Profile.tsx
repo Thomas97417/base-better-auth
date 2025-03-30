@@ -1,8 +1,8 @@
 "use client";
 
 import { UserType } from "@/utils/types/UserType";
-import PasswordChangeCard from "./PasswordChangeCard";
-import ProfileInfoForm from "./ProfileInfoForm";
+import PasswordChangeCard from "./cards/PasswordChangeCard";
+import ProfileInfoForm from "./forms/ProfileInfoForm";
 
 export default function Profile({ user }: { user: UserType }) {
   return (

@@ -1,6 +1,6 @@
-import Avatar from "@/components/Avatar";
-import CardWrapper from "@/components/card-wrapper";
+import Avatar from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
+import CardWrapper from "@/components/ui/card-wrapper";
 import { getUser } from "@/lib/auth-session";
 import { Activity, Settings, Shield, User } from "lucide-react";
 import Link from "next/link";

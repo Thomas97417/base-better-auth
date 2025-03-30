@@ -1,32 +1,35 @@
-import SignUpForm from "@/components/forms/auth/SignUpForm";
-import CardWrapper from "@/components/ui/card-wrapper";
+"use client";
+
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { ForgotPasswordForm } from "../forms/auth/ForgotPasswordForm";
+import CardWrapper from "../ui/card-wrapper";
 
-export default function SignUp() {
+export function ForgotPasswordCard() {
   return (
     <div className="w-full">
       <div className="max-w-md mx-auto">
         <div className="mb-6">
           <Link
-            href="/"
+            href="/sign-in"
             className="text-sm text-muted-foreground hover:text-primary flex items-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to home
+            Back to sign in
           </Link>
         </div>
         <CardWrapper
-          cardTitle="Create an account"
-          cardDescription="Enter your information below to create your account"
-          cardFooterDescription="Already have an account?"
+          cardTitle="Forgot Password"
+          cardFooterDescription="Remember your password?"
+          cardDescription="Enter your email to send link to reset password"
           cardFooterLink="/sign-in"
           cardFooterLinkTitle="Sign in"
-          className="w-full"
         >
-          <SignUpForm />
+          <ForgotPasswordForm />
         </CardWrapper>
       </div>
     </div>
   );
 }
+
+export default ForgotPasswordCard;

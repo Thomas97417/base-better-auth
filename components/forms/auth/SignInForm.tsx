@@ -1,6 +1,17 @@
 "use client";
 
+import { PasswordField } from "@/components/forms/fields/password-field";
+import GithubIcon from "@/components/icons/github-icon";
+import GoogleIcon from "@/components/icons/google-icon";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAuthState } from "@/hooks/useAuthState";
 import { signIn } from "@/lib/auth-client";
@@ -10,18 +21,7 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import FormError from "./form-error";
-import GithubIcon from "./icons/github-icon";
-import GoogleIcon from "./icons/google-icon";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
-import { PasswordField } from "./ui/password-field";
+import FormError from "../FormError";
 
 export default function SignInForm() {
   const { loading, setLoading, error, setError, resetState } = useAuthState();
