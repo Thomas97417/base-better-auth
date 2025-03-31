@@ -1,21 +1,20 @@
 "use client";
+
 import FormError from "@/components/forms/FormError";
 import { FormSuccess } from "@/components/forms/FormSuccess";
 import { Button } from "@/components/ui/button";
-import CardWrapper from "@/components/ui/card-wrapper";
 import { Form } from "@/components/ui/form";
 import { useAuthState } from "@/hooks/useAuthState";
 import { authClient } from "@/lib/auth-client";
 import { ResetPasswordSchema } from "@/utils/zod/reset-password-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Loader2 } from "lucide-react";
-import Link from "next/link";
+import { Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { PasswordField } from "../fields/password-field";
 
-const ResetPasswordForm = () => {
+export default function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const router = useRouter();
@@ -39,10 +38,9 @@ const ResetPasswordForm = () => {
 
   const onSubmit = async (values: z.infer<typeof ResetPasswordSchema>) => {
     try {
-      // Call the authClient's reset password method, passing the email and a redirect URL.
       await authClient.resetPassword(
         {
-          newPassword: values.password, // new password given by user
+          newPassword: values.password,
           token: token as string,
         },
         {
@@ -63,64 +61,36 @@ const ResetPasswordForm = () => {
         }
       );
     } catch (error) {
-      // catches the error
-      console.log(error);
+      console.error(error);
       setError("Something went wrong");
     }
   };
 
   return (
-    <div className="w-full">
-      <div className="max-w-md mx-auto">
-        <div className="mb-6">
-          <Link
-            href="/sign-in"
-            className="text-sm text-muted-foreground hover:text-primary flex items-center gap-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to sign in
-          </Link>
-        </div>
-        <CardWrapper
-          cardTitle="Reset Password"
-          cardDescription="Create a new password"
-          cardFooterLink="/sign-in"
-          cardFooterDescription="Remember your password?"
-          cardFooterLinkTitle="Sign in"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <PasswordField
+          control={form.control}
+          name="password"
+          label="New Password"
+          disabled={loading}
+        />
+        <PasswordField
+          control={form.control}
+          name="confirmPassword"
+          label="Confirm New Password"
+          disabled={loading}
+        />
+        <FormError message={error} />
+        <FormSuccess message={success} />
+        <Button
+          type="submit"
+          className="w-full hover:cursor-pointer"
+          disabled={loading}
         >
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <PasswordField
-                control={form.control}
-                name="password"
-                label="New Password"
-                disabled={loading}
-              />
-              <PasswordField
-                control={form.control}
-                name="confirmPassword"
-                label="Confirm New Password"
-                disabled={loading}
-              />
-              <FormError message={error} />
-              <FormSuccess message={success} />
-              <Button
-                type="submit"
-                className="w-full hover:cursor-pointer"
-                disabled={loading}
-              >
-                {loading ? (
-                  <Loader2 size={16} className="animate-spin" />
-                ) : (
-                  "Submit"
-                )}
-              </Button>
-            </form>
-          </Form>
-        </CardWrapper>
-      </div>
-    </div>
+          {loading ? <Loader2 size={16} className="animate-spin" /> : "Submit"}
+        </Button>
+      </form>
+    </Form>
   );
-};
-
-export default ResetPasswordForm;
+}
