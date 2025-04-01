@@ -5,11 +5,11 @@ import Link from "next/link";
 
 export default async function ChangePasswordPage() {
   return (
-    <div className="min-h-screen w-full">
+    <div className="w-full my-auto">
       <div className="max-w-md mx-auto py-6 sm:px-6 lg:px-8">
         <div className="mb-6">
           <Link
-            href="/dashboard/profile"
+            href="/profile"
             className="text-sm text-muted-foreground hover:text-primary flex items-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />

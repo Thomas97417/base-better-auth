@@ -45,6 +45,7 @@ export default function UserAvatar({
         width: size,
         height: size,
         fontSize: size * 0.4,
+        userSelect: "none",
       }}
     >
       {initial}

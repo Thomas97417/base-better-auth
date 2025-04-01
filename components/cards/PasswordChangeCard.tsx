@@ -22,7 +22,7 @@ export default function PasswordChangeCard() {
         <div className="flex justify-end">
           <Button
             className="hover:cursor-pointer"
-            onClick={() => router.push("/dashboard/profile/change-password")}
+            onClick={() => router.push("/profile/password")}
           >
             Change Password
           </Button>

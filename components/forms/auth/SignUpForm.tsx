@@ -18,7 +18,7 @@ import { signUp } from "@/lib/auth-client";
 import { convertImageToBase64 } from "@/lib/convert-image";
 import { SignUpSchema } from "@/utils/zod/sign-up-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, X } from "lucide-react";
+import { Loader2, Plus, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -147,31 +147,56 @@ export default function SignUpForm() {
           />
 
           <div className="space-y-2">
-            <FormLabel htmlFor="image">Profile Image (optional)</FormLabel>
-            <div className="flex items-end gap-4">
-              {imagePreview && (
-                <div className="relative w-16 h-16 rounded-sm overflow-hidden">
-                  <Image
-                    src={imagePreview}
-                    alt="Profile preview"
-                    layout="fill"
-                    objectFit="cover"
-                  />
+            <FormLabel>Profile Image (optional)</FormLabel>
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <div className="relative w-16 h-16 group/image">
+                  {imagePreview ? (
+                    <div className="w-full h-full overflow-hidden">
+                      <Image
+                        src={imagePreview}
+                        alt="Profile preview"
+                        fill
+                        className="rounded-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+                      <Plus className="w-6 h-6 text-muted-foreground" />
+                    </div>
+                  )}
+
+                  <label
+                    htmlFor="profile-image"
+                    className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover/image:opacity-100 transition-opacity cursor-pointer"
+                  >
+                    <Plus className="w-6 h-6 text-white" />
+                    <Input
+                      id="profile-image"
+                      type="file"
+                      className="hidden"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      disabled={loading}
+                    />
+                  </label>
                 </div>
-              )}
-              <div className="flex items-center gap-2 w-full">
-                <Input
-                  id="image"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="w-full"
-                  disabled={loading}
-                />
+
                 {imagePreview && (
-                  <X className="cursor-pointer" onClick={resetImage} />
+                  <div className="absolute -top-2 -right-2 group/delete">
+                    <button
+                      type="button"
+                      className="p-1 bg-white dark:bg-gray-800 rounded-full shadow-md group-hover/delete:bg-gray-100 dark:group-hover/delete:bg-gray-700 hover:cursor-pointer"
+                      onClick={resetImage}
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
                 )}
               </div>
+              <p className="text-sm text-muted-foreground">
+                Add a profile picture to personalize your account
+              </p>
             </div>
           </div>
         </div>

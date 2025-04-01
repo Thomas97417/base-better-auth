@@ -14,7 +14,7 @@ export default async function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen w-full">
+    <div className="flex w-full">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {/* Welcome Card */}
         <CardWrapper
@@ -36,12 +36,12 @@ export default async function Dashboard() {
         </CardWrapper>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Profile Card */}
           <CardWrapper
             cardTitle="Profile Settings"
             cardDescription="Manage your personal information"
-            cardFooterLink="/dashboard/profile"
+            cardFooterLink="/profile"
             cardFooterLinkTitle="Edit Profile"
             className="w-full"
           >
@@ -61,7 +61,7 @@ export default async function Dashboard() {
           <CardWrapper
             cardTitle="Security"
             cardDescription="Manage your account security"
-            cardFooterLink="/dashboard/profile/change-password"
+            cardFooterLink="/profile/password"
             cardFooterLinkTitle="Change Password"
             className="w-full"
           >
@@ -89,7 +89,7 @@ export default async function Dashboard() {
                 className="w-full justify-start"
                 asChild
               >
-                <Link href="/dashboard/profile">
+                <Link href="profile">
                   <User className="mr-2 h-4 w-4" />
                   Edit Profile
                 </Link>
@@ -99,7 +99,7 @@ export default async function Dashboard() {
                 className="w-full justify-start"
                 asChild
               >
-                <Link href="/dashboard/profile/change-password">
+                <Link href="/profile/password">
                   <Shield className="mr-2 h-4 w-4" />
                   Change Password
                 </Link>

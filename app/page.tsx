@@ -15,9 +15,9 @@ export default async function Home() {
   const user = await getUser();
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Navbar user={user} />
-      <div className="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-background">
+      <div className="flex-1 flex flex-col items-center justify-center pb-12 px-4 sm:px-6 lg:px-8 bg-background">
         <Card className="max-w-md w-full">
           <CardHeader className="text-center space-y-2">
             <CardTitle className="text-4xl font-extrabold">
@@ -63,6 +63,6 @@ export default async function Home() {
           </CardContent>
         </Card>
       </div>
-    </>
+    </div>
   );
 }
