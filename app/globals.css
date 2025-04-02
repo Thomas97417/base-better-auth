@@ -43,13 +43,6 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
-
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -126,4 +119,8 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@theme {
+  --breakpoint-xs: 500px;
 }

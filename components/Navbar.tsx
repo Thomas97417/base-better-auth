@@ -47,7 +47,7 @@ export default function Navbar({ user }: { user?: UserType }) {
   return (
     <nav className="border-b bg-background">
       <div className="flex h-16 items-center px-4 max-w-7xl mx-auto">
-        <div className="flex items-center space-x-10 flex-1">
+        <div className="flex items-center space-x-4 xs:space-x-10 flex-1">
           {user ? (
             <>
               <Link
@@ -56,17 +56,17 @@ export default function Navbar({ user }: { user?: UserType }) {
               >
                 MyApp
               </Link>
-              <div className="flex space-x-8">
+              <div className="flex space-x-4 xs:space-x-8">
                 <NavLink href="/dashboard">
                   <span className="flex items-center gap-2">
                     <Home className="w-5 h-5" />
-                    <span className="">Dashboard</span>
+                    <span className="hidden xs:block">Dashboard</span>
                   </span>
                 </NavLink>
                 <NavLink href="/profile">
                   <span className="flex items-center gap-2">
                     <SquareUser className="w-5 h-5" />
-                    <span className="hidden xs:inline">Profile</span>
+                    <span className="hidden xs:block">Profile</span>
                   </span>
                 </NavLink>
               </div>
