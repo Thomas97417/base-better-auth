@@ -105,7 +105,7 @@ export default function Navbar({ user }: { user?: UserType }) {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild className="cursor-pointer">
-                  <Link href="/dashboard/profile" className="flex items-center">
+                  <Link href="/profile" className="flex items-center">
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>
                   </Link>

@@ -8,6 +8,11 @@ export const auth = betterAuth({
   database: prismaAdapter(db, {
     provider: "postgresql",
   }),
+  rateLimit: {
+    enabled: true, // Enable rate limiting for development mode
+    window: 10, // window of 10 seconds
+    max: 3, // 3 requests per window
+  },
 
   user: {
     fields: {
