@@ -11,7 +11,7 @@ import {
 import { useLogout } from "@/hooks/useLogout";
 import { cn } from "@/lib/utils";
 import { UserType } from "@/utils/types/UserType";
-import { Home, SquareUser, User } from "lucide-react";
+import { Home, ShieldUser, SquareUser, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "./theme/ThemeToggle";
@@ -69,6 +69,14 @@ export default function Navbar({ user }: { user?: UserType }) {
                     <span className="hidden xs:block">Profile</span>
                   </span>
                 </NavLink>
+                {user.role === "admin" && (
+                  <NavLink href="/admin">
+                    <span className="flex items-center gap-2">
+                      <ShieldUser className="w-5 h-5" />
+                      <span className="hidden xs:block">Admin</span>
+                    </span>
+                  </NavLink>
+                )}
               </div>
             </>
           ) : (
