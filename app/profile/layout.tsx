@@ -1,6 +1,5 @@
 import Navbar from "@/components/Navbar";
 import { getUser } from "@/lib/auth-session";
-import { redirect } from "next/navigation";
 
 export default async function ProfileLayout({
   children,
@@ -8,10 +7,6 @@ export default async function ProfileLayout({
   children: React.ReactNode;
 }) {
   const user = await getUser();
-
-  if (!user) {
-    redirect("/");
-  }
 
   return (
     <div className="min-h-screen flex flex-col">

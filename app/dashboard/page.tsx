@@ -4,14 +4,9 @@ import UserAvatar from "@/components/ui/user-avatar";
 import { getUser } from "@/lib/auth-session";
 import { Activity, Settings, Shield, User } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 export default async function Dashboard() {
   const user = await getUser();
-
-  if (!user) {
-    redirect("/");
-  }
 
   return (
     <div className="flex w-full">
@@ -24,13 +19,13 @@ export default async function Dashboard() {
         >
           <div className="flex items-center space-x-4">
             <UserAvatar
-              src={user.image || null}
-              fullName={user.fullName || null}
+              src={user?.image || null}
+              fullName={user?.fullName || null}
               size={64}
             />
             <div>
-              <h2 className="text-2xl font-bold">{user.fullName || "User"}</h2>
-              <p className="text-muted-foreground">{user.email}</p>
+              <h2 className="text-2xl font-bold">{user?.fullName || "User"}</h2>
+              <p className="text-muted-foreground">{user?.email}</p>
             </div>
           </div>
         </CardWrapper>
