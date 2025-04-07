@@ -23,3 +23,5 @@ npx @better-auth/cli generate
 npx prisma db push
 
 (Opt : npx prisma studio)
+
+Do not migrate prisma with better-auth, you have to generate.

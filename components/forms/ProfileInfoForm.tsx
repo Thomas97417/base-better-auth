@@ -41,15 +41,11 @@ export default function ProfileInfoForm({ user }: ProfileInfoFormProps) {
     resetState,
   } = useAuthState();
 
-  const {
-    image,
-    imagePreview,
-    handleImageChange,
-    resetImage,
-    setCustomPreview,
-  } = useImageUpload({
-    initialPreview: user?.image || null,
-  });
+  const { image, imagePreview, handleImageChange, resetImage } = useImageUpload(
+    {
+      initialPreview: user?.image || null,
+    }
+  );
 
   const form = useForm<z.infer<typeof ProfileInformationSchema>>({
     resolver: zodResolver(ProfileInformationSchema),
