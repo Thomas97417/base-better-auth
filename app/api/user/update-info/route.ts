@@ -6,7 +6,7 @@ export async function PUT(request: Request) {
     const body = await request.json();
     const { id, fullName, email, image } = body;
 
-    const updatedUser = await db.user.update({
+    await db.user.update({
       where: {
         id: id,
       },
@@ -17,11 +17,17 @@ export async function PUT(request: Request) {
       },
     });
 
-    return NextResponse.json(updatedUser);
+    return NextResponse.json({
+      success: true,
+      message: "User updated successfully",
+    });
   } catch (error) {
     console.error("Error updating user:", error);
     return NextResponse.json(
-      { error: "Failed to update user" },
+      {
+        success: false,
+        error: "Failed to update user",
+      },
       { status: 500 }
     );
   }

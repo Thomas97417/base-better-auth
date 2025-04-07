@@ -98,19 +98,14 @@ export default function ProfileInfoForm({ user }: ProfileInfoFormProps) {
         throw new Error("Failed to update profile");
       }
 
-      const updatedUser = await response.json();
-      form.reset({
-        fullName: updatedUser.fullName,
-        email: updatedUser.email,
-        image: updatedUser.image,
-      });
+      const result = await response.json();
 
-      if (updatedUser.image) {
-        setCustomPreview(updatedUser.image);
+      if (result.success) {
+        setSuccess("Profile information updated.");
+        router.refresh();
+      } else {
+        throw new Error(result.error || "Failed to update profile");
       }
-
-      setSuccess("Profile information updated.");
-      router.refresh();
     } catch (error) {
       console.error(error);
       setError("Failed to update profile information");
