@@ -1,6 +1,6 @@
 "use client";
 
-import ListUsers from "@/components/ListUsers";
+import ListUsers from "@/components/admin/ListUsers";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useUsers } from "@/hooks/useUsers";
 import { UserType } from "@/utils/types/UserType";
