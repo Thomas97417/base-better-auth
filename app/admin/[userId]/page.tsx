@@ -1,8 +1,8 @@
 "use client";
 
+import BackButton from "@/components/admin/BackButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useUsers } from "@/hooks/useUsers";
 import {
@@ -14,12 +14,11 @@ import {
   Shield,
   UserRound,
 } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 export default function UserDetailsPage() {
-  const router = useRouter();
-  const { userId } = useParams();
   const { users, isLoading } = useUsers();
+  const { userId } = useParams();
   const user = users?.find((u) => u.id === userId);
 
   if (isLoading) {
@@ -34,13 +33,7 @@ export default function UserDetailsPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <p className="text-red-500">User not found</p>
-        <Button
-          variant="outline"
-          className="hover:cursor-pointer"
-          onClick={() => router.push("/admin")}
-        >
-          Go Back
-        </Button>
+        <BackButton text="Go Back" />
       </div>
     );
   }
@@ -49,13 +42,7 @@ export default function UserDetailsPage() {
     <div className="container mx-auto py-8 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">User Details</h1>
-        <Button
-          variant="outline"
-          className="hover:cursor-pointer"
-          onClick={() => router.push("/admin")}
-        >
-          Back to Users
-        </Button>
+        <BackButton text="Back to Users" />
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
@@ -164,6 +151,44 @@ export default function UserDetailsPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* <Card className="md:col-span-2">
+          <CardHeader>
+            <CardTitle>Active Sessions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {sessions.length > 0 ? (
+              <div className="space-y-4">
+                {sessions.map((session) => (
+                  <div
+                    key={session.id}
+                    className="flex items-center justify-between p-4 rounded-lg border"
+                  >
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-4 w-4 text-muted-foreground" />
+                        <p className="text-sm font-medium">
+                          Last active:{" "}
+                          {new Date(session.lastActiveAt).toLocaleString()}
+                        </p>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Expires: {new Date(session.expiresAt).toLocaleString()}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Session ID: {session.id}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground py-4">
+                No active sessions found.
+              </p>
+            )}
+          </CardContent>
+        </Card> */}
       </div>
     </div>
   );

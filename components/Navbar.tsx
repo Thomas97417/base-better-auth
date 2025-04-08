@@ -56,7 +56,7 @@ export default function Navbar({ user }: { user?: UserType }) {
               >
                 MyApp
               </Link>
-              <div className="flex space-x-4 xs:space-x-8">
+              <div className="flex space-x-2 xs:space-x-4 sm:space-x-10">
                 <NavLink href="/dashboard">
                   <span className="flex items-center gap-2">
                     <Home className="w-5 h-5" />

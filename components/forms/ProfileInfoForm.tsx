@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Avatar from "@/components/ui/user-avatar";
@@ -9,7 +10,7 @@ import { convertImageToBase64 } from "@/lib/convert-image";
 import { UserType } from "@/utils/types/UserType";
 import { ProfileInformationSchema } from "@/utils/zod/profile-information-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, X } from "lucide-react";
+import { Plus, Shield, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -114,7 +115,7 @@ export default function ProfileInfoForm({ user }: ProfileInfoFormProps) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Profile Image Section */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-start space-x-4 mb-8">
           <div className="relative">
             {/* Image Container */}
             <div className="relative w-16 h-16 group/image">
@@ -150,6 +151,19 @@ export default function ProfileInfoForm({ user }: ProfileInfoFormProps) {
                   disabled={loading}
                 />
               </label>
+
+              {/* Admin Badge */}
+              {user.role === "admin" && (
+                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                  <Badge
+                    variant="default"
+                    className="flex items-center gap-1 px-2 py-0.5"
+                  >
+                    <Shield className="w-3 h-3" />
+                    Admin
+                  </Badge>
+                </div>
+              )}
             </div>
 
             {/* Delete Button */}
