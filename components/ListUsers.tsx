@@ -183,9 +183,9 @@ export default function UsersTable() {
                           onClick={() => handleUserAction(user)}
                           className={`cursor-pointer ${
                             user.banned
-                              ? "text-green-600 focus:text-green-600"
-                              : "text-red-600 focus:text-red-600"
-                          } dark:focus:text-red-600`}
+                              ? "text-green-600 focus:text-green-600 dark:text-green-400 dark:focus:text-green-400"
+                              : "text-red-600 focus:text-red-600 dark:text-red-400 dark:focus:text-red-400"
+                          }`}
                         >
                           {user.banned ? "Unban user" : "Ban user"}
                         </DropdownMenuItem>

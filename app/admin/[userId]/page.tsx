@@ -153,11 +153,13 @@ export default function UserDetailsPage() {
                     Reason: {user.banReason}
                   </p>
                 )}
-                {user.banExpires && (
-                  <p className="text-sm text-muted-foreground">
-                    Expires: {new Date(user.banExpires).toLocaleDateString()}
-                  </p>
-                )}
+
+                <p className="text-sm text-muted-foreground">
+                  Expires:{" "}
+                  {user.banExpires
+                    ? new Date(user.banExpires).toLocaleDateString()
+                    : "Permanent"}
+                </p>
               </div>
             )}
           </CardContent>

@@ -9,10 +9,28 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { authClient } from "@/lib/auth-client";
 import { UserType } from "@/utils/types/UserType";
 import { Ban, Loader2, ShieldCheck } from "lucide-react";
 import { useState } from "react";
+
+// Durée de ban prédéfinies
+const BAN_DURATIONS = [
+  { label: "1 hour", value: "3600" },
+  { label: "24 hours", value: "86400" },
+  { label: "7 days", value: "604800" },
+  { label: "30 days", value: "2592000" },
+  { label: "Permanent", value: "permanent" },
+] as const;
 
 interface UserBanDialogProps {
   isOpen: boolean;
@@ -28,6 +46,8 @@ export default function UserBanDialog({
   onSuccess,
 }: UserBanDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [banReason, setBanReason] = useState("");
+  const [banDuration, setBanDuration] = useState<string>("604800"); // 7 days par défaut
   const isBanned = user?.banned || false;
 
   const handleAction = async () => {
@@ -42,10 +62,15 @@ export default function UserBanDialog({
       } else {
         await authClient.admin.banUser({
           userId: user.id,
+          banReason: banReason.trim() || undefined,
+          banExpiresIn:
+            banDuration === "permanent" ? undefined : parseInt(banDuration),
         });
       }
       onSuccess();
       onClose();
+      setBanReason(""); // Reset the reason after successful action
+      setBanDuration("604800"); // Reset to default duration
     } catch (error) {
       console.error("Error updating user ban status:", error);
     } finally {
@@ -115,6 +140,48 @@ export default function UserBanDialog({
               <li>This action can be reversed later</li>
             </ul>
           </div>
+
+          {!isBanned && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="banDuration">Ban Duration</Label>
+                <Select
+                  value={banDuration}
+                  onValueChange={setBanDuration}
+                  disabled={isLoading}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select duration" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {BAN_DURATIONS.map(({ label, value }) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  Select how long the user should be banned for
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="banReason">Ban Reason</Label>
+                <Input
+                  id="banReason"
+                  placeholder="Enter a reason for the ban (optional)"
+                  value={banReason}
+                  onChange={(e) => setBanReason(e.target.value)}
+                  disabled={isLoading}
+                />
+                <p className="text-xs text-muted-foreground">
+                  If no reason is provided, &quot;No reason&quot; will be used
+                  as default
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         <DialogFooter className="gap-2">
