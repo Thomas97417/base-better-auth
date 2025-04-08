@@ -1,5 +1,6 @@
 "use client";
 
+import UserBanDialog from "@/components/dialogs/UserBanDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useUsers } from "@/hooks/useUsers";
+import { cn } from "@/lib/utils";
+import { UserType } from "@/utils/types/UserType";
 import {
   Ban,
   CheckCircle,
@@ -30,18 +33,38 @@ import {
   UserRound,
   UserX,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import FormError from "./forms/FormError";
 
 export default function UsersTable() {
-  const { users, isLoading, error } = useUsers();
+  const router = useRouter();
+  const { users, isLoading, error, mutate } = useUsers();
   const [search, setSearch] = useState("");
+  const [showBannedOnly, setShowBannedOnly] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
 
-  const filteredUsers = users?.filter(
-    (user) =>
+  const filteredUsers = users?.filter((user) => {
+    const matchesSearch =
       user.fullName?.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase())
-  );
+      user.email.toLowerCase().includes(search.toLowerCase());
+
+    if (showBannedOnly) {
+      return matchesSearch && user.banned;
+    }
+
+    return matchesSearch;
+  });
+
+  const handleUserAction = (user: UserType) => {
+    setSelectedUser(user);
+    setIsDialogOpen(true);
+  };
+
+  const handleViewDetails = (userId: string) => {
+    router.push(`/admin/${userId}`);
+  };
 
   if (isLoading) {
     return <Loader2 className="animate-spin" />;
@@ -50,6 +73,8 @@ export default function UsersTable() {
   if (error) {
     return <FormError message={error.message} />;
   }
+
+  const bannedCount = users?.filter((user) => user.banned).length || 0;
 
   return (
     <div className="space-y-4">
@@ -60,9 +85,18 @@ export default function UsersTable() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Button variant="outline" size="sm">
-          <UserX className="mr-2 h-4 w-4" />
-          View Banned Users
+        <Button
+          variant={showBannedOnly ? "destructive" : "outline"}
+          size="sm"
+          onClick={() => setShowBannedOnly(!showBannedOnly)}
+          className="hover:cursor-pointer"
+        >
+          <UserX
+            className={cn("mr-2 h-4 w-4", showBannedOnly && "text-white")}
+          />
+          {showBannedOnly
+            ? `Banned Users (${bannedCount})`
+            : "View Banned Users"}
         </Button>
       </div>
 
@@ -120,7 +154,7 @@ export default function UsersTable() {
                         Verified
                       </Badge>
                     ) : (
-                      <Badge variant="destructive">Pending</Badge>
+                      <Badge variant="secondary">Not verified</Badge>
                     )}
                   </TableCell>
                   <TableCell>
@@ -129,17 +163,31 @@ export default function UsersTable() {
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
+                        <Button
+                          variant="ghost"
+                          className="h-8 w-8 p-0 hover:cursor-pointer"
+                        >
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>View details</DropdownMenuItem>
-                        <DropdownMenuItem>Edit user</DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">
-                          Ban user
+                        <DropdownMenuItem
+                          onClick={() => handleViewDetails(user.id)}
+                          className="cursor-pointer"
+                        >
+                          View details
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleUserAction(user)}
+                          className={`cursor-pointer ${
+                            user.banned
+                              ? "text-green-600 focus:text-green-600"
+                              : "text-red-600 focus:text-red-600"
+                          } dark:focus:text-red-600`}
+                        >
+                          {user.banned ? "Unban user" : "Ban user"}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -151,9 +199,18 @@ export default function UsersTable() {
         </div>
       ) : (
         <div className="flex justify-center p-4">
-          <span>No users found</span>
+          <span>
+            {showBannedOnly ? "No banned users found" : "No users found"}
+          </span>
         </div>
       )}
+
+      <UserBanDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        user={selectedUser}
+        onSuccess={() => mutate()}
+      />
     </div>
   );
 }
