@@ -1,6 +1,7 @@
 "use client";
 
 import BackButton from "@/components/admin/BackButton";
+import UserSessions from "@/components/admin/UserSessions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -152,43 +153,8 @@ export default function UserDetailsPage() {
           </CardContent>
         </Card>
 
-        {/* <Card className="md:col-span-2">
-          <CardHeader>
-            <CardTitle>Active Sessions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {sessions.length > 0 ? (
-              <div className="space-y-4">
-                {sessions.map((session) => (
-                  <div
-                    key={session.id}
-                    className="flex items-center justify-between p-4 rounded-lg border"
-                  >
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-muted-foreground" />
-                        <p className="text-sm font-medium">
-                          Last active:{" "}
-                          {new Date(session.lastActiveAt).toLocaleString()}
-                        </p>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        Expires: {new Date(session.expiresAt).toLocaleString()}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Session ID: {session.id}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground py-4">
-                No active sessions found.
-              </p>
-            )}
-          </CardContent>
-        </Card> */}
+        {/* Sessions Card */}
+        <UserSessions userId={user.id} />
       </div>
     </div>
   );
