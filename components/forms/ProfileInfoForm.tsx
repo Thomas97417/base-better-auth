@@ -153,7 +153,7 @@ export default function ProfileInfoForm({ user }: ProfileInfoFormProps) {
               </label>
 
               {/* Admin Badge */}
-              {user.role === "admin" && (
+              {user?.role === "admin" && (
                 <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap">
                   <Badge
                     variant="default"

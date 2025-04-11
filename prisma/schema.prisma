@@ -29,6 +29,7 @@ model User {
   banReason  String?
   banExpires DateTime?
 
+
   @@map("user")
 }
 
