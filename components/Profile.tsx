@@ -1,5 +1,3 @@
-"use client";
-
 import { UserType } from "@/utils/types/UserType";
 import PasswordChangeCard from "./cards/PasswordChangeCard";
 import { ProfileInfoCard } from "./cards/ProfileInfoCard";

@@ -1,3 +1,4 @@
+import { SubscriptionCard } from "@/components/cards/SubscriptionCard";
 import { Button } from "@/components/ui/button";
 import CardWrapper from "@/components/ui/card-wrapper";
 import UserAvatar from "@/components/ui/user-avatar";
@@ -10,7 +11,7 @@ export default async function Dashboard() {
 
   return (
     <div className="flex w-full">
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 w-full">
         {/* Welcome Card */}
         <CardWrapper
           cardTitle="Welcome Back!"
@@ -29,6 +30,11 @@ export default async function Dashboard() {
             </div>
           </div>
         </CardWrapper>
+
+        {/* Subscription Card */}
+        <div className="mb-6">
+          <SubscriptionCard />
+        </div>
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

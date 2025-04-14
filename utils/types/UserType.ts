@@ -10,4 +10,5 @@ export type UserType = {
   banned?: boolean;
   banReason?: string | null | undefined;
   banExpires?: Date | null | undefined;
+  stripeCustomerId?: string | null | undefined;
 };

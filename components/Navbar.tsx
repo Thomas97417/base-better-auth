@@ -11,7 +11,7 @@ import {
 import { useLogout } from "@/hooks/useLogout";
 import { cn } from "@/lib/utils";
 import { UserType } from "@/utils/types/UserType";
-import { Home, ShieldUser, SquareUser, User } from "lucide-react";
+import { CreditCard, Home, ShieldUser, SquareUser, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "./theme/ThemeToggle";
@@ -47,7 +47,7 @@ export default function Navbar({ user }: { user?: UserType }) {
   return (
     <nav className="border-b bg-background">
       <div className="flex h-16 items-center px-4 max-w-7xl mx-auto">
-        <div className="flex items-center space-x-4 xs:space-x-10 flex-1">
+        <div className="flex items-center space-x-2 xs:space-x-6 flex-1">
           {user ? (
             <>
               <Link
@@ -56,22 +56,28 @@ export default function Navbar({ user }: { user?: UserType }) {
               >
                 MyApp
               </Link>
-              <div className="flex space-x-2 xs:space-x-4 sm:space-x-10">
+              <div className="flex space-x-1 xs:space-x-2 sm:space-x-6">
                 <NavLink href="/dashboard">
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-1 xs:gap-2">
                     <Home className="w-5 h-5" />
                     <span className="hidden xs:block">Dashboard</span>
                   </span>
                 </NavLink>
                 <NavLink href="/profile">
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-1 xs:gap-2">
                     <SquareUser className="w-5 h-5" />
                     <span className="hidden xs:block">Profile</span>
                   </span>
                 </NavLink>
+                <NavLink href="/plans">
+                  <span className="flex items-center gap-1 xs:gap-2">
+                    <CreditCard className="w-5 h-5" />
+                    <span className="hidden xs:block">Plans</span>
+                  </span>
+                </NavLink>
                 {user.role === "admin" && (
                   <NavLink href="/admin">
-                    <span className="flex items-center gap-2">
+                    <span className="flex items-center gap-1 xs:gap-2">
                       <ShieldUser className="w-5 h-5" />
                       <span className="hidden xs:block">Admin</span>
                     </span>

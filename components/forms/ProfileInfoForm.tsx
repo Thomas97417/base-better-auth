@@ -9,8 +9,9 @@ import { useImageUpload } from "@/hooks/useImageUpload";
 import { convertImageToBase64 } from "@/lib/convert-image";
 import { UserType } from "@/utils/types/UserType";
 import { ProfileInformationSchema } from "@/utils/zod/profile-information-schema";
+import { Subscription } from "@better-auth/stripe";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Shield, X } from "lucide-react";
+import { Plus, Shield, Star, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -28,9 +29,13 @@ import { FormSuccess } from "./FormSuccess";
 
 interface ProfileInfoFormProps {
   user: UserType;
+  activeSubscription: Subscription | null;
 }
 
-export default function ProfileInfoForm({ user }: ProfileInfoFormProps) {
+export default function ProfileInfoForm({
+  user,
+  activeSubscription,
+}: ProfileInfoFormProps) {
   const router = useRouter();
   const {
     loading,
@@ -115,7 +120,7 @@ export default function ProfileInfoForm({ user }: ProfileInfoFormProps) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Profile Image Section */}
-        <div className="flex items-start space-x-4 mb-8">
+        <div className="flex flex-col items-start space-y-4 mb-8">
           <div className="relative">
             {/* Image Container */}
             <div className="relative w-16 h-16 group/image">
@@ -152,31 +157,39 @@ export default function ProfileInfoForm({ user }: ProfileInfoFormProps) {
                 />
               </label>
 
-              {/* Admin Badge */}
-              {user?.role === "admin" && (
-                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                  <Badge
-                    variant="default"
-                    className="flex items-center gap-1 px-2 py-0.5"
+              {/* Delete Button */}
+              {imagePreview && imagePreview !== user?.image && (
+                <div className="absolute -top-2 -right-2 group/delete">
+                  <button
+                    type="button"
+                    className="p-1 bg-white dark:bg-gray-800 rounded-full shadow-md group-hover/delete:bg-gray-100 dark:group-hover/delete:bg-gray-700 hover:cursor-pointer"
+                    onClick={resetImage}
                   >
-                    <Shield className="w-3 h-3" />
-                    Admin
-                  </Badge>
+                    <X className="w-4 h-4" />
+                  </button>
                 </div>
               )}
             </div>
+          </div>
 
-            {/* Delete Button */}
-            {imagePreview && imagePreview !== user?.image && (
-              <div className="absolute -top-2 -right-2 group/delete">
-                <button
-                  type="button"
-                  className="p-1 bg-white dark:bg-gray-800 rounded-full shadow-md group-hover/delete:bg-gray-100 dark:group-hover/delete:bg-gray-700 hover:cursor-pointer"
-                  onClick={resetImage}
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
+          {/* Badges Row */}
+          <div className="flex flex-wrap gap-2 items-center">
+            <Badge
+              variant="default"
+              className="flex items-center gap-1 px-2 py-0.5"
+            >
+              <Shield className="w-3 h-3" />
+              {user?.role.charAt(0).toUpperCase() + user?.role.slice(1)}
+            </Badge>
+            {activeSubscription && (
+              <Badge
+                variant="secondary"
+                className="flex items-center gap-1 px-2 py-0.5"
+              >
+                <Star className="w-3 h-3" />
+                {activeSubscription.plan.charAt(0).toUpperCase() +
+                  activeSubscription.plan.slice(1)}
+              </Badge>
             )}
           </div>
         </div>

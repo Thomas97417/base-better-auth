@@ -1,9 +1,14 @@
+import { PLANS } from "@/utils/constants";
+import { stripe } from "@better-auth/stripe";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { admin } from "better-auth/plugins";
+import Stripe from "stripe";
 import { db } from "./prisma";
 import { resend } from "./resend";
+
+const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export const auth = betterAuth({
   database: prismaAdapter(db, {
@@ -49,5 +54,23 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
   },
-  plugins: [nextCookies(), admin()],
+  plugins: [
+    nextCookies(),
+    admin(),
+    stripe({
+      stripeClient,
+      stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
+      createCustomerOnSignUp: true,
+      onCustomerCreate: async ({ customer, stripeCustomer, user }) => {
+        // Do something with the newly created customer
+        console.log(
+          `Customer ${customer.id} created for user ${user.id}, ${stripeCustomer.id}`
+        );
+      },
+      subscription: {
+        enabled: true,
+        plans: PLANS,
+      },
+    }),
+  ],
 });
