@@ -1,11 +1,13 @@
 import { getActiveSubscription } from "@/actions/sub";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import CardWrapper from "@/components/ui/card-wrapper";
 import { Progress } from "@/components/ui/progress";
 import { PLANS } from "@/utils/constants";
-import { Calendar, Check, CreditCard, Star, Zap } from "lucide-react";
-import Link from "next/link";
+import { Calendar, Check, Zap } from "lucide-react";
+import {
+  default as SubscriptionActions,
+  default as SubscriptionActionsButtons,
+} from "./SubscriptionActions";
 
 export async function SubscriptionCard() {
   const { subscription: activeSubscription } = await getActiveSubscription();
@@ -46,14 +48,7 @@ export async function SubscriptionCard() {
           </div>
 
           {/* Subscription Actions */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Button className="flex-1" asChild>
-              <Link href="/plans">
-                View Plans
-                <CreditCard className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
+          <SubscriptionActionsButtons hasActiveSubscription={false} />
         </div>
       </CardWrapper>
     );
@@ -151,20 +146,10 @@ export async function SubscriptionCard() {
         </div>
 
         {/* Subscription Actions */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Button className="flex-1" asChild>
-            <Link href="/plans">
-              Change Plan
-              <CreditCard className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-          <Button variant="outline" className="flex-1" asChild>
-            <Link href="/billing" target="_blank">
-              Manage Subscription
-              <Star className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
+        <SubscriptionActions
+          hasActiveSubscription={true}
+          planName={activeSubscription.plan}
+        />
       </div>
     </CardWrapper>
   );

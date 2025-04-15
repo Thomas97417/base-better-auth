@@ -1,5 +1,5 @@
-"use client";
-
+import { getActiveSubscription } from "@/actions/sub";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,25 +11,44 @@ import {
 } from "@/components/ui/card";
 import CreateSubscriptionButton from "@/components/ui/create-sub-button";
 import { PLANS } from "@/utils/constants";
-import { Check } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Check, Zap } from "lucide-react";
+import Link from "next/link";
 
-export default function Plans() {
-  const router = useRouter();
+export default async function Plans() {
+  const { subscription: activeSubscription } = await getActiveSubscription();
+  const currentPlan = activeSubscription
+    ? PLANS.find((p) => p.name === activeSubscription.plan)
+    : null;
 
   return (
     <div className="container mx-auto my-auto px-4 py-16">
       <div className="text-center mb-16">
-        <h1 className="text-4xl font-bold mb-4">Choose Your Plan</h1>
+        <h1 className="text-4xl font-bold mb-4">
+          {activeSubscription ? "Upgrade Your Plan" : "Choose Your Plan"}
+        </h1>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Select the perfect plan for your needs. All plans include access to
-          our core features.
+          {activeSubscription
+            ? `You are currently on the ${activeSubscription.plan} plan. Compare our plans and upgrade to get more features.`
+            : "Select the perfect plan for your needs. All plans include access to our core features."}
         </p>
+        {activeSubscription && (
+          <div className="mt-4">
+            <Badge variant="outline" className="text-base py-1.5">
+              <Zap className="w-4 h-4 mr-1 inline" />
+              Current Plan:{" "}
+              {activeSubscription.plan.charAt(0).toUpperCase() +
+                activeSubscription.plan.slice(1)}
+            </Badge>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
         {PLANS.map((plan) => {
           const isPopular = plan.name === "pro";
+          const isCurrentPlan = activeSubscription?.plan === plan.name;
+          const isDowngrade = currentPlan && plan.price < currentPlan.price;
+
           return (
             <Card
               key={plan.name}
@@ -37,11 +56,18 @@ export default function Plans() {
                 isPopular
                   ? "border-primary shadow-lg scale-105 hover:scale-[1.06]"
                   : "hover:scale-[1.02]"
-              } transition-transform duration-200`}
+              } transition-transform duration-200 ${
+                isCurrentPlan ? "border-primary/50 bg-primary/5" : ""
+              }`}
             >
-              {isPopular && (
+              {isPopular && !isCurrentPlan && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium">
                   Most Popular
+                </div>
+              )}
+              {isCurrentPlan && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium">
+                  Current Plan
                 </div>
               )}
               <CardHeader>
@@ -73,7 +99,13 @@ export default function Plans() {
                 </div>
               </CardContent>
               <CardFooter>
-                <CreateSubscriptionButton plan={plan} isPopular={isPopular} />
+                <CreateSubscriptionButton
+                  plan={plan}
+                  isPopular={isPopular}
+                  isCurrentPlan={isCurrentPlan}
+                  isDowngrade={isDowngrade ?? false}
+                  activeSubscription={activeSubscription}
+                />
               </CardFooter>
             </Card>
           );
@@ -88,10 +120,10 @@ export default function Plans() {
         </p>
         <Button
           variant="outline"
+          asChild
           className="hover:cursor-pointer hover:bg-primary hover:text-primary-foreground"
-          onClick={() => router.push("/faq")}
         >
-          View FAQ
+          <Link href="/faq">View FAQ</Link>
         </Button>
       </div>
     </div>

@@ -31,7 +31,7 @@ export const PLANS: Plan[] = [
       tokens: 1000,
     },
     features: ["Gives you access to the enterprise features of the app"],
-    price: 29.99,
+    price: 39.99,
     description: "For large organizations with advanced needs",
   },
 ];
