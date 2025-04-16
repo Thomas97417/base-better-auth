@@ -27,11 +27,16 @@ export default function CancelSubscriptionDialog({
   const handleSubCancellation = async () => {
     try {
       setIsLoading(true);
-      await authClient.subscription.cancel({
+      const { data, error } = await authClient.subscription.cancel({
         returnUrl: "/",
       });
-      toast.success("Subscription cancellation initiated");
-      onClose();
+      console.log(data, error);
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success("Subscription cancellation initiated");
+        onClose();
+      }
     } catch (error) {
       console.error(error);
       toast.error("Failed to cancel subscription");

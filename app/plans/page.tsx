@@ -123,7 +123,7 @@ export default async function Plans() {
           asChild
           className="hover:cursor-pointer hover:bg-primary hover:text-primary-foreground"
         >
-          <Link href="/faq">View FAQ</Link>
+          <Link href="/plans">View FAQ</Link>
         </Button>
       </div>
     </div>
