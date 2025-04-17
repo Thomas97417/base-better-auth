@@ -4,6 +4,7 @@ import { updateExistingSubscription } from "@/actions/sub";
 import { authClient } from "@/lib/auth-client";
 import { Plan } from "@/utils/types/PlanType";
 import { Subscription } from "@better-auth/stripe";
+import { RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -67,6 +68,28 @@ export default function CreateSubscriptionButton({
     }
   };
 
+  // Si c'est le plan actuel et qu'il est annulé, montrer le bouton pour reprendre l'abonnement
+  if (isCurrentPlan && activeSubscription?.cancelAtPeriodEnd) {
+    return (
+      <Button
+        onClick={handleSubscriptionChange}
+        className="w-full text-primary border-primary hover:bg-primary/10 hover:cursor-pointer hover:text-primary"
+        variant="outline"
+        disabled={loading}
+      >
+        {loading ? (
+          "Processing..."
+        ) : (
+          <>
+            <RotateCcw className="mr-2 h-4 w-4" />
+            Resume This Plan
+          </>
+        )}
+      </Button>
+    );
+  }
+
+  // Si c'est le plan actuel (non annulé), désactiver le bouton
   if (isCurrentPlan) {
     return (
       <Button variant="outline" className="w-full" disabled>
@@ -79,7 +102,7 @@ export default function CreateSubscriptionButton({
     return (
       <Button
         variant="outline"
-        className="w-full text-yellow-600 hover:text-yellow-700"
+        className="w-full text-yellow-600 hover:text-yellow-700 hover:cursor-pointer"
         onClick={handleSubscriptionChange}
         disabled={loading}
       >

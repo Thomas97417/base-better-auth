@@ -11,7 +11,7 @@ import { UserType } from "@/utils/types/UserType";
 import { ProfileInformationSchema } from "@/utils/zod/profile-information-schema";
 import { Subscription } from "@better-auth/stripe";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Shield, Star, X } from "lucide-react";
+import { Plus, Shield, Star, User, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -178,12 +178,16 @@ export default function ProfileInfoForm({
               variant="default"
               className="flex items-center gap-1 px-2 py-0.5"
             >
-              <Shield className="w-3 h-3" />
+              {user?.role === "admin" ? (
+                <Shield className="w-3 h-3" />
+              ) : (
+                <User className="w-3 h-3" />
+              )}
               {user?.role.charAt(0).toUpperCase() + user?.role.slice(1)}
             </Badge>
             {activeSubscription && (
               <Badge
-                variant="secondary"
+                variant="outline"
                 className="flex items-center gap-1 px-2 py-0.5"
               >
                 <Star className="w-3 h-3" />

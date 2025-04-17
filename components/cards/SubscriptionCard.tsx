@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import CardWrapper from "@/components/ui/card-wrapper";
 import { Progress } from "@/components/ui/progress";
 import { PLANS } from "@/utils/constants";
-import { Calendar, Check, Zap } from "lucide-react";
+import { AlertCircle, Calendar, Check, Clock, Zap } from "lucide-react";
 import {
   default as SubscriptionActions,
   default as SubscriptionActionsButtons,
@@ -71,6 +71,16 @@ export async function SubscriptionCard() {
   const maxTokens = currentPlan?.limits.tokens || 0;
   const tokenPercentage = Math.min((usedTokens / maxTokens) * 100, 100);
 
+  // Calculate days remaining if subscription is cancelled
+  const daysRemaining =
+    activeSubscription.cancelAtPeriodEnd && activeSubscription.periodEnd
+      ? Math.ceil(
+          (new Date(activeSubscription.periodEnd).getTime() -
+            new Date().getTime()) /
+            (1000 * 60 * 60 * 24)
+        )
+      : null;
+
   return (
     <CardWrapper
       cardTitle="Subscription Plan"
@@ -95,11 +105,30 @@ export async function SubscriptionCard() {
               >
                 {activeSubscription.status}
               </Badge>
+              {activeSubscription.cancelAtPeriodEnd && (
+                <Badge variant="destructive" className="gap-1">
+                  <AlertCircle className="h-3.5 w-3.5" />
+                  Cancels Soon
+                </Badge>
+              )}
             </div>
             <p className="text-sm text-muted-foreground flex items-center gap-1">
               <Calendar className="h-4 w-4" />
               Current Period: {periodStart} - {periodEnd}
             </p>
+            {activeSubscription.cancelAtPeriodEnd && daysRemaining !== null && (
+              <div className="flex flex-col gap-1 mt-2 bg-destructive/10 p-3 rounded-md">
+                <p className="text-sm text-destructive flex items-center gap-1">
+                  <AlertCircle className="h-4 w-4" />
+                  Your subscription will end on {periodEnd}
+                </p>
+                <p className="text-sm text-muted-foreground flex items-center gap-1">
+                  <Clock className="h-4 w-4" />
+                  {daysRemaining} {daysRemaining === 1 ? "day" : "days"}{" "}
+                  remaining with premium features
+                </p>
+              </div>
+            )}
           </div>
           <div className="text-2xl font-bold">
             {currentPlan?.price}
@@ -149,6 +178,7 @@ export async function SubscriptionCard() {
         <SubscriptionActions
           hasActiveSubscription={true}
           planName={activeSubscription.plan}
+          isCancelled={activeSubscription.cancelAtPeriodEnd}
         />
       </div>
     </CardWrapper>

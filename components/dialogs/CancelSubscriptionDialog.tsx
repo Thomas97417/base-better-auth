@@ -109,7 +109,6 @@ export default function CancelSubscriptionDialog({
             Keep Subscription
           </Button>
           <Button
-            variant="destructive"
             onClick={handleSubCancellation}
             disabled={isLoading}
             className="w-full sm:w-auto hover:cursor-pointer font-medium"

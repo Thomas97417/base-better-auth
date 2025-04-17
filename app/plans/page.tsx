@@ -80,7 +80,7 @@ export default async function Plans() {
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold">€{plan.price}</span>
+                  <span className="text-4xl font-bold">{plan.price}€</span>
                   <span className="text-muted-foreground">/month</span>
                 </div>
                 <div className="space-y-4">
