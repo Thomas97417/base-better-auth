@@ -4,7 +4,7 @@ export const PLANS: Plan[] = [
   {
     id: 1,
     name: "basic",
-    priceId: "price_1RDnclRrUMfYKqsHtyPXFgww",
+    priceId: process.env.STRIPE_PRICE_ID_1!,
     limits: {
       tokens: 100,
     },
@@ -15,7 +15,7 @@ export const PLANS: Plan[] = [
   {
     id: 2,
     name: "pro",
-    priceId: "price_1RDndsRrUMfYKqsHKwUuzI0z",
+    priceId: process.env.STRIPE_PRICE_ID_2!,
     limits: {
       tokens: 300,
     },
@@ -26,7 +26,7 @@ export const PLANS: Plan[] = [
   {
     id: 3,
     name: "enterprise",
-    priceId: "price_1RDne2RrUMfYKqsHYtIrH4z2",
+    priceId: process.env.STRIPE_PRICE_ID_3!,
     limits: {
       tokens: 1000,
     },

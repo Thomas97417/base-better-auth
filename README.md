@@ -98,24 +98,6 @@ npx prisma studio
 
 ---
 
-## 💳 Stripe Setup
-
-To use Stripe in your project, you’ll need the following keys:
-
-- `STRIPE_SECRET_KEY`
-- `STRIPE_WEBHOOK_SECRET`
-
-### Get your API key:
-
-Go to your Stripe dashboard: [https://dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys)
-
-### Set up your webhook for local testing:
-
-```bash
-stripe login
-stripe listen --forward-to localhost:3000/api/stripe/webhook
-```
-
 ## 🔐 OAuth Setup (GitHub & Google)
 
 To enable social login, you’ll need to configure OAuth credentials for both **GitHub** and **Google**.
@@ -161,6 +143,8 @@ To enable social login, you’ll need to configure OAuth credentials for both **
    GOOGLE_CLIENT_SECRET=your_client_secret
    ```
 
+---
+
 ## 📧 Resend API Setup (Transactional Emails)
 
 To enable transactional emails in your project, you'll need a `RESEND_API_KEY`.
@@ -187,3 +171,69 @@ RESEND_API_KEY=your_resend_api_key
 ```
 
 > 📝 Don’t forget to restart your dev server after updating the `.env` file.
+
+---
+
+## 💳 Stripe Setup
+
+To use Stripe in your project, you’ll need the following keys:
+
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+
+### Get your API key:
+
+Go to your Stripe dashboard: [https://dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys)
+
+### Set up your webhook for local testing:
+
+```bash
+stripe login
+stripe listen --forward-to localhost:3000/api/stripe/webhook
+```
+
+## 💼 Stripe Product & Pricing Setup (Subscription Tiers)
+
+To set up subscription tiers for your app, you'll need to create a product and pricing plans in your Stripe dashboard.
+
+### 🛠️ Steps to Create a Product and Tiers in Stripe:
+
+1. Go to your [Stripe Dashboard](https://dashboard.stripe.com/)
+2. In the left sidebar, click on **"Products"**
+3. Click the **"Add product"** button
+
+### ➕ Create a Product:
+
+- **Name:** (e.g., `Pro Plan`, `Premium Subscription`, etc.)
+- **Description:** Optional, but helpful to identify the product
+- Click **"Add pricing plan"** during product creation
+
+### 💰 Add Pricing (Tiers):
+
+For each tier you want to support, add a pricing plan:
+
+- **Type:** Recurring
+- **Billing period:** Monthly or yearly, depending on your model
+- **Price:** Set according to your tier (e.g., $10/month, $30/month, etc.)
+
+You can add multiple prices to the same product (e.g., one for monthly, one for yearly).
+
+Once created, each pricing plan will have a unique **Price ID** (looks like `price_ABC123...`).
+
+---
+
+### 📄 Update your `.env` file with the Price IDs:
+
+```env
+STRIPE_PRICE_ID_1=price_xxxxxxxxxxxx
+STRIPE_PRICE_ID_2=price_yyyyyyyyyyyy
+STRIPE_PRICE_ID_3=price_zzzzzzzzzzzz
+```
+
+> 📝 Rename the keys as needed based on your subscription logic (e.g., BASIC, PRO, PREMIUM, etc.)
+
+> 🔄 Restart your server after updating the `.env` file to apply changes.
+
+---
+
+### ✅ You’re now ready to link your pricing tiers with your frontend/backend logic using these `priceId`s!
