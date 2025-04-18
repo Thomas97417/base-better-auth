@@ -29,9 +29,6 @@ export default function ResumeSubscriptionDialog({
 }: ResumeSubscriptionDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  console.log("planName", planName);
-  console.log("subscriptionId", subscriptionId);
-  console.log("priceId", priceId);
 
   const handleResumeSubscription = async () => {
     // Vérifier que nous avons les données nécessaires

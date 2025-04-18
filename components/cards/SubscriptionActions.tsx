@@ -27,11 +27,6 @@ export default function SubscriptionActionsButtons({
 
   // Trouver le plan actuel pour obtenir le priceId
   const currentPlan = PLANS.find((p) => p.name === planName);
-  console.log("Current plan for resume:", {
-    planName,
-    currentPlan,
-    subscription,
-  });
 
   if (!hasActiveSubscription) {
     return (

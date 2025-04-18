@@ -76,11 +76,7 @@ export async function updateExistingSubscription(
     const isResumingSubscription = currentSubscription.cancel_at_period_end;
 
     // Get the price details to know which plan it corresponds to
-    const price = await stripeClient.prices.retrieve(
-      isResumingSubscription
-        ? currentSubscription.items.data[0].price.id
-        : switchToPriceId
-    );
+    const price = await stripeClient.prices.retrieve(switchToPriceId);
     console.log("price", price);
     const plan = PLANS.find((p) => p.priceId === price.id);
     if (!plan) {
@@ -91,12 +87,19 @@ export async function updateExistingSubscription(
     }
     const planName = plan.name;
 
-    // If we're resuming, we just need to remove cancel_at_period_end
+    // If we're resuming, we need to update both the cancel_at_period_end and the price
     if (isResumingSubscription) {
       const updatedStripeSubscription = await stripeClient.subscriptions.update(
         subId,
         {
           cancel_at_period_end: false,
+          items: [
+            {
+              id: currentSubscription.items.data[0].id,
+              price: switchToPriceId,
+            },
+          ],
+          proration_behavior: "create_prorations",
         }
       );
 
