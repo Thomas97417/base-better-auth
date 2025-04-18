@@ -73,7 +73,7 @@ export default function CreateSubscriptionButton({
     return (
       <Button
         onClick={handleSubscriptionChange}
-        className="w-full text-primary border-primary hover:bg-primary/10 hover:cursor-pointer hover:text-primary"
+        className="w-full bg-primary/10 border-primary text-primary hover:bg-primary hover:text-primary-foreground hover:cursor-pointer"
         variant="outline"
         disabled={loading}
       >
@@ -82,7 +82,7 @@ export default function CreateSubscriptionButton({
         ) : (
           <>
             <RotateCcw className="mr-2 h-4 w-4" />
-            Resume This Plan
+            Resume Subscription
           </>
         )}
       </Button>

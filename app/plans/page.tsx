@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import CreateSubscriptionButton from "@/components/ui/create-sub-button";
 import { PLANS } from "@/utils/constants";
-import { Check, Zap } from "lucide-react";
+import { CalendarOff, Check, Clock, Zap } from "lucide-react";
 import Link from "next/link";
 
 export default async function Plans() {
@@ -28,17 +28,46 @@ export default async function Plans() {
         </h1>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
           {activeSubscription
-            ? `You are currently on the ${activeSubscription.plan} plan. Compare our plans and upgrade to get more features.`
+            ? activeSubscription.cancelAtPeriodEnd
+              ? `Your ${activeSubscription.plan} plan will be cancelled at the end of the current period. You can choose a new plan or resume your current one.`
+              : `You are currently on the ${activeSubscription.plan} plan. Compare our plans and upgrade to get more features.`
             : "Select the perfect plan for your needs. All plans include access to our core features."}
         </p>
         {activeSubscription && (
-          <div className="mt-4">
+          <div className="mt-4 flex flex-col items-center gap-3">
             <Badge variant="outline" className="text-base py-1.5">
               <Zap className="w-4 h-4 mr-1 inline" />
               Current Plan:{" "}
               {activeSubscription.plan.charAt(0).toUpperCase() +
                 activeSubscription.plan.slice(1)}
             </Badge>
+            {activeSubscription.cancelAtPeriodEnd &&
+              activeSubscription.periodEnd && (
+                <Badge
+                  variant="destructive"
+                  className="text-base py-1.5 gap-2 transition-all hover:opacity-80"
+                >
+                  <CalendarOff className="w-4 h-4 inline" />
+                  <span>
+                    Cancels{" "}
+                    {new Date(activeSubscription.periodEnd).toLocaleDateString(
+                      "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      }
+                    )}
+                  </span>
+                  <Clock className="w-4 h-4 inline" />
+                  {Math.ceil(
+                    (new Date(activeSubscription.periodEnd).getTime() -
+                      new Date().getTime()) /
+                      (1000 * 60 * 60 * 24)
+                  )}{" "}
+                  days left
+                </Badge>
+              )}
           </div>
         )}
       </div>
@@ -52,7 +81,7 @@ export default async function Plans() {
           return (
             <Card
               key={plan.name}
-              className={`relative ${
+              className={`relative flex flex-col ${
                 isPopular
                   ? "border-primary shadow-lg scale-105 hover:scale-[1.06]"
                   : "hover:scale-[1.02]"
@@ -78,7 +107,7 @@ export default async function Plans() {
                   {plan.description}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="flex-1">
                 <div className="mb-6">
                   <span className="text-4xl font-bold">{plan.price}€</span>
                   <span className="text-muted-foreground">/month</span>
@@ -98,7 +127,7 @@ export default async function Plans() {
                   ))}
                 </div>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="mt-auto">
                 <CreateSubscriptionButton
                   plan={plan}
                   isPopular={isPopular}

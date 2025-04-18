@@ -11,6 +11,7 @@ import {
 
 export async function SubscriptionCard() {
   const { subscription: activeSubscription } = await getActiveSubscription();
+  const planName = activeSubscription?.plan;
 
   if (!activeSubscription) {
     return (
@@ -48,7 +49,10 @@ export async function SubscriptionCard() {
           </div>
 
           {/* Subscription Actions */}
-          <SubscriptionActionsButtons hasActiveSubscription={false} />
+          <SubscriptionActionsButtons
+            hasActiveSubscription={false}
+            planName={planName ?? ""}
+          />
         </div>
       </CardWrapper>
     );
@@ -179,6 +183,7 @@ export async function SubscriptionCard() {
           hasActiveSubscription={true}
           planName={activeSubscription.plan}
           isCancelled={activeSubscription.cancelAtPeriodEnd}
+          subscription={activeSubscription}
         />
       </div>
     </CardWrapper>

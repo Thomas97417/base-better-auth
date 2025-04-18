@@ -222,7 +222,7 @@ Once created, each pricing plan will have a unique **Price ID** (looks like `pri
 
 ---
 
-### 📄 Update your `.env` file with the Price IDs:
+### 📄 Update your `constant.ts` file with the Price IDs:
 
 ```env
 STRIPE_PRICE_ID_1=price_xxxxxxxxxxxx
@@ -231,8 +231,6 @@ STRIPE_PRICE_ID_3=price_zzzzzzzzzzzz
 ```
 
 > 📝 Rename the keys as needed based on your subscription logic (e.g., BASIC, PRO, PREMIUM, etc.)
-
-> 🔄 Restart your server after updating the `.env` file to apply changes.
 
 ---
 
