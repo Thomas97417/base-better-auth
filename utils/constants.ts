@@ -1,10 +1,11 @@
+import { STRIPE_PRICES } from "./server.constants";
 import { Plan } from "./types/PlanType";
 
 export const PLANS: Plan[] = [
   {
     id: 1,
     name: "basic",
-    priceId: process.env.STRIPE_PRICE_ID_1!,
+    priceId: STRIPE_PRICES.basic,
     limits: {
       tokens: 100,
     },
@@ -15,7 +16,7 @@ export const PLANS: Plan[] = [
   {
     id: 2,
     name: "pro",
-    priceId: process.env.STRIPE_PRICE_ID_2!,
+    priceId: STRIPE_PRICES.pro,
     limits: {
       tokens: 300,
     },
@@ -26,7 +27,7 @@ export const PLANS: Plan[] = [
   {
     id: 3,
     name: "enterprise",
-    priceId: process.env.STRIPE_PRICE_ID_3!,
+    priceId: STRIPE_PRICES.enterprise,
     limits: {
       tokens: 1000,
     },
