@@ -1,3 +1,33 @@
+# 🧩 Next.js Web App Starter Template
+
+This repository provides a modern, feature-rich template to kickstart your web application development with built-in authentication, subscription payments, and admin capabilities.
+
+Built with the latest technologies, this boilerplate is designed to help developers ship production-ready applications with a solid foundation:
+
+- **Next.js 15** – App router, server actions, and enhanced routing features
+- **React 19** – Concurrent rendering, hooks, and the latest React features
+- **ShadCN UI** – Beautifully styled and accessible UI components using Tailwind CSS
+- **Prisma ORM** – Type-safe database access with an intuitive schema-driven workflow
+- **Authentication** – Secure user authentication with role-based access control
+- **Admin Dashboard** – Full-featured admin panel to manage users and data
+- **Stripe Integration** – Subscription payment processing with multiple pricing tiers
+- **Email Service** – Transactional emails using Resend
+- **Database Support** – Works with PostgreSQL locally or cloud providers
+- **TypeScript** – Full type safety across the entire codebase
+- **Responsive Design** – Mobile-first UI that works on all devices
+
+---
+
+Whether you're building a SaaS product, an internal dashboard, or a side project, this starter saves you weeks of development time by providing:
+
+- Complete authentication flow with protected routes
+- User management with admin controls
+- Subscription billing with Stripe
+- Email notifications for key events
+- Responsive layouts and components
+- Dark mode support
+- Production-ready infrastructure
+
 ## 🚀 Getting Started
 
 Start the development server:
