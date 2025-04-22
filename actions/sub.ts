@@ -159,7 +159,7 @@ export async function updateExistingSubscription(
           },
         ],
         cancel_at_period_end: false,
-        proration_behavior: "create_prorations",
+        proration_behavior: "always_invoice",
       }
     );
 
