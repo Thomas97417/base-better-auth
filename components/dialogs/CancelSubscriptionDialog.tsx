@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -57,13 +58,13 @@ export default function CancelSubscriptionDialog({
               Cancel Subscription
             </DialogTitle>
           </div>
-          <p className="text-base text-muted-foreground font-medium">
+          <DialogDescription className="text-base text-muted-foreground font-medium">
             Are you sure you want to cancel your{" "}
             <span className="text-foreground">
               {planName.toLocaleUpperCase()}
             </span>{" "}
             subscription?
-          </p>
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6 py-4">

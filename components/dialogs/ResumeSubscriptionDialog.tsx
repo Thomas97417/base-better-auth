@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -71,13 +72,13 @@ export default function ResumeSubscriptionDialog({
               Resume Subscription
             </DialogTitle>
           </div>
-          <p className="text-base text-muted-foreground font-medium">
+          <DialogDescription className="text-base text-muted-foreground font-medium">
             Ready to resume your{" "}
             <span className="text-foreground font-semibold">
               {planName.toUpperCase()}
             </span>{" "}
             plan benefits?
-          </p>
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
