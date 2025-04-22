@@ -95,3 +95,26 @@ model Subscription {
   trialStart           DateTime?
   trialEnd             DateTime?
 }
+
+model UserTokens {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  balance   Int      @default(0)
+  usedTotal Int      @default(0)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  // Historique des transactions
+  transactions TokenTransaction[]
+}
+
+model TokenTransaction {
+  id        String   @id @default(cuid())
+  userId    String
+  amount    Int      // Peut être positif (crédit) ou négatif (débit)
+  action    String   // Description de l'action (ex: "subscription_credit", "api_call")
+  metadata  Json?    // Données supplémentaires sur la transaction
+  createdAt DateTime @default(now())
+
+  userTokens UserTokens @relation(fields: [userId], references: [userId])
+}

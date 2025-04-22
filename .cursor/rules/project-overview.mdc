@@ -1,0 +1,22 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Project Overview
+
+This is a Next.js TypeScript project with the following key directories:
+
+- `app/`: Contains Next.js app router pages and layouts
+- `components/`: Reusable React components
+- `actions/`: Server actions for handling data mutations
+- `utils/`: Utility functions and helpers
+- `lib/`: Core library code and configurations
+- `hooks/`: Custom React hooks
+- `prisma/`: Database schema and Prisma configurations
+
+Key configuration files:
+- [next.config.ts](mdc:next.config.ts): Next.js configuration
+- [tsconfig.json](mdc:tsconfig.json): TypeScript configuration
+- [package.json](mdc:package.json): Project dependencies and scripts
+- [docker-compose.yml](mdc:docker-compose.yml): Docker configuration

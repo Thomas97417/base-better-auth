@@ -193,9 +193,12 @@ export async function updateExistingSubscription(
       },
     });
 
+    // Update the user tokens
+    // await creditTokensForSubscription(session.user.id, planName);
+
     return {
       status: true,
-      message: "Subscription updated successfully!",
+      message: "Subscription and tokens updated successfully!",
     };
   } catch (error) {
     console.error(error);

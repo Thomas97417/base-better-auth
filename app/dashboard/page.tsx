@@ -1,4 +1,5 @@
 import { SubscriptionCard } from "@/components/cards/SubscriptionCard";
+import { TokenBalance } from "@/components/TokenBalance";
 import { Button } from "@/components/ui/button";
 import CardWrapper from "@/components/ui/card-wrapper";
 import UserAvatar from "@/components/ui/user-avatar";
@@ -34,6 +35,10 @@ export default async function Dashboard() {
         {/* Subscription Card */}
         <div className="mb-6">
           <SubscriptionCard />
+        </div>
+
+        <div className="mb-6">
+          <TokenBalance />
         </div>
 
         {/* Cards Grid */}

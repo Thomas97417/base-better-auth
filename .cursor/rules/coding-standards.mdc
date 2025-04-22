@@ -1,0 +1,38 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Coding Standards
+
+## TypeScript
+- Use TypeScript for all new code
+- Define explicit types for function parameters and return values
+- Use interfaces for object shapes
+
+## React Components
+- Use functional components with hooks
+- Place components in the `components/` directory
+- Follow the component-per-file pattern
+- Use named exports instead of default exports
+
+## File Structure
+- Keep files focused and single-purpose
+- Use PascalCase for component files
+- Use camelCase for utility files
+- Group related files in feature-specific directories
+
+## State Management
+- Use React hooks for local state
+- Implement server actions in `actions/` directory
+- Keep data fetching close to where it's used
+
+## Styling
+- Use Tailwind CSS for styling
+- Follow mobile-first responsive design
+- Keep styles modular and component-specific
+
+## Database
+- Use Prisma as the ORM
+- Place database schemas in `prisma/` directory
+- Keep database operations in server actions

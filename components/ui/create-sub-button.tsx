@@ -1,6 +1,7 @@
 "use client";
 
 import { updateExistingSubscription } from "@/actions/sub";
+import { creditTokensForSubscriptionAction } from "@/actions/tokens";
 import { authClient } from "@/lib/auth-client";
 import { Plan } from "@/utils/types/PlanType";
 import { Subscription } from "@better-auth/stripe";
@@ -58,6 +59,17 @@ export default function CreateSubscriptionButton({
         if (error) {
           toast.error("Failed to create subscription");
           console.error("Failed to create subscription:", error);
+        } else {
+          // Crédit des tokens pour la nouvelle souscription
+          try {
+            await creditTokensForSubscriptionAction(plan.name);
+            toast.success(
+              "Subscription created and tokens credited successfully!"
+            );
+          } catch (tokenError) {
+            console.error("Failed to credit tokens:", tokenError);
+            toast.error("Subscription created but failed to credit tokens");
+          }
         }
       }
     } catch (error) {

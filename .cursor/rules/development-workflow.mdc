@@ -1,0 +1,40 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Development Workflow
+
+## Getting Started
+1. Install dependencies: `npm install`
+2. Start development server: `npm run dev`
+3. Run database migrations: `npx prisma migrate dev`
+
+## Development Process
+- Create feature branches from `main`
+- Follow conventional commits
+- Update documentation as needed
+- Write tests for new features
+
+## Environment Setup
+- Use `.env` for environment variables
+- Never commit sensitive data
+- Use Docker for consistent development environments
+
+## Testing
+- Write unit tests for utilities
+- Create component tests for UI
+- Test server actions independently
+- Run tests before committing
+
+## Deployment
+- Verify builds locally before pushing
+- Use staging environment for testing
+- Follow the deployment checklist
+- Monitor logs after deployment
+
+## Code Review
+- Review PR descriptions
+- Check for TypeScript errors
+- Verify test coverage
+- Ensure documentation is updated
