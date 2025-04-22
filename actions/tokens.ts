@@ -5,30 +5,22 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 import { PLANS } from "@/utils/constants";
 import { Prisma } from "@prisma/client";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 
 export async function creditTokensForSubscriptionAction(
   planName: string,
   previousPlanName?: string
 ) {
-  const cookieStore = cookies();
-  const sessionToken = (await cookieStore).get("session")?.value;
-
-  if (!sessionToken) {
-    throw new Error("Unauthorized");
-  }
-
-  const session = await db.session.findUnique({
-    where: { token: sessionToken },
-    select: { userId: true },
+  const session = await auth.api.getSession({
+    headers: await headers(),
   });
 
   if (!session) {
-    throw new Error("Invalid session");
+    throw new Error("Unauthorized");
   }
 
   return creditTokensForSubscription(
-    session.userId,
+    session.user.id,
     planName,
     previousPlanName
   );
@@ -43,8 +35,9 @@ export async function creditTokensForSubscription(
   if (!plan) throw new Error("Plan not found");
 
   const tokensToCredit = plan.limits.tokens;
+  console.log("tokensToCredit", tokensToCredit);
 
-  // Si c'est un upgrade, calculer la différence de tokens
+  // If there is a previous plan, we need to calculate the difference in tokens
   if (previousPlanName) {
     const previousPlan = PLANS.find((p) => p.name === previousPlanName);
     if (previousPlan) {
@@ -66,7 +59,7 @@ export async function creditTokensForSubscription(
               action: "subscription_upgrade",
               metadata: {
                 planName,
-                previousPlanName,
+                previousPlanName: previousPlan.name,
                 type: "upgrade_credit",
               },
             },
@@ -82,7 +75,7 @@ export async function creditTokensForSubscription(
               action: "subscription_upgrade",
               metadata: {
                 planName,
-                previousPlanName,
+                previousPlanName: previousPlan.name,
                 type: "upgrade_credit",
               },
             },
@@ -94,7 +87,8 @@ export async function creditTokensForSubscription(
     }
   }
 
-  // Cas d'une nouvelle souscription
+  // Case of a new subscription
+
   const userTokens = await db.userTokens.upsert({
     where: { userId },
     create: {

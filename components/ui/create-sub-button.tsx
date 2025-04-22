@@ -30,6 +30,7 @@ export default function CreateSubscriptionButton({
   const [loading, setLoading] = useState(false);
 
   const handleSubscriptionChange = async () => {
+    console.log("activeSubscription", activeSubscription);
     try {
       setLoading(true);
 
@@ -37,11 +38,12 @@ export default function CreateSubscriptionButton({
         // Handle upgrade/downgrade of existing subscription
         const result = await updateExistingSubscription(
           activeSubscription.stripeSubscriptionId,
-          plan.priceId
+          plan.priceId,
+          activeSubscription.plan
         );
 
         if (result.status) {
-          toast.success("Subscription updated successfully");
+          toast.success(result.message || "Subscription updated successfully");
           router.push("/dashboard");
           router.refresh();
         } else {
@@ -60,7 +62,7 @@ export default function CreateSubscriptionButton({
           toast.error("Failed to create subscription");
           console.error("Failed to create subscription:", error);
         } else {
-          // Crédit des tokens pour la nouvelle souscription
+          // Credit tokens for new subscription
           try {
             await creditTokensForSubscriptionAction(
               plan.name,
@@ -83,7 +85,7 @@ export default function CreateSubscriptionButton({
     }
   };
 
-  // Si c'est le plan actuel et qu'il est annulé, montrer le bouton pour reprendre l'abonnement
+  // If it's the current plan and it's cancelled, show the button to resume the subscription
   if (isCurrentPlan && activeSubscription?.cancelAtPeriodEnd) {
     return (
       <Button
@@ -104,7 +106,7 @@ export default function CreateSubscriptionButton({
     );
   }
 
-  // Si c'est le plan actuel (non annulé), désactiver le bouton
+  // If it's the current plan (not cancelled), disable the button
   if (isCurrentPlan) {
     return (
       <Button variant="outline" className="w-full" disabled>

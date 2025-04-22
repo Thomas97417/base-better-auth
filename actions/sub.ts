@@ -50,7 +50,8 @@ export async function getActiveSubscription(): Promise<{
 
 export async function updateExistingSubscription(
   subId: string,
-  switchToPriceId: string
+  switchToPriceId: string,
+  previousPlanName?: string
 ): Promise<{ status: boolean; message: string }> {
   // Check if the user is logged in
   const session = await auth.api.getSession({ headers: await headers() });
@@ -78,7 +79,6 @@ export async function updateExistingSubscription(
 
     // Get the price details to know which plan it corresponds to
     const price = await stripeClient.prices.retrieve(switchToPriceId);
-    console.log("price", price);
     const plan = PLANS.find((p) => p.priceId === price.id);
     if (!plan) {
       return {
@@ -195,7 +195,13 @@ export async function updateExistingSubscription(
     });
 
     //Update the user tokens
-    await creditTokensForSubscription(session.user.id, planName);
+    console.log("planName", planName);
+    console.log("previousPlanName", previousPlanName);
+    await creditTokensForSubscription(
+      session.user.id,
+      planName,
+      previousPlanName
+    );
 
     return {
       status: true,
