@@ -157,7 +157,7 @@ export async function useTokens(
   return updatedTokens;
 }
 
-export async function getTokenInfo() {
+export async function getTokenInfo(userId?: string) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -167,12 +167,20 @@ export async function getTokenInfo() {
   }
 
   try {
+    // If userId is provided, check if the current user is an admin
+    if (userId && session.user.role !== "admin") {
+      throw new Error("Unauthorized: Admin access required");
+    }
+
+    // Use either the provided userId (for admin) or the current user's id
+    const targetUserId = userId || session.user.id;
+
     const userTokens = await db.userTokens.findFirst({
-      where: { userId: session.user.id },
+      where: { userId: targetUserId },
       include: {
         transactions: {
           orderBy: { createdAt: "desc" },
-          take: 10,
+          take: 20,
         },
       },
     });

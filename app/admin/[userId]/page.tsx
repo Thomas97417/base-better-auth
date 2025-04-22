@@ -1,34 +1,28 @@
-"use client";
-
 import BackButton from "@/components/admin/BackButton";
 import UserSessions from "@/components/admin/UserSessions";
+import UserTokens from "@/components/admin/UserTokens";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useUsers } from "@/hooks/useUsers";
+import { db } from "@/lib/prisma";
 import {
   Ban,
   Calendar,
   CheckCircle,
-  Loader2,
   Mail,
   Shield,
   UserRound,
 } from "lucide-react";
-import { useParams } from "next/navigation";
 
-export default function UserDetailsPage() {
-  const { users, isLoading } = useUsers();
-  const { userId } = useParams();
-  const user = users?.find((u) => u.id === userId);
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <Loader2 className="animate-spin" />
-      </div>
-    );
-  }
+export default async function UserDetailsPage({
+  params,
+}: {
+  params: { userId: string };
+}) {
+  const { userId } = await params;
+  const user = await db.user.findUnique({
+    where: { id: userId },
+  });
 
   if (!user) {
     return (
@@ -155,6 +149,9 @@ export default function UserDetailsPage() {
 
         {/* Sessions Card */}
         <UserSessions userId={user.id} />
+
+        {/* Tokens Information */}
+        <UserTokens userId={user.id} />
       </div>
     </div>
   );
