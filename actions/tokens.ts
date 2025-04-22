@@ -7,7 +7,10 @@ import { PLANS } from "@/utils/constants";
 import { Prisma } from "@prisma/client";
 import { cookies, headers } from "next/headers";
 
-export async function creditTokensForSubscriptionAction(planName: string) {
+export async function creditTokensForSubscriptionAction(
+  planName: string,
+  previousPlanName?: string
+) {
   const cookieStore = cookies();
   const sessionToken = (await cookieStore).get("session")?.value;
 
@@ -24,20 +27,74 @@ export async function creditTokensForSubscriptionAction(planName: string) {
     throw new Error("Invalid session");
   }
 
-  return creditTokensForSubscription(session.userId, planName);
+  return creditTokensForSubscription(
+    session.userId,
+    planName,
+    previousPlanName
+  );
 }
 
 export async function creditTokensForSubscription(
   userId: string,
-  planName: string
+  planName: string,
+  previousPlanName?: string
 ) {
   const plan = PLANS.find((p) => p.name === planName);
   if (!plan) throw new Error("Plan not found");
 
   const tokensToCredit = plan.limits.tokens;
-  console.log("tokensToCredit", tokensToCredit);
 
-  // Mise à jour ou création du solde de tokens
+  // Si c'est un upgrade, calculer la différence de tokens
+  if (previousPlanName) {
+    const previousPlan = PLANS.find((p) => p.name === previousPlanName);
+    if (previousPlan) {
+      const tokenDifference = tokensToCredit - previousPlan.limits.tokens;
+      console.log("tokenDifference for upgrade", tokenDifference);
+
+      // Si la différence est négative ou nulle, ne pas créditer de tokens
+      if (tokenDifference <= 0) return null;
+
+      // Mise à jour du solde avec la différence de tokens
+      const userTokens = await db.userTokens.upsert({
+        where: { userId },
+        create: {
+          userId,
+          balance: tokenDifference,
+          transactions: {
+            create: {
+              amount: tokenDifference,
+              action: "subscription_upgrade",
+              metadata: {
+                planName,
+                previousPlanName,
+                type: "upgrade_credit",
+              },
+            },
+          },
+        },
+        update: {
+          balance: {
+            increment: tokenDifference,
+          },
+          transactions: {
+            create: {
+              amount: tokenDifference,
+              action: "subscription_upgrade",
+              metadata: {
+                planName,
+                previousPlanName,
+                type: "upgrade_credit",
+              },
+            },
+          },
+        },
+      });
+
+      return userTokens;
+    }
+  }
+
+  // Cas d'une nouvelle souscription
   const userTokens = await db.userTokens.upsert({
     where: { userId },
     create: {

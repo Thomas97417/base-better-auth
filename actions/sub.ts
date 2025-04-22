@@ -6,6 +6,7 @@ import { PLANS } from "@/utils/constants";
 import { Subscription } from "@better-auth/stripe";
 import { headers } from "next/headers";
 import Stripe from "stripe";
+import { creditTokensForSubscription } from "./tokens";
 
 const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -193,8 +194,8 @@ export async function updateExistingSubscription(
       },
     });
 
-    // Update the user tokens
-    // await creditTokensForSubscription(session.user.id, planName);
+    //Update the user tokens
+    await creditTokensForSubscription(session.user.id, planName);
 
     return {
       status: true,

@@ -62,7 +62,10 @@ export default function CreateSubscriptionButton({
         } else {
           // Crédit des tokens pour la nouvelle souscription
           try {
-            await creditTokensForSubscriptionAction(plan.name);
+            await creditTokensForSubscriptionAction(
+              plan.name,
+              activeSubscription?.plan
+            );
             toast.success(
               "Subscription created and tokens credited successfully!"
             );
