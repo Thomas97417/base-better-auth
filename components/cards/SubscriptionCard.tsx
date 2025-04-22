@@ -1,16 +1,23 @@
 import { getActiveSubscription } from "@/actions/sub";
+import { getTokenInfo } from "@/actions/tokens";
 import { Badge } from "@/components/ui/badge";
 import CardWrapper from "@/components/ui/card-wrapper";
 import { Progress } from "@/components/ui/progress";
 import { PLANS } from "@/utils/constants";
-import { AlertCircle, Calendar, Check, Clock, Zap } from "lucide-react";
+import { formatNumber } from "@/utils/format";
 import {
-  default as SubscriptionActions,
-  default as SubscriptionActionsButtons,
-} from "./SubscriptionActions";
+  AlertCircle,
+  Calendar,
+  Check,
+  Clock,
+  History,
+  Zap,
+} from "lucide-react";
+import { default as SubscriptionActions } from "./SubscriptionActions";
 
 export async function SubscriptionCard() {
   const { subscription: activeSubscription } = await getActiveSubscription();
+  const tokenInfo = await getTokenInfo();
   const planName = activeSubscription?.plan;
 
   if (!activeSubscription) {
@@ -49,7 +56,7 @@ export async function SubscriptionCard() {
           </div>
 
           {/* Subscription Actions */}
-          <SubscriptionActionsButtons
+          <SubscriptionActions
             hasActiveSubscription={false}
             planName={planName ?? ""}
           />
@@ -70,10 +77,12 @@ export async function SubscriptionCard() {
     ? new Date(activeSubscription.periodEnd).toLocaleDateString()
     : "N/A";
 
-  // Handle usage statistics with safe defaults
-  const usedTokens = 0; // We'll need to implement this based on your actual usage tracking
+  // Handle token usage statistics
+  const usedTokens = tokenInfo.usedTotal;
+  const availableTokens = tokenInfo.balance;
   const maxTokens = currentPlan?.limits.tokens || 0;
   const tokenPercentage = Math.min((usedTokens / maxTokens) * 100, 100);
+  const recentTransactions = tokenInfo.recentTransactions;
 
   // Calculate days remaining if subscription is cancelled
   const daysRemaining =
@@ -141,31 +150,70 @@ export async function SubscriptionCard() {
           </div>
         </div>
 
-        {/* Usage Stats */}
-        <div className="space-y-4 p-4 bg-muted/30 rounded-lg">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Zap className="h-5 w-5 text-primary" />
-              <span className="font-medium">Tokens Usage</span>
+        {/* Token Usage Stats */}
+        <div className="space-y-4">
+          {/* Monthly Token Usage */}
+          <div className="p-4 bg-muted/30 rounded-lg space-y-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <Zap className="h-5 w-5 text-primary" />
+                <span className="font-medium">Monthly Token Usage</span>
+              </div>
+              <span className="text-sm text-muted-foreground">
+                {formatNumber(usedTokens)} / {formatNumber(maxTokens)}
+              </span>
             </div>
-            <span className="text-sm text-muted-foreground">
-              {usedTokens.toLocaleString()} / {maxTokens.toLocaleString()}
-            </span>
+            <Progress value={tokenPercentage} className="h-2" />
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-muted-foreground">
+                {tokenPercentage >= 80 ? (
+                  <span className="text-yellow-500 font-medium">
+                    You are approaching your token limit
+                  </span>
+                ) : (
+                  <span>
+                    {Math.round(100 - tokenPercentage)}% of monthly tokens
+                    remaining
+                  </span>
+                )}
+              </span>
+              <span className="font-medium">
+                {formatNumber(availableTokens)} tokens available
+              </span>
+            </div>
           </div>
-          <Progress value={tokenPercentage} className="h-2" />
-          <p className="text-sm text-muted-foreground">
-            {tokenPercentage >= 80 ? (
-              <span className="text-yellow-500">
-                You are approaching your token limit. Consider upgrading your
-                plan.
-              </span>
-            ) : (
-              <span>
-                {Math.round(100 - tokenPercentage)}% of your monthly tokens
-                remaining
-              </span>
-            )}
-          </p>
+
+          {/* Recent Token Transactions */}
+          {recentTransactions.length > 0 && (
+            <div className="p-4 bg-muted/30 rounded-lg space-y-3">
+              <div className="flex items-center gap-2 mb-3">
+                <History className="h-5 w-5 text-primary" />
+                <span className="font-medium">Recent Token Activity</span>
+              </div>
+              <div className="space-y-2">
+                {recentTransactions.slice(0, 3).map((transaction) => (
+                  <div
+                    key={transaction.id}
+                    className="flex justify-between items-center text-sm"
+                  >
+                    <span className="text-muted-foreground capitalize">
+                      {transaction.action.replace(/_/g, " ")}
+                    </span>
+                    <span
+                      className={
+                        transaction.amount > 0
+                          ? "text-green-500 font-medium"
+                          : "text-red-500 font-medium"
+                      }
+                    >
+                      {transaction.amount > 0 ? "+" : ""}
+                      {formatNumber(transaction.amount)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Plan Features */}
