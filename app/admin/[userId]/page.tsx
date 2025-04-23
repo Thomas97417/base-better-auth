@@ -115,7 +115,7 @@ export default async function UserDetailsPage({
                 <span>Joined on</span>
               </div>
               <p className="font-medium">
-                {new Date(user.createdAt).toLocaleDateString(undefined, {
+                {new Date(user.createdAt).toLocaleDateString("en-US", {
                   weekday: "long",
                   year: "numeric",
                   month: "long",

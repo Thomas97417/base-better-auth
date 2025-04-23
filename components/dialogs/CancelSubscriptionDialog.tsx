@@ -29,7 +29,7 @@ export default function CancelSubscriptionDialog({
     try {
       setIsLoading(true);
       const { data, error } = await authClient.subscription.cancel({
-        returnUrl: "/",
+        returnUrl: "/dashboard",
       });
       console.log(data, error);
       if (error) {

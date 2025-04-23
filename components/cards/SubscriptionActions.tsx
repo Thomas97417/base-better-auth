@@ -30,7 +30,7 @@ export default function SubscriptionActionsButtons({
 
   if (!hasActiveSubscription) {
     return (
-      <Button className="flex-1" asChild>
+      <Button className="flex" asChild>
         <Link href="/plans">
           View Plans
           <CreditCard className="ml-2 h-4 w-4" />

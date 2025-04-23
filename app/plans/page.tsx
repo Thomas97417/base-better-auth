@@ -81,7 +81,7 @@ export default async function Plans() {
           return (
             <Card
               key={plan.name}
-              className={`relative flex flex-col ${
+              className={`relative flex flex-col last:md:col-span-2 last:lg:col-span-1 ${
                 isPopular
                   ? "border-primary shadow-lg scale-105 hover:scale-[1.06]"
                   : "hover:scale-[1.02]"
