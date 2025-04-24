@@ -26,7 +26,7 @@ async function TokenBalanceContent() {
               <div className="space-y-2">
                 {tokenInfo.recentTransactions.map((tx) => (
                   <div key={tx.id} className="flex justify-between text-sm">
-                    <span>{tx.action}</span>
+                    <span>{tx.action.replace("_", " ")}</span>
                     <span
                       className={
                         tx.amount > 0 ? "text-green-600" : "text-red-600"

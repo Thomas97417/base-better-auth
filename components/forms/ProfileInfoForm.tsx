@@ -11,7 +11,7 @@ import { UserType } from "@/utils/types/UserType";
 import { ProfileInformationSchema } from "@/utils/zod/profile-information-schema";
 import { Subscription } from "@better-auth/stripe";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Shield, Star, User, X } from "lucide-react";
+import { Loader2, Plus, Shield, Sparkles, Star, User, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -120,130 +120,158 @@ export default function ProfileInfoForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Profile Image Section */}
-        <div className="flex flex-col items-start space-y-4 mb-8">
-          <div className="relative">
+        <div className="flex flex-col items-start space-y-4">
+          <div className="flex items-center gap-6">
             {/* Image Container */}
-            <div className="relative w-16 h-16 group/image">
-              {imagePreview ? (
-                <div className="w-full h-full overflow-hidden">
-                  <Image
-                    src={imagePreview}
-                    alt="Profile preview"
-                    fill
-                    className="rounded-full object-cover"
+            <div className="relative">
+              <div className="relative w-20 h-20">
+                {imagePreview ? (
+                  <div className="w-full h-full overflow-hidden">
+                    <Image
+                      src={imagePreview}
+                      alt="Profile preview"
+                      fill
+                      className="rounded-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <Avatar
+                    src={user?.image || null}
+                    fullName={user?.fullName || null}
+                    size={80}
                   />
-                </div>
-              ) : (
-                <Avatar
-                  src={user?.image || null}
-                  fullName={user?.fullName || null}
-                  size={64}
-                />
-              )}
+                )}
 
-              {/* Overlay with plus button */}
-              <label
-                htmlFor="profile-image"
-                className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover/image:opacity-100 transition-opacity cursor-pointer"
+                {/* Overlay with plus button */}
+                <label
+                  htmlFor="profile-image"
+                  className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
+                >
+                  <Plus className="w-6 h-6 text-white" />
+                  <Input
+                    id="profile-image"
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    disabled={loading}
+                  />
+                </label>
+
+                {/* Delete Button */}
+                {imagePreview && imagePreview !== user?.image && (
+                  <div className="absolute -top-2 -right-2">
+                    <button
+                      type="button"
+                      className="p-1.5 bg-white dark:bg-gray-800 border rounded-full shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 hover:cursor-pointer transition-colors"
+                      onClick={resetImage}
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Badges Column */}
+            <div className="flex flex-col gap-2">
+              <Badge
+                variant="default"
+                className="flex items-center gap-1.5 px-2.5 py-1"
               >
-                <Plus className="w-6 h-6 text-white" />
-                <Input
-                  id="profile-image"
-                  type="file"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  disabled={loading}
-                />
-              </label>
-
-              {/* Delete Button */}
-              {imagePreview && imagePreview !== user?.image && (
-                <div className="absolute -top-2 -right-2 group/delete">
-                  <button
-                    type="button"
-                    className="p-1 bg-white dark:bg-gray-800 rounded-full shadow-md group-hover/delete:bg-gray-100 dark:group-hover/delete:bg-gray-700 hover:cursor-pointer"
-                    onClick={resetImage}
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
+                {user?.role === "admin" ? (
+                  <Shield className="w-3.5 h-3.5" />
+                ) : (
+                  <User className="w-3.5 h-3.5" />
+                )}
+                {user?.role.charAt(0).toUpperCase() + user?.role.slice(1)}
+              </Badge>
+              {activeSubscription ? (
+                <Badge
+                  variant="outline"
+                  className="flex items-center gap-1.5 px-2.5 py-1"
+                >
+                  <Star className="w-3.5 h-3.5" />
+                  {activeSubscription.plan.charAt(0).toUpperCase() +
+                    activeSubscription.plan.slice(1)}
+                </Badge>
+              ) : (
+                <Badge
+                  variant="outline"
+                  className="flex items-center gap-1.5 px-2.5 py-1"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  Free
+                </Badge>
               )}
             </div>
           </div>
-
-          {/* Badges Row */}
-          <div className="flex flex-wrap gap-2 items-center">
-            <Badge
-              variant="default"
-              className="flex items-center gap-1 px-2 py-0.5"
-            >
-              {user?.role === "admin" ? (
-                <Shield className="w-3 h-3" />
-              ) : (
-                <User className="w-3 h-3" />
-              )}
-              {user?.role.charAt(0).toUpperCase() + user?.role.slice(1)}
-            </Badge>
-            {activeSubscription && (
-              <Badge
-                variant="outline"
-                className="flex items-center gap-1 px-2 py-0.5"
-              >
-                <Star className="w-3 h-3" />
-                {activeSubscription.plan.charAt(0).toUpperCase() +
-                  activeSubscription.plan.slice(1)}
-              </Badge>
-            )}
-          </div>
         </div>
 
-        {/* Name Field */}
-        <FormField
-          control={form.control}
-          name="fullName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Your name" disabled={loading} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="space-y-6">
+          {/* Name Field */}
+          <FormField
+            control={form.control}
+            name="fullName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-foreground">Name</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Your name"
+                    disabled={loading}
+                    className="bg-background"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* Email Field */}
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input
-                  type="email"
-                  placeholder="your@email.com"
-                  disabled={loading}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          {/* Email Field */}
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-foreground">Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="your@email.com"
+                    disabled={loading}
+                    className="bg-background"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-        <FormError message={error} />
-        <FormSuccess message={success} />
+        {/* Fixed height container for error/success messages */}
+        <div className="h-[48px] flex flex-col justify-center">
+          <FormError message={error} />
+          <FormSuccess message={success} />
+        </div>
 
         {/* Save Button */}
         <div className="flex justify-end">
           <Button
             type="submit"
             disabled={loading}
-            className="hover:cursor-pointer"
+            className="hover:cursor-pointer px-6"
           >
-            {loading ? "Saving..." : "Save Changes"}
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving Changes
+              </>
+            ) : (
+              "Save Changes"
+            )}
           </Button>
         </div>
       </form>
