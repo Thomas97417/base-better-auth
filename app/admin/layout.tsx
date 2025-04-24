@@ -9,9 +9,9 @@ export default async function DashboardLayout({
   const user = await getUser();
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col gap-4">
       <Navbar user={user} />
-      <div className="flex-1 flex flex-col pb-12 px-4 sm:px-6 lg:px-8 bg-background">
+      <div className="flex flex-col px-4 sm:px-6 lg:px-8 bg-background">
         {children}
       </div>
     </div>

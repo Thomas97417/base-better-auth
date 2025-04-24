@@ -14,14 +14,14 @@ import { PLANS } from "@/utils/constants";
 import { CalendarOff, Check, Clock, Zap } from "lucide-react";
 import Link from "next/link";
 
-export default async function Plans() {
+export default async function PlansPage() {
   const { subscription: activeSubscription } = await getActiveSubscription();
   const currentPlan = activeSubscription
     ? PLANS.find((p) => p.name === activeSubscription.plan)
     : null;
 
   return (
-    <div className="container mx-auto my-auto px-4 py-16">
+    <div className="max-w-6xl mx-auto px-4 pt-8 pb-8">
       <div className="text-center mb-16">
         <h1 className="text-4xl font-bold mb-4">
           {activeSubscription ? "Upgrade Your Plan" : "Choose Your Plan"}

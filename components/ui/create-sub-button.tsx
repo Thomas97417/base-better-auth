@@ -125,7 +125,7 @@ export default function CreateSubscriptionButton({
       <>
         <Button
           variant="outline"
-          className="w-full hover:cursor-pointer group border-destructive/30 hover:border-destructive hover:bg-destructive/10 hover:text-destructive text-destructive/80"
+          className="w-full hover:cursor-pointer group border-destructive/30 hover:border-destructive hover:bg-destructive/10 hover:text-destructive text-destructive/80 dark:text-destructive/60 dark:hover:text-destructive dark:hover:bg-destructive/10 dark:hover:border-destructive"
           onClick={() => setIsCancelDialogOpen(true)}
         >
           <XCircle className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
@@ -145,7 +145,7 @@ export default function CreateSubscriptionButton({
     return (
       <Button
         variant="outline"
-        className="w-full hover:cursor-pointer group bg-transparent border-yellow-500/30 hover:border-yellow-500 hover:bg-yellow-500/20 hover:text-yellow-600 text-yellow-500/80"
+        className="w-full hover:cursor-pointer group bg-transparent border-yellow-500/30 hover:border-yellow-500 hover:bg-yellow-500/20 hover:text-yellow-600 text-yellow-500/80 dark:text-yellow-500/60 dark:hover:text-yellow-500 dark:hover:bg-yellow-500/20 dark:hover:border-yellow-500"
         onClick={handleSubscriptionChange}
         disabled={loading}
       >
@@ -171,10 +171,10 @@ export default function CreateSubscriptionButton({
       className={`w-full hover:cursor-pointer group ${
         isPopular
           ? activeSubscription
-            ? "bg-transparent border-primary/30 hover:border-primary hover:bg-primary/20 hover:text-primary text-primary/80"
+            ? "bg-transparent border-primary/30 hover:border-primary hover:bg-primary/20 hover:text-primary text-primary/80 dark:text-primary/60 dark:hover:text-primary dark:hover:bg-primary/20 dark:hover:border-primary"
             : "bg-primary hover:bg-primary/10 hover:text-primary transition-all duration-300"
           : activeSubscription
-          ? "bg-transparent border-primary/30 hover:border-primary hover:bg-primary/20 hover:text-primary text-primary/80"
+          ? "bg-transparent border-primary/30 hover:border-primary hover:bg-primary/20 hover:text-primary text-primary/80 dark:text-primary/60 dark:hover:text-primary dark:hover:bg-primary/20 dark:hover:border-primary"
           : "hover:bg-primary/10 hover:text-primary transition-all duration-300"
       }`}
       variant={activeSubscription ? "outline" : "default"}

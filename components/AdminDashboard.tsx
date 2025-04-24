@@ -4,7 +4,7 @@ import ListUsers from "@/components/admin/ListUsers";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useUsers } from "@/hooks/useUsers";
 import { UserType } from "@/utils/types/UserType";
-import { LucideIcon, UserCheck, Users, UserX } from "lucide-react";
+import { LucideIcon, ShieldCheck, UserCheck, Users, UserX } from "lucide-react";
 
 interface AdminDashboardProps {
   user: UserType;
@@ -50,11 +50,22 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
   ];
 
   return (
-    <div className="container mx-auto py-8 space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Administration</h1>
-        <div className="hidden xs:block text-sm text-muted-foreground">
-          Connected as {user.fullName}
+    <div className="w-full px-4 max-w-5xl mx-auto space-y-8">
+      {/* Header */}
+      <div className="py-8">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="p-2 rounded-full bg-primary/10">
+            <ShieldCheck className="w-5 h-5 text-primary" />
+          </div>
+          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        </div>
+        <div className="flex justify-between items-center">
+          <p className="text-muted-foreground">
+            Manage users, view statistics and monitor system activity.
+          </p>
+          <div className="hidden xs:block text-sm text-muted-foreground">
+            Connected as {user.fullName}
+          </div>
         </div>
       </div>
 

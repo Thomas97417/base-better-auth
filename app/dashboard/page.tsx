@@ -12,7 +12,7 @@ export default async function Dashboard() {
 
   return (
     <div className="flex w-full">
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 w-full">
+      <div className="max-w-5xl mx-auto py-6 sm:px-6 lg:px-8 w-full">
         {/* Welcome Card */}
         <CardWrapper
           cardTitle="Welcome Back!"

@@ -6,7 +6,7 @@ import { User } from "lucide-react";
 export default async function ProfilePage() {
   const user = await getUser();
   return (
-    <div className="w-full min-h-screen bg-background">
+    <div className="w-full bg-background">
       {/* Header */}
       <div>
         <div className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
