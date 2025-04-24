@@ -5,10 +5,16 @@ import { creditTokensForSubscriptionAction } from "@/actions/tokens";
 import { authClient } from "@/lib/auth-client";
 import { Plan } from "@/utils/types/PlanType";
 import { Subscription } from "@better-auth/stripe";
-import { RotateCcw } from "lucide-react";
+import {
+  ArrowDownCircle,
+  ArrowUpCircle,
+  RotateCcw,
+  XCircle,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import CancelSubscriptionDialog from "../dialogs/CancelSubscriptionDialog";
 import { Button } from "./button";
 
 interface CreateSubscriptionButtonProps {
@@ -28,6 +34,7 @@ export default function CreateSubscriptionButton({
 }: CreateSubscriptionButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
 
   const handleSubscriptionChange = async () => {
     console.log("activeSubscription", activeSubscription);
@@ -90,7 +97,7 @@ export default function CreateSubscriptionButton({
     return (
       <Button
         onClick={handleSubscriptionChange}
-        className="w-full bg-primary/10 border-primary text-primary hover:bg-primary hover:text-primary-foreground hover:cursor-pointer"
+        className="w-full hover:cursor-pointer group bg-transparent border-primary/30 hover:border-primary hover:bg-primary/20 text-primary/80 hover:text-primary"
         variant="outline"
         disabled={loading}
       >
@@ -98,20 +105,34 @@ export default function CreateSubscriptionButton({
           "Processing..."
         ) : (
           <>
-            <RotateCcw className="mr-2 h-4 w-4" />
-            Resume Subscription
+            <RotateCcw className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
+            Resume {plan.name.charAt(0).toUpperCase() + plan.name.slice(1)}{" "}
+            Subscription
           </>
         )}
       </Button>
     );
   }
 
-  // If it's the current plan (not cancelled), disable the button
+  // If it's the current plan (not cancelled), show cancel button
   if (isCurrentPlan) {
     return (
-      <Button variant="outline" className="w-full" disabled>
-        Current Plan
-      </Button>
+      <>
+        <Button
+          variant="outline"
+          className="w-full hover:cursor-pointer group border-destructive/30 hover:border-destructive hover:bg-destructive/10 hover:text-destructive text-destructive/80"
+          onClick={() => setIsCancelDialogOpen(true)}
+        >
+          <XCircle className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
+          Cancel Current Plan
+        </Button>
+
+        <CancelSubscriptionDialog
+          isOpen={isCancelDialogOpen}
+          onClose={() => setIsCancelDialogOpen(false)}
+          planName={plan.name}
+        />
+      </>
     );
   }
 
@@ -119,15 +140,19 @@ export default function CreateSubscriptionButton({
     return (
       <Button
         variant="outline"
-        className="w-full text-yellow-600 hover:text-yellow-700 hover:cursor-pointer"
+        className="w-full hover:cursor-pointer group bg-transparent border-yellow-500/30 hover:border-yellow-500 hover:bg-yellow-500/20 hover:text-yellow-600 text-yellow-500/80"
         onClick={handleSubscriptionChange}
         disabled={loading}
       >
-        {loading
-          ? "Processing..."
-          : `Downgrade to ${
-              plan.name.charAt(0).toUpperCase() + plan.name.slice(1)
-            }`}
+        {loading ? (
+          "Processing..."
+        ) : (
+          <>
+            <ArrowDownCircle className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
+            Downgrade to{" "}
+            {plan.name.charAt(0).toUpperCase() + plan.name.slice(1)}
+          </>
+        )}
       </Button>
     );
   }
@@ -135,17 +160,34 @@ export default function CreateSubscriptionButton({
   return (
     <Button
       onClick={handleSubscriptionChange}
-      className={`w-full hover:cursor-pointer ${
-        isPopular ? "bg-primary hover:bg-primary/90" : ""
+      className={`w-full hover:cursor-pointer group ${
+        isPopular
+          ? activeSubscription
+            ? "bg-transparent border-primary/30 hover:border-primary hover:bg-primary/20 hover:text-primary text-primary/80"
+            : "bg-primary hover:bg-primary/90"
+          : activeSubscription
+          ? "bg-transparent border-primary/30 hover:border-primary hover:bg-primary/20 hover:text-primary text-primary/80"
+          : ""
       }`}
+      variant={activeSubscription ? "outline" : "default"}
       disabled={loading}
     >
       {loading ? (
         "Processing..."
       ) : (
         <>
-          {activeSubscription ? "Upgrade to " : "Get Started with "}
-          {plan.name.charAt(0).toUpperCase() + plan.name.slice(1)}
+          {activeSubscription ? (
+            <>
+              <ArrowUpCircle className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
+              Upgrade to{" "}
+              {plan.name.charAt(0).toUpperCase() + plan.name.slice(1)}
+            </>
+          ) : (
+            <>
+              Get Started with{" "}
+              {plan.name.charAt(0).toUpperCase() + plan.name.slice(1)}
+            </>
+          )}
         </>
       )}
     </Button>

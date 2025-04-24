@@ -86,7 +86,9 @@ export default async function Plans() {
                   ? "border-primary shadow-lg scale-105 hover:scale-[1.06]"
                   : "hover:scale-[1.02]"
               } transition-transform duration-200 ${
-                isCurrentPlan ? "border-primary/50 bg-primary/5" : ""
+                isCurrentPlan
+                  ? "border-primary/50 bg-primary/5 scale-105 hover:scale-[1.06]"
+                  : ""
               }`}
             >
               {isPopular && !isCurrentPlan && (
@@ -152,7 +154,7 @@ export default async function Plans() {
           asChild
           className="hover:cursor-pointer hover:bg-primary hover:text-primary-foreground"
         >
-          <Link href="/plans">View FAQ</Link>
+          <Link href="/plans/faq">View FAQ</Link>
         </Button>
       </div>
     </div>
