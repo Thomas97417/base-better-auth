@@ -4,10 +4,17 @@ import ListUsers from "@/components/admin/ListUsers";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useUsers } from "@/hooks/useUsers";
 import { UserType } from "@/utils/types/UserType";
-import { UserCheck, Users, UserX } from "lucide-react";
+import { LucideIcon, UserCheck, Users, UserX } from "lucide-react";
 
 interface AdminDashboardProps {
   user: UserType;
+}
+
+interface StatCardProps {
+  title: string;
+  value: number;
+  description: string;
+  icon: LucideIcon;
 }
 
 export default function AdminDashboard({ user }: AdminDashboardProps) {
@@ -21,55 +28,57 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
   const bannedPercentage =
     totalUsers > 0 ? Math.round((bannedUsers / totalUsers) * 100) : 0;
 
+  const stats: StatCardProps[] = [
+    {
+      title: "Total Users",
+      value: totalUsers,
+      description: "Active users",
+      icon: Users,
+    },
+    {
+      title: "Verified Users",
+      value: verifiedUsers,
+      description: `${verifiedPercentage}% of total users`,
+      icon: UserCheck,
+    },
+    {
+      title: "Banned Users",
+      value: bannedUsers,
+      description: `${bannedPercentage}% of total users`,
+      icon: UserX,
+    },
+  ];
+
   return (
     <div className="container mx-auto py-8 space-y-8">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Administration</h1>
-        <div className="text-sm text-muted-foreground">
+        <div className="hidden xs:block text-sm text-muted-foreground">
           Connected as {user.fullName}
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalUsers}</div>
-            <p className="text-xs text-muted-foreground">Active users</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Verified Users
-            </CardTitle>
-            <UserCheck className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{verifiedUsers}</div>
-            <p className="text-xs text-muted-foreground">
-              {verifiedPercentage}% of total users
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Banned Users</CardTitle>
-            <UserX className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{bannedUsers}</div>
-            <p className="text-xs text-muted-foreground">
-              {bannedPercentage}% of total users
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-4 grid-cols-1 xs:grid-cols-2 md:grid-cols-3">
+        {stats.map((stat) => (
+          <Card
+            key={stat.title}
+            className="last:xs:col-span-2 last:md:col-span-1"
+          >
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {stat.title}
+              </CardTitle>
+              <stat.icon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stat.value}</div>
+              <p className="text-xs text-muted-foreground">
+                {stat.description}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Users Table Section */}

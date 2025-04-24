@@ -47,6 +47,33 @@ export async function creditTokensForSubscription(
       // Si la différence est négative ou nulle, ne pas créditer de tokens
       if (tokenDifference <= 0) return null;
 
+      // Vérifier si un crédit similaire a déjà été effectué dans les 30 derniers jours
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+      const recentUpgrade = await db.tokenTransaction.findFirst({
+        where: {
+          userId,
+          action: "subscription_upgrade",
+          amount: tokenDifference,
+          metadata: {
+            path: ["planName"],
+            equals: planName,
+          },
+          createdAt: {
+            gte: thirtyDaysAgo,
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      if (recentUpgrade) {
+        console.log("Recent similar upgrade found, skipping token credit");
+        return null;
+      }
+
       // Mise à jour du solde avec la différence de tokens
       const userTokens = await db.userTokens.upsert({
         where: { userId },
@@ -61,6 +88,7 @@ export async function creditTokensForSubscription(
                 planName,
                 previousPlanName: previousPlan.name,
                 type: "upgrade_credit",
+                upgradeDate: new Date().toISOString(),
               },
             },
           },
@@ -77,6 +105,7 @@ export async function creditTokensForSubscription(
                 planName,
                 previousPlanName: previousPlan.name,
                 type: "upgrade_credit",
+                upgradeDate: new Date().toISOString(),
               },
             },
           },
@@ -88,7 +117,6 @@ export async function creditTokensForSubscription(
   }
 
   // Case of a new subscription
-
   const userTokens = await db.userTokens.upsert({
     where: { userId },
     create: {
@@ -98,7 +126,11 @@ export async function creditTokensForSubscription(
         create: {
           amount: tokensToCredit,
           action: "subscription_credit",
-          metadata: { planName, type: "initial_credit" },
+          metadata: {
+            planName,
+            type: "initial_credit",
+            creditDate: new Date().toISOString(),
+          },
         },
       },
     },
@@ -110,7 +142,11 @@ export async function creditTokensForSubscription(
         create: {
           amount: tokensToCredit,
           action: "subscription_credit",
-          metadata: { planName, type: "renewal_credit" },
+          metadata: {
+            planName,
+            type: "renewal_credit",
+            creditDate: new Date().toISOString(),
+          },
         },
       },
     },

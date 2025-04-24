@@ -60,10 +60,10 @@ export default function ListUsers() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <Input
           placeholder="Search users..."
-          className="max-w-sm"
+          className="md:max-w-sm max-w-full"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -74,11 +74,13 @@ export default function ListUsers() {
           className="hover:cursor-pointer"
         >
           <UserX
-            className={cn("mr-2 h-4 w-4", showBannedOnly && "text-white")}
+            className={cn("xs:mr-2 h-4 w-4", showBannedOnly && "text-white")}
           />
-          {showBannedOnly
-            ? `Banned Users (${bannedCount})`
-            : "View Banned Users"}
+          <span className="hidden xs:block">
+            {showBannedOnly
+              ? `Banned Users (${bannedCount})`
+              : "View Banned Users"}
+          </span>
         </Button>
       </div>
 

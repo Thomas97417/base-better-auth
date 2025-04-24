@@ -11,10 +11,18 @@ import {
 import { useLogout } from "@/hooks/useLogout";
 import { cn } from "@/lib/utils";
 import { UserType } from "@/utils/types/UserType";
-import { CreditCard, Home, ShieldUser, SquareUser, User } from "lucide-react";
+import {
+  CreditCard,
+  Home,
+  Menu,
+  ShieldUser,
+  SquareUser,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "./theme/ThemeToggle";
+import { Button } from "./ui/button";
 import UserAvatar from "./ui/user-avatar";
 
 interface NavLinkProps {
@@ -43,11 +51,41 @@ function NavLink({ href, children, className }: NavLinkProps) {
 
 export default function Navbar({ user }: { user?: UserType }) {
   const handleLogout = useLogout();
+  const pathname = usePathname();
+
+  const navLinks = user
+    ? [
+        {
+          href: "/dashboard",
+          icon: <Home className="w-5 h-5" />,
+          label: "Dashboard",
+        },
+        {
+          href: "/profile",
+          icon: <SquareUser className="w-5 h-5" />,
+          label: "Profile",
+        },
+        {
+          href: "/plans",
+          icon: <CreditCard className="w-5 h-5" />,
+          label: "Plans",
+        },
+        ...(user.role === "admin"
+          ? [
+              {
+                href: "/admin",
+                icon: <ShieldUser className="w-5 h-5" />,
+                label: "Admin",
+              },
+            ]
+          : []),
+      ]
+    : [];
 
   return (
     <nav className="border-b bg-background">
       <div className="flex h-16 items-center px-4 max-w-7xl mx-auto">
-        <div className="flex items-center space-x-2 xs:space-x-6 flex-1">
+        <div className="flex items-center space-x-6 flex-1">
           {user ? (
             <>
               <Link
@@ -56,33 +94,55 @@ export default function Navbar({ user }: { user?: UserType }) {
               >
                 MyApp
               </Link>
-              <div className="flex space-x-1 xs:space-x-2 sm:space-x-6">
-                <NavLink href="/dashboard">
-                  <span className="flex items-center gap-1 xs:gap-2">
-                    <Home className="w-5 h-5" />
-                    <span className="hidden xs:block">Dashboard</span>
-                  </span>
-                </NavLink>
-                <NavLink href="/profile">
-                  <span className="flex items-center gap-1 xs:gap-2">
-                    <SquareUser className="w-5 h-5" />
-                    <span className="hidden xs:block">Profile</span>
-                  </span>
-                </NavLink>
-                <NavLink href="/plans">
-                  <span className="flex items-center gap-1 xs:gap-2">
-                    <CreditCard className="w-5 h-5" />
-                    <span className="hidden xs:block">Plans</span>
-                  </span>
-                </NavLink>
-                {user.role === "admin" && (
-                  <NavLink href="/admin">
-                    <span className="flex items-center gap-1 xs:gap-2">
-                      <ShieldUser className="w-5 h-5" />
-                      <span className="hidden xs:block">Admin</span>
+
+              {/* Mobile Navigation Dropdown */}
+              <div className="block xs:hidden">
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    className="flex items-center -m-2 hover:bg-accent rounded-md hover:cursor-pointer"
+                    asChild
+                  >
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="hover:cursor-pointer"
+                    >
+                      <Menu className="w-5 h-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    {navLinks.map((link) => (
+                      <DropdownMenuItem key={link.href} asChild>
+                        <Link
+                          href={link.href}
+                          className={cn(
+                            "w-full",
+                            pathname === link.href
+                              ? "text-primary"
+                              : "text-muted-foreground"
+                          )}
+                        >
+                          <span className="flex items-center gap-2">
+                            {link.icon}
+                            {link.label}
+                          </span>
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
+              {/* Desktop Navigation */}
+              <div className="hidden xs:flex justify-between xs:justify-start xs:space-x-6 flex-1 xs:flex-initial max-w-[300px] xs:max-w-none mx-4 xs:mx-0">
+                {navLinks.map((link) => (
+                  <NavLink key={link.href} href={link.href}>
+                    <span className="flex items-center gap-1">
+                      <span className="hidden sm:block">{link.icon}</span>
+                      <span className="">{link.label}</span>
                     </span>
                   </NavLink>
-                )}
+                ))}
               </div>
             </>
           ) : (
