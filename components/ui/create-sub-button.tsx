@@ -7,7 +7,9 @@ import { Plan } from "@/utils/types/PlanType";
 import { Subscription } from "@better-auth/stripe";
 import {
   ArrowDownCircle,
+  ArrowRightCircle,
   ArrowUpCircle,
+  Loader2,
   RotateCcw,
   XCircle,
 } from "lucide-react";
@@ -102,7 +104,10 @@ export default function CreateSubscriptionButton({
         disabled={loading}
       >
         {loading ? (
-          "Processing..."
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Processing
+          </>
         ) : (
           <>
             <RotateCcw className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
@@ -145,7 +150,10 @@ export default function CreateSubscriptionButton({
         disabled={loading}
       >
         {loading ? (
-          "Processing..."
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Processing
+          </>
         ) : (
           <>
             <ArrowDownCircle className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
@@ -164,16 +172,19 @@ export default function CreateSubscriptionButton({
         isPopular
           ? activeSubscription
             ? "bg-transparent border-primary/30 hover:border-primary hover:bg-primary/20 hover:text-primary text-primary/80"
-            : "bg-primary hover:bg-primary/90"
+            : "bg-primary hover:bg-primary/10 hover:text-primary transition-all duration-300"
           : activeSubscription
           ? "bg-transparent border-primary/30 hover:border-primary hover:bg-primary/20 hover:text-primary text-primary/80"
-          : ""
+          : "hover:bg-primary/10 hover:text-primary transition-all duration-300"
       }`}
       variant={activeSubscription ? "outline" : "default"}
       disabled={loading}
     >
       {loading ? (
-        "Processing..."
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Processing
+        </>
       ) : (
         <>
           {activeSubscription ? (
@@ -186,6 +197,7 @@ export default function CreateSubscriptionButton({
             <>
               Get Started with{" "}
               {plan.name.charAt(0).toUpperCase() + plan.name.slice(1)}
+              <ArrowRightCircle className="ml-2 h-4 w-4 transition-all group-hover:translate-x-1" />
             </>
           )}
         </>

@@ -99,7 +99,7 @@ export default function Navbar({ user }: { user?: UserType }) {
               <div className="block xs:hidden">
                 <DropdownMenu>
                   <DropdownMenuTrigger
-                    className="flex items-center -m-2 hover:bg-accent rounded-md hover:cursor-pointer"
+                    className="flex items-center -m-2 hover:bg-primary/25 rounded-md hover:cursor-pointer"
                     asChild
                   >
                     <Button

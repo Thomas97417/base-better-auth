@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, HelpCircle, MessageCircle } from "lucide-react";
+import { HelpCircle, MessageCircle } from "lucide-react";
 import Link from "next/link";
 
 const faqCategories = [
@@ -24,12 +24,12 @@ const faqCategories = [
       {
         question: "Can I change my plan later?",
         answer:
-          "Yes! You can upgrade or downgrade your plan at any time. When upgrading, you'll get immediate access to the new features, and we'll prorate your billing. When downgrading, the change will take effect at the start of your next billing cycle.",
+          "Yes! You can upgrade or downgrade your plan at any time. When upgrading, you'll pay immediately for the new plan and gain access to the new features right away, and we'll prorate your billing. When downgrading, the change will take effect at the start of your next billing cycle.",
       },
       {
-        question: "What payment methods do you accept?",
+        question: "What payment methods does the platform accept?",
         answer:
-          "We accept all major credit cards (Visa, MasterCard, American Express) and PayPal. For annual subscriptions, we can also accommodate bank transfers - please contact our support team for details.",
+          "The platform accepts all major credit cards (Visa, MasterCard, American Express) and PayPal. For annual subscriptions, we can also accommodate bank transfers - please contact our support team for details.",
       },
     ],
   },
@@ -45,7 +45,7 @@ const faqCategories = [
       {
         question: "Do unused tokens roll over to the next month?",
         answer:
-          "No, tokens don't roll over. Your token balance resets at the beginning of each billing cycle to ensure consistent and predictable usage patterns.",
+          "Yes, unused tokens will roll over to the next month. This allows you to save tokens for future use.",
       },
       {
         question: "Can I track my token usage?",
@@ -75,32 +75,6 @@ const faqCategories = [
 export default function FAQPage() {
   return (
     <div className="container mx-auto px-4 py-16 max-w-5xl">
-      {/* Header Section */}
-      <div className="flex justify-between items-center mb-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="hover:bg-primary/5 -ml-4"
-          asChild
-        >
-          <Link href="/plans" className="gap-2">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Plans
-          </Link>
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="gap-2 hover:bg-primary/5"
-          asChild
-        >
-          <Link href="/contact">
-            <MessageCircle className="w-4 h-4" />
-            Contact Support
-          </Link>
-        </Button>
-      </div>
-
       {/* Title Section */}
       <div className="text-center mb-12">
         <div className="inline-block p-2 bg-primary/5 rounded-full mb-4">
@@ -110,7 +84,7 @@ export default function FAQPage() {
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
           Find answers to common questions about our services, billing, and
           features. Can&apos;t find what you&apos;re looking for?{" "}
-          <Link href="/contact" className="text-primary hover:underline">
+          <Link href="/plans/faq" className="text-primary hover:underline">
             Contact our support team
           </Link>
           .
@@ -147,7 +121,7 @@ export default function FAQPage() {
           Still have questions? We&apos;re here to help!
         </p>
         <Button asChild>
-          <Link href="/contact" className="gap-2">
+          <Link href="/plans/faq" className="gap-2">
             <MessageCircle className="w-4 h-4" />
             Contact Support
           </Link>
