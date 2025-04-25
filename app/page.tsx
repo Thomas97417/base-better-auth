@@ -1,65 +1,115 @@
+import { SubscriptionCard } from "@/components/cards/SubscriptionCard";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import CardWrapper from "@/components/ui/card-wrapper";
+import UserAvatar from "@/components/ui/user-avatar";
 import { getUser } from "@/lib/auth-session";
-import { ArrowRight } from "lucide-react";
+import { Activity, Settings, Shield, User } from "lucide-react";
 import Link from "next/link";
 
-export default async function Home() {
+export default async function Dashboard() {
   const user = await getUser();
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex w-full flex-col">
       <Navbar user={user} />
-      <div className="flex-1 flex flex-col items-center justify-center pb-12 px-4 sm:px-6 lg:px-8 bg-background">
-        <Card className="max-w-md w-full">
-          <CardHeader className="text-center space-y-2">
-            <CardTitle className="text-4xl font-extrabold">
-              Better Auth
-            </CardTitle>
-            <CardDescription className="text-lg">
-              A secure and modern authentication solution
-            </CardDescription>
-          </CardHeader>
+      <div className="max-w-5xl mx-auto py-6 sm:px-6 lg:px-8 w-full">
+        {/* Welcome Card */}
+        <CardWrapper
+          cardTitle="Welcome Back!"
+          cardDescription="Here's an overview of your account"
+          className="w-full mb-6"
+        >
+          <div className="flex items-center space-x-4">
+            <UserAvatar
+              src={user?.image || null}
+              fullName={user?.fullName || null}
+              size={64}
+            />
+            <div>
+              <h2 className="text-2xl font-bold">{user?.fullName || "User"}</h2>
+              <p className="text-muted-foreground">{user?.email}</p>
+            </div>
+          </div>
+        </CardWrapper>
 
-          <CardContent className="space-y-6">
+        {/* Subscription Card */}
+        <div className="mb-6">
+          <SubscriptionCard />
+        </div>
+
+        {/* Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Profile Card */}
+          <CardWrapper
+            cardTitle="Profile Settings"
+            cardDescription="Manage your personal information"
+            cardFooterLink="/profile"
+            cardFooterLinkTitle="Edit Profile"
+            className="w-full"
+          >
             <div className="space-y-4">
-              <Button asChild className="w-full" size="lg">
-                <Link
-                  href="/sign-in"
-                  className="flex items-center justify-center gap-2"
-                >
-                  Sign in to your account
-                  <ArrowRight className="w-4 h-4" />
+              <div className="flex items-center space-x-2">
+                <User className="w-5 h-5 text-primary" />
+                <span>Update your profile details</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Settings className="w-5 h-5 text-primary" />
+                <span>Customize your preferences</span>
+              </div>
+            </div>
+          </CardWrapper>
+
+          {/* Security Card */}
+          <CardWrapper
+            cardTitle="Security"
+            cardDescription="Manage your account security"
+            cardFooterLink="/profile/password"
+            cardFooterLinkTitle="Change Password"
+            className="w-full"
+          >
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Shield className="w-5 h-5 text-primary" />
+                <span>Update your password</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Activity className="w-5 h-5 text-primary" />
+                <span>View login activity</span>
+              </div>
+            </div>
+          </CardWrapper>
+
+          {/* Quick Actions Card */}
+          <CardWrapper
+            cardTitle="Quick Actions"
+            cardDescription="Common tasks and actions"
+            className="w-full"
+          >
+            <div className="space-y-4">
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                asChild
+              >
+                <Link href="profile">
+                  <User className="mr-2 h-4 w-4" />
+                  Edit Profile
                 </Link>
               </Button>
-
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-card text-muted-foreground">or</span>
-                </div>
-              </div>
-
-              <Button asChild variant="outline" className="w-full" size="lg">
-                <Link href="/sign-up">Create new account</Link>
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                asChild
+              >
+                <Link href="/profile/password">
+                  <Shield className="mr-2 h-4 w-4" />
+                  Change Password
+                </Link>
               </Button>
             </div>
-
-            <p className="text-center text-sm text-muted-foreground">
-              Experience secure authentication with modern features and a
-              seamless user experience.
-            </p>
-          </CardContent>
-        </Card>
+          </CardWrapper>
+        </div>
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ export default function ResetPasswordCard() {
       <div className="max-w-md mx-auto">
         <div className="mb-6">
           <Link
-            href="/sign-in"
+            href="/login/sign-in"
             className="text-sm text-muted-foreground hover:text-primary flex items-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -21,7 +21,7 @@ export default function ResetPasswordCard() {
         <CardWrapper
           cardTitle="Reset Password"
           cardDescription="Create a new password"
-          cardFooterLink="/sign-in"
+          cardFooterLink="/login/sign-in"
           cardFooterDescription="Remember your password?"
           cardFooterLinkTitle="Sign in"
         >

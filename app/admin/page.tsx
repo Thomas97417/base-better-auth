@@ -7,7 +7,7 @@ export default async function AdminPage() {
   const role = user?.role;
 
   if (role !== "admin") {
-    redirect("/dashboard");
+    redirect("/");
   }
 
   return <AdminDashboard user={user} />;

@@ -11,14 +11,7 @@ import {
 import { useLogout } from "@/hooks/useLogout";
 import { cn } from "@/lib/utils";
 import { UserType } from "@/utils/types/UserType";
-import {
-  CreditCard,
-  Home,
-  Menu,
-  ShieldUser,
-  SquareUser,
-  User,
-} from "lucide-react";
+import { CreditCard, Menu, ShieldUser, SquareUser, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "./theme/ThemeToggle";
@@ -56,11 +49,6 @@ export default function Navbar({ user }: { user?: UserType }) {
   const navLinks = user
     ? [
         {
-          href: "/dashboard",
-          icon: <Home className="w-5 h-5" />,
-          label: "Dashboard",
-        },
-        {
           href: "/profile",
           icon: <SquareUser className="w-5 h-5" />,
           label: "Profile",
@@ -89,7 +77,7 @@ export default function Navbar({ user }: { user?: UserType }) {
           {user ? (
             <>
               <Link
-                href="/dashboard"
+                href="/"
                 className="text-xl font-semibold hover:text-primary transition-colors"
               >
                 MyApp

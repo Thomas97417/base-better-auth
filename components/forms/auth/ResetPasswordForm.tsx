@@ -74,12 +74,14 @@ export default function ResetPasswordForm() {
           name="password"
           label="New Password"
           disabled={loading}
+          placeholder="Enter your new password"
         />
         <PasswordField
           control={form.control}
           name="confirmPassword"
           label="Confirm New Password"
           disabled={loading}
+          placeholder="Confirm your new password"
         />
         <FormError message={error} />
         <FormSuccess message={success} />

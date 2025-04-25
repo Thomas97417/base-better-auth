@@ -41,11 +41,14 @@ export default function ResumeSubscriptionDialog({
 
     try {
       setIsLoading(true);
-      const result = await updateExistingSubscription(subscriptionId, priceId);
+      const result = await updateExistingSubscription({
+        subId: subscriptionId,
+        switchToPriceId: priceId,
+      });
 
       if (result.status) {
         toast.success("Subscription resumed successfully");
-        router.push("/dashboard");
+        router.push("/");
         router.refresh();
         onClose();
       } else {

@@ -40,7 +40,7 @@ export default function SignInForm() {
         {
           email: values.email,
           password: values.password,
-          callbackURL: "/dashboard",
+          callbackURL: "/",
         },
         {
           onRequest: () => {
@@ -89,7 +89,7 @@ export default function SignInForm() {
             <div className="flex items-center justify-between">
               <FormLabel>Password</FormLabel>
               <Link
-                href="/forgot-password"
+                href="/login/forgot-password"
                 className="text-xs text-muted-foreground hover:text-primary"
               >
                 Forgot password?
@@ -139,7 +139,7 @@ export default function SignInForm() {
               onClick={async () => {
                 await signIn.social({
                   provider: "google",
-                  callbackURL: "/dashboard",
+                  callbackURL: "/",
                 });
               }}
             >
@@ -153,7 +153,7 @@ export default function SignInForm() {
               onClick={async () => {
                 await signIn.social({
                   provider: "github",
-                  callbackURL: "/dashboard",
+                  callbackURL: "/",
                 });
               }}
             >

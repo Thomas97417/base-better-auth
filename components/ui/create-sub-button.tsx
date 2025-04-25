@@ -53,7 +53,7 @@ export default function CreateSubscriptionButton({
 
         if (result.status) {
           toast.success(result.message || "Subscription updated successfully");
-          router.push("/dashboard");
+          router.push("/");
           router.refresh();
         } else {
           toast.error(result.message || "Failed to update subscription");
@@ -63,7 +63,7 @@ export default function CreateSubscriptionButton({
         // Handle new subscription
         const { error } = await authClient.subscription.upgrade({
           plan: plan.name,
-          successUrl: `${window.location.origin}/dashboard`,
+          successUrl: `${window.location.origin}`,
           cancelUrl: `${window.location.origin}/plans`,
         });
 
