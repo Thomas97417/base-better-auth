@@ -2,121 +2,154 @@
 
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/prisma";
+import {
+  TokenAction,
+  TokenInfo,
+  TokenMetadata,
+  TokenResponse,
+} from "@/types/tokens";
 import { PLANS } from "@/utils/constants";
-import { Prisma } from "@prisma/client";
+import { UseTokensSchema } from "@/utils/zod/tokens-schema";
 import { headers } from "next/headers";
 
+/**
+ * Credits tokens for a subscription change through the API
+ * @param planName - Name of the new plan
+ * @param previousPlanName - Optional name of the previous plan
+ * @returns Promise<TokenResponse>
+ */
 export async function creditTokensForSubscriptionAction(
   planName: string,
   previousPlanName?: string
-) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
+): Promise<TokenResponse> {
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
-    throw new Error("Unauthorized");
+    return {
+      status: false,
+      message: "Unauthorized",
+    };
   }
 
-  return creditTokensForSubscription(
-    session.user.id,
-    planName,
-    previousPlanName
-  );
+  try {
+    const result = await creditTokensForSubscription(
+      session.user.id,
+      planName,
+      previousPlanName
+    );
+    return {
+      status: true,
+      data: result
+        ? {
+            balance: result.balance,
+            usedTotal: result.usedTotal,
+            recentTransactions: [],
+          }
+        : undefined,
+    };
+  } catch (error) {
+    console.error("Error crediting tokens:", error);
+    return {
+      status: false,
+      message:
+        error instanceof Error ? error.message : "Failed to credit tokens",
+    };
+  }
 }
 
+/**
+ * Internal function to handle token crediting for subscription changes
+ */
+async function handleSubscriptionUpgrade(
+  userId: string,
+  tokenDifference: number,
+  metadata: TokenMetadata
+) {
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const recentUpgrade = await db.tokenTransaction.findFirst({
+    where: {
+      userId,
+      action: "subscription_upgrade" as TokenAction,
+      amount: tokenDifference,
+      metadata: {
+        path: ["planName"],
+        equals: metadata.planName,
+      },
+      createdAt: { gte: thirtyDaysAgo },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  if (recentUpgrade) {
+    return null;
+  }
+
+  return db.userTokens.upsert({
+    where: { userId },
+    create: {
+      userId,
+      balance: tokenDifference,
+      transactions: {
+        create: {
+          amount: tokenDifference,
+          action: "subscription_upgrade",
+          metadata: metadata,
+        },
+      },
+    },
+    update: {
+      balance: { increment: tokenDifference },
+      transactions: {
+        create: {
+          amount: tokenDifference,
+          action: "subscription_upgrade",
+          metadata,
+        },
+      },
+    },
+  });
+}
+
+/**
+ * Credits tokens based on subscription plan changes
+ */
 export async function creditTokensForSubscription(
   userId: string,
   planName: string,
   previousPlanName?: string
 ) {
   const plan = PLANS.find((p) => p.name === planName);
-  if (!plan) throw new Error("Plan not found");
+  if (!plan) {
+    throw new Error("Plan not found");
+  }
 
   const tokensToCredit = plan.limits.tokens;
-  console.log("tokensToCredit", tokensToCredit);
 
-  // If there is a previous plan, we need to calculate the difference in tokens
   if (previousPlanName) {
     const previousPlan = PLANS.find((p) => p.name === previousPlanName);
     if (previousPlan) {
       const tokenDifference = tokensToCredit - previousPlan.limits.tokens;
-      console.log("tokenDifference for upgrade", tokenDifference);
-
-      // Si la différence est négative ou nulle, ne pas créditer de tokens
       if (tokenDifference <= 0) return null;
 
-      // Vérifier si un crédit similaire a déjà été effectué dans les 30 derniers jours
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      const metadata: TokenMetadata = {
+        planName,
+        previousPlanName: previousPlan.name,
+        type: "upgrade_credit",
+        upgradeDate: new Date().toISOString(),
+      };
 
-      const recentUpgrade = await db.tokenTransaction.findFirst({
-        where: {
-          userId,
-          action: "subscription_upgrade",
-          amount: tokenDifference,
-          metadata: {
-            path: ["planName"],
-            equals: planName,
-          },
-          createdAt: {
-            gte: thirtyDaysAgo,
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-      });
-
-      if (recentUpgrade) {
-        console.log("Recent similar upgrade found, skipping token credit");
-        return null;
-      }
-
-      // Mise à jour du solde avec la différence de tokens
-      const userTokens = await db.userTokens.upsert({
-        where: { userId },
-        create: {
-          userId,
-          balance: tokenDifference,
-          transactions: {
-            create: {
-              amount: tokenDifference,
-              action: "subscription_upgrade",
-              metadata: {
-                planName,
-                previousPlanName: previousPlan.name,
-                type: "upgrade_credit",
-                upgradeDate: new Date().toISOString(),
-              },
-            },
-          },
-        },
-        update: {
-          balance: {
-            increment: tokenDifference,
-          },
-          transactions: {
-            create: {
-              amount: tokenDifference,
-              action: "subscription_upgrade",
-              metadata: {
-                planName,
-                previousPlanName: previousPlan.name,
-                type: "upgrade_credit",
-                upgradeDate: new Date().toISOString(),
-              },
-            },
-          },
-        },
-      });
-
-      return userTokens;
+      return handleSubscriptionUpgrade(userId, tokenDifference, metadata);
     }
   }
 
-  // Case of a new subscription
-  const userTokens = await db.userTokens.upsert({
+  const metadata: TokenMetadata = {
+    planName,
+    type: "initial_credit",
+    creditDate: new Date().toISOString(),
+  };
+
+  return db.userTokens.upsert({
     where: { userId },
     create: {
       userId,
@@ -125,42 +158,33 @@ export async function creditTokensForSubscription(
         create: {
           amount: tokensToCredit,
           action: "subscription_credit",
-          metadata: {
-            planName,
-            type: "initial_credit",
-            creditDate: new Date().toISOString(),
-          },
+          metadata,
         },
       },
     },
     update: {
-      balance: {
-        increment: tokensToCredit,
-      },
+      balance: { increment: tokensToCredit },
       transactions: {
         create: {
           amount: tokensToCredit,
           action: "subscription_credit",
-          metadata: {
-            planName,
-            type: "renewal_credit",
-            creditDate: new Date().toISOString(),
-          },
+          metadata: { ...metadata, type: "renewal_credit" },
         },
       },
     },
   });
-
-  return userTokens;
 }
 
-// Fonction pour utiliser des tokens
-export async function useTokens(
-  userId: string,
-  amount: number,
-  action: string,
-  metadata?: Prisma.InputJsonValue
-) {
+/**
+ * Uses tokens for a specific action
+ */
+export async function useTokens(userId: string, input: unknown) {
+  const validation = UseTokensSchema.safeParse(input);
+  if (!validation.success) {
+    throw new Error("Invalid input parameters");
+  }
+
+  const { amount, action, metadata } = validation.data;
   const userTokens = await db.userTokens.findUnique({
     where: { userId },
   });
@@ -169,16 +193,11 @@ export async function useTokens(
     throw new Error("Insufficient tokens");
   }
 
-  // Mise à jour du solde et enregistrement de la transaction
-  const updatedTokens = await db.userTokens.update({
+  return db.userTokens.update({
     where: { userId },
     data: {
-      balance: {
-        decrement: amount,
-      },
-      usedTotal: {
-        increment: amount,
-      },
+      balance: { decrement: amount },
+      usedTotal: { increment: amount },
       transactions: {
         create: {
           amount: -amount,
@@ -188,28 +207,19 @@ export async function useTokens(
       },
     },
   });
-
-  return updatedTokens;
 }
 
-export async function getTokenInfo(userId?: string) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
+/**
+ * Retrieves token information for a user
+ */
+export async function getTokenInfo(userId?: string): Promise<TokenInfo> {
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
     throw new Error("Unauthorized");
   }
 
   try {
-    // If userId is provided, check if the current user is an admin
-    if (userId && session.user.role !== "admin") {
-      throw new Error("Unauthorized: Admin access required");
-    }
-
-    // Use either the provided userId (for admin) or the current user's id
     const targetUserId = userId || session.user.id;
-
     const userTokens = await db.userTokens.findFirst({
       where: { userId: targetUserId },
       include: {
@@ -226,7 +236,7 @@ export async function getTokenInfo(userId?: string) {
       recentTransactions: userTokens?.transactions ?? [],
     };
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching token info:", error);
     return {
       balance: 0,
       usedTotal: 0,

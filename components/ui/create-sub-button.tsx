@@ -45,11 +45,11 @@ export default function CreateSubscriptionButton({
 
       if (activeSubscription?.stripeSubscriptionId) {
         // Handle upgrade/downgrade of existing subscription
-        const result = await updateExistingSubscription(
-          activeSubscription.stripeSubscriptionId,
-          plan.priceId,
-          activeSubscription.plan
-        );
+        const result = await updateExistingSubscription({
+          subId: activeSubscription.stripeSubscriptionId,
+          switchToPriceId: plan.priceId,
+          previousPlanName: activeSubscription.plan,
+        });
 
         if (result.status) {
           toast.success(result.message || "Subscription updated successfully");
