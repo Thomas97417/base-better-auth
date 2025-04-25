@@ -34,7 +34,10 @@ export default function ResumeSubscriptionDialog({
   const handleResumeSubscription = async () => {
     // Vérifier que nous avons les données nécessaires
     if (!subscriptionId || !priceId) {
-      toast.error("Missing subscription information");
+      toast("Missing subscription information", {
+        icon: "❌",
+        description: "Please try again.",
+      });
       console.error("Missing subscription information");
       return;
     }
@@ -47,17 +50,28 @@ export default function ResumeSubscriptionDialog({
       });
 
       if (result.status) {
-        toast.success("Subscription resumed successfully");
+        toast("Subscription resumed successfully", {
+          icon: "🎉",
+          description: `You can now access all the features of ${
+            planName.charAt(0).toUpperCase() + planName.slice(1)
+          } plan.`,
+        });
         router.push("/");
         router.refresh();
         onClose();
       } else {
-        toast.error(result.message || "Failed to resume subscription");
+        toast(result.message || "Failed to resume subscription", {
+          icon: "❌",
+          description: "Please try again.",
+        });
         console.error("Failed to resume subscription:", result.message);
       }
     } catch (error) {
       console.error(error);
-      toast.error("An unexpected error occurred");
+      toast("An unexpected error occurred", {
+        icon: "❌",
+        description: "Please try again.",
+      });
     } finally {
       setIsLoading(false);
     }

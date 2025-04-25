@@ -54,7 +54,7 @@ export default function SignUpForm() {
         password: values.password,
         name: `${values.name} ${values.lastName}`,
         image: image ? await convertImageToBase64(image) : "",
-        callbackURL: "/sign-in",
+        callbackURL: "/login/sign-in",
         fetchOptions: {
           onResponse: () => setLoading(false),
           onRequest: () => {

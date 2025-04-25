@@ -38,7 +38,7 @@ export default async function RootLayout({
           <main className="min-h-screen flex-1 px-4 flex flex-col justify-center">
             {children}
           </main>
-          <Toaster richColors position="top-center" />
+          <Toaster richColors closeButton position="bottom-right" />
         </ThemeProvider>
       </body>
     </html>

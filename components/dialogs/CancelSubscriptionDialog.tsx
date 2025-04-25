@@ -33,14 +33,23 @@ export default function CancelSubscriptionDialog({
       });
       console.log(data, error);
       if (error) {
-        toast.error(error.message);
+        toast(error.message, {
+          icon: "❌",
+          description: "Please try again.",
+        });
       } else {
-        toast.success("Subscription cancellation initiated");
+        toast("Subscription cancellation initiated", {
+          icon: "🎉",
+          description: "You will not be charged again.",
+        });
         onClose();
       }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to cancel subscription");
+      toast("Failed to cancel subscription", {
+        icon: "❌",
+        description: "Please try again.",
+      });
     } finally {
       setIsLoading(false);
     }

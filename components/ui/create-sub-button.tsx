@@ -52,11 +52,18 @@ export default function CreateSubscriptionButton({
         });
 
         if (result.status) {
-          toast.success(result.message || "Subscription updated successfully");
-          router.push("/");
+          toast(result.message || "Subscription updated successfully", {
+            icon: "🎉",
+            description: `You can now access all the features of ${
+              plan.name.charAt(0).toUpperCase() + plan.name.slice(1)
+            } plan.`,
+          });
           router.refresh();
         } else {
-          toast.error(result.message || "Failed to update subscription");
+          toast(result.message || "Failed to update subscription", {
+            icon: "❌",
+            description: "Please try again.",
+          });
           console.error("Failed to update subscription:", result.message);
         }
       } else {
@@ -68,7 +75,10 @@ export default function CreateSubscriptionButton({
         });
 
         if (error) {
-          toast.error("Failed to create subscription");
+          toast("Failed to create subscription", {
+            icon: "❌",
+            description: "Please try again.",
+          });
           console.error("Failed to create subscription:", error);
         } else {
           // Credit tokens for new subscription
@@ -77,17 +87,26 @@ export default function CreateSubscriptionButton({
               plan.name,
               activeSubscription?.plan
             );
-            toast.success(
-              "Subscription created and tokens credited successfully!"
-            );
+            toast("Subscription created and tokens credited successfully!", {
+              icon: "🎉",
+              description: `You can now access all the features of ${
+                plan.name.charAt(0).toUpperCase() + plan.name.slice(1)
+              } plan.`,
+            });
           } catch (tokenError) {
             console.error("Failed to credit tokens:", tokenError);
-            toast.error("Subscription created but failed to credit tokens");
+            toast("Subscription created but failed to credit tokens", {
+              icon: "❌",
+              description: "Please try again.",
+            });
           }
         }
       }
     } catch (error) {
-      toast.error("An unexpected error occurred");
+      toast("An unexpected error occurred", {
+        icon: "❌",
+        description: "Please try again.",
+      });
       console.error("Subscription action failed:", error);
     } finally {
       setLoading(false);
