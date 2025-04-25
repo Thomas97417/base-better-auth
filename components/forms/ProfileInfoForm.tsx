@@ -1,5 +1,6 @@
 "use client";
 
+import { updateProfile } from "@/actions/profile";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,43 +68,20 @@ export default function ProfileInfoForm({
       setLoading(true);
       resetState();
 
-      const updateData: {
-        id: string | undefined;
-        fullName?: string;
-        email?: string;
+      const updateData: z.infer<typeof ProfileInformationSchema> & {
         image?: string;
       } = {
-        id: user?.id,
+        ...values,
       };
-
-      if (values.fullName !== user?.fullName) {
-        updateData.fullName = values.fullName;
-      }
-
-      if (values.email !== user?.email) {
-        updateData.email = values.email;
-      }
 
       if (image) {
         updateData.image = await convertImageToBase64(image);
       }
 
-      const response = await fetch("/api/user/update-info", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updateData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update profile");
-      }
-
-      const result = await response.json();
+      const result = await updateProfile(user.id, updateData);
 
       if (result.success) {
-        setSuccess("Profile information updated.");
+        setSuccess(result.message || "Profile information updated.");
         router.refresh();
       } else {
         throw new Error(result.error || "Failed to update profile");

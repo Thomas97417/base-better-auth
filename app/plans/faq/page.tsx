@@ -74,7 +74,7 @@ const faqCategories = [
 
 export default function FAQPage() {
   return (
-    <div className="container mx-auto px-4 py-16 max-w-5xl">
+    <div className="w-full mx-auto px-4 py-8 max-w-3xl">
       {/* Title Section */}
       <div className="text-center mb-12">
         <div className="inline-block p-2 bg-primary/5 rounded-full mb-4">
@@ -94,12 +94,12 @@ export default function FAQPage() {
       {/* FAQ Categories */}
       <div className="grid gap-8">
         {faqCategories.map((category) => (
-          <Card key={category.title} className="p-6">
+          <Card key={category.title} className="p-6 w-full">
             <div className="flex items-center gap-3 mb-6">
               <span className="text-2xl">{category.icon}</span>
               <h2 className="text-2xl font-semibold">{category.title}</h2>
             </div>
-            <Accordion type="single" collapsible className="w-full">
+            <Accordion type="single" collapsible className="w-full max-w-2xl">
               {category.questions.map((faq, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>
                   <AccordionTrigger className="text-base hover:cursor-pointer">
