@@ -11,6 +11,7 @@ import {
   Check,
   Clock,
   History,
+  X,
   Zap,
 } from "lucide-react";
 import { default as SubscriptionActions } from "./SubscriptionActions";
@@ -19,6 +20,7 @@ export async function SubscriptionCard() {
   const { subscription: activeSubscription } = await getActiveSubscription();
   const tokenInfo = await getTokenInfo();
   const planName = activeSubscription?.plan;
+  const { balance } = await getTokenInfo(activeSubscription?.referenceId);
 
   if (!activeSubscription) {
     return (
@@ -27,31 +29,80 @@ export async function SubscriptionCard() {
         cardDescription="Your current plan and usage"
         className="w-full"
       >
-        <div className="space-y-6">
+        <div className="space-y-4">
+          {/* Plan Header */}
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <h3 className="text-lg font-semibold">Free Plan</h3>
                 <Badge variant="secondary" className="capitalize">
-                  inactive
+                  Current
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground">
-                No active subscription
+                Limited features and usage
               </p>
             </div>
-            <div className="text-2xl font-bold">Free</div>
+            <div className="text-2xl font-bold flex items-baseline gap-1">
+              <span>€0</span>
+              <span className="text-sm font-normal text-muted-foreground">
+                /mo
+              </span>
+            </div>
+          </div>
+
+          {/* Usage Section */}
+          <div className="space-y-4">
+            <div className="p-4 bg-muted/30 rounded-lg space-y-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-primary" />
+                  <span className="font-medium">Token Allowance</span>
+                </div>
+                <span className="text-sm text-muted-foreground">Free Plan</span>
+              </div>
+              <Progress value={0} className="h-2" />
+              <div className="flex flex-col gap-2">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-muted-foreground">
+                    Available Tokens
+                  </span>
+                  <span className="font-medium">
+                    {formatNumber(balance)} tokens
+                  </span>
+                </div>
+                <div className="mt-2 flex items-start gap-2 text-sm text-primary">
+                  <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                  <span>
+                    Upgrade to a paid plan to get tokens and unlock premium
+                    features
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Free Plan Features */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Check className="h-5 w-5 text-primary flex-shrink-0" />
-              <span>Limited features access</span>
+            <div className="flex items-center gap-2 text-sm">
+              <Check className="h-4 w-4 text-primary flex-shrink-0" />
+              <span>Basic features access</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Check className="h-5 w-5 text-primary flex-shrink-0" />
-              <span>Basic support</span>
+            <div className="flex items-center gap-2 text-sm">
+              <Check className="h-4 w-4 text-primary flex-shrink-0" />
+              <span>Community support</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <X className="h-4 w-4 flex-shrink-0" />
+              <span>Monthly Token Allowance</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <X className="h-4 w-4 flex-shrink-0" />
+              <span>Advanced features</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <X className="h-4 w-4 flex-shrink-0" />
+              <span>Priority support</span>
             </div>
           </div>
 

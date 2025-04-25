@@ -30,8 +30,8 @@ export default function SubscriptionActionsButtons({
 
   if (!hasActiveSubscription) {
     return (
-      <Button className="flex" asChild>
-        <Link href="/plans">
+      <Button className="flex-1 hover:cursor-pointer" asChild>
+        <Link href="/plans" className="w-full hover:cursor-pointer">
           View Plans
           <CreditCard className="ml-2 h-4 w-4" />
         </Link>
