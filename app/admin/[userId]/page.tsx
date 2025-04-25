@@ -34,7 +34,7 @@ export default async function UserDetailsPage({
   }
 
   return (
-    <div className="container mx-auto py-8 space-y-6">
+    <div className="w-full max-w-5xl mx-auto py-8 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">User Details</h1>
         <BackButton text="Back to Users" />
