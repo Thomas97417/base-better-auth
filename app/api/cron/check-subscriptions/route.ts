@@ -2,8 +2,6 @@ import { creditTokensForSubscription } from "@/actions/tokens";
 import { db } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export const runtime = "edge";
-export const preferredRegion = "fra1";
 export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {

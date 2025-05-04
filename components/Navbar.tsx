@@ -95,7 +95,7 @@ export default function Navbar({ user }: { user?: UserType }) {
               <div className="block xs:hidden">
                 <DropdownMenu>
                   <DropdownMenuTrigger
-                    className="flex items-center -m-2 rounded-md hover:cursor-pointer"
+                    className="flex items-center -m-2 rounded-md hover:cursor-pointer "
                     asChild
                   >
                     <Button
@@ -160,6 +160,7 @@ export default function Navbar({ user }: { user?: UserType }) {
                   src={user?.image || null}
                   fullName={user?.fullName || null}
                   size={40}
+                  className="border-2 border-transparent transition-all duration-300 hover:border-primary"
                 />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">

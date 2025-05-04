@@ -4,12 +4,14 @@ type UserAvatarProps = {
   src: string | null;
   fullName: string | null;
   size?: number;
+  className?: string;
 };
 
 export default function UserAvatar({
   src,
   fullName,
   size = 48,
+  className,
 }: UserAvatarProps) {
   const initial = fullName?.charAt(0).toUpperCase() || "?";
   const colors = [
@@ -31,7 +33,7 @@ export default function UserAvatar({
         <Image
           src={src}
           alt={fullName || "Profile"}
-          className="rounded-full object-cover"
+          className={`rounded-full object-cover ${className}`}
           fill
         />
       </div>
@@ -40,7 +42,7 @@ export default function UserAvatar({
 
   return (
     <div
-      className={`flex items-center justify-center rounded-full text-white font-semibold ${colorClass}`}
+      className={`flex items-center justify-center rounded-full text-white font-semibold ${colorClass} ${className}`}
       style={{
         width: size,
         height: size,

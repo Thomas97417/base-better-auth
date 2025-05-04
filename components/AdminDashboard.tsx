@@ -63,7 +63,7 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
           <p className="text-muted-foreground">
             Manage users, view statistics and monitor system activity.
           </p>
-          <div className="hidden xs:block text-sm text-muted-foreground">
+          <div className="hidden md:block text-sm text-muted-foreground">
             Connected as {user.fullName}
           </div>
         </div>
