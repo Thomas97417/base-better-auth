@@ -106,7 +106,7 @@ export default async function ProfileSettingsCard() {
             <div className="mt-3 flex justify-end gap-3">
               <Button
                 variant="outline"
-                className="hover:cursor-pointer group"
+                className="hover:cursor-pointer group hover:text-primary hover:bg-primary/10 hover:border-primary/20"
                 asChild
               >
                 <Link href="/plans">

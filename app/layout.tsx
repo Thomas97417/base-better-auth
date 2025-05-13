@@ -35,7 +35,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main className="min-h-screen flex-1 px-4 flex flex-col justify-center">
+          <main className="min-h-screen flex-1 px-4 flex flex-col">
             {children}
           </main>
           <Toaster richColors closeButton position="bottom-right" />

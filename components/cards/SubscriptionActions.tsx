@@ -51,10 +51,10 @@ export default function SubscriptionActionsButtons({
           </Button>
           <Button
             variant="outline"
-            className="flex-1 hover:cursor-pointer text-primary border-primary hover:bg-primary/10"
+            className="flex-1 hover:cursor-pointer group bg-transparent border-primary/30 hover:border-primary hover:bg-primary/20 hover:text-primary text-primary/80 dark:text-primary/60 dark:hover:text-primary dark:hover:bg-primary/20 dark:hover:border-primary"
             onClick={() => setIsResumeDialogOpen(true)}
           >
-            <RotateCcw className="mr-2 h-4 w-4" />
+            <RotateCcw className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
             Resume Subscription
           </Button>
         </div>

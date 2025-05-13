@@ -89,7 +89,7 @@ export default async function Dashboard() {
             <div className="space-y-4">
               <Button
                 variant="outline"
-                className="w-full justify-start"
+                className="w-full justify-start hover:cursor-pointer group hover:text-primary hover:bg-primary/10 hover:border-primary/20"
                 asChild
               >
                 <Link href="profile">
@@ -99,7 +99,7 @@ export default async function Dashboard() {
               </Button>
               <Button
                 variant="outline"
-                className="w-full justify-start"
+                className="w-full justify-start hover:cursor-pointer group hover:text-primary hover:bg-primary/10 hover:border-primary/20"
                 asChild
               >
                 <Link href="/profile/password">

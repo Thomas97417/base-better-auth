@@ -155,7 +155,7 @@ export default function ProfileInfoForm({
             <div className="flex flex-col gap-2">
               <Badge
                 variant="default"
-                className="flex items-center gap-1.5 px-2.5 py-1"
+                className="flex items-center gap-1.5 px-2.5 py-1 bg-primary/5 text-primary border border-primary/20"
               >
                 {user?.role === "admin" ? (
                   <Shield className="w-3.5 h-3.5" />

@@ -244,7 +244,7 @@ export async function SubscriptionCard() {
               <div className="space-y-2">
                 {recentTransactions.slice(0, 3).map((transaction) => (
                   <div
-                    key={transaction.id}
+                    key={transaction.createdAt.toString()}
                     className="flex justify-between items-center text-sm"
                   >
                     <span className="text-muted-foreground capitalize">
