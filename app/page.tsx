@@ -6,7 +6,7 @@ import { getUser } from "@/lib/auth-session";
 import { Activity, Home, Settings, Shield, User } from "lucide-react";
 import Link from "next/link";
 
-export default async function Dashboard() {
+export default async function DashboardPage() {
   const user = await getUser();
 
   return (

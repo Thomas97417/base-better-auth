@@ -19,7 +19,9 @@ const CardWrapper = ({
   className = "",
 }: CardWrapperType) => {
   return (
-    <Card className={`w-[400px] relative ${className} border-2 shadow-md`}>
+    <Card
+      className={`w-[400px] relative ${className} border-none shadow-md hover:shadow-lg transition-shadow duration-200`}
+    >
       <CardHeader>
         <CardTitle>{cardTitle}</CardTitle>
         <CardDescription>{cardDescription}</CardDescription>
