@@ -82,12 +82,12 @@ export default async function DashboardPage() {
             <CardWrapper
               cardTitle="Quick Actions"
               cardDescription="Common tasks and actions"
-              className="w-full"
+              className="w-full sm:col-span-2 lg:col-span-1"
             >
               <div className="space-y-4">
                 <Button
                   variant="outline"
-                  className="w-full justify-start hover:cursor-pointer group hover:text-primary hover:bg-primary/10 hover:border-primary/20"
+                  className="w-full justify-start sm:justify-center lg:justify-start hover:cursor-pointer group hover:text-primary hover:bg-primary/10 hover:border-primary/20"
                   asChild
                 >
                   <Link href="profile">
@@ -97,7 +97,7 @@ export default async function DashboardPage() {
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full justify-start hover:cursor-pointer group hover:text-primary hover:bg-primary/10 hover:border-primary/20"
+                  className="w-full justify-start sm:justify-center lg:justify-start hover:cursor-pointer group hover:text-primary hover:bg-primary/10 hover:border-primary/20"
                   asChild
                 >
                   <Link href="/profile/password">
