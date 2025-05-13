@@ -8,7 +8,7 @@ import {
   TokenMetadata,
   TokenResponse,
 } from "@/types/tokens";
-import { PLANS } from "@/utils/constants";
+import { INITIAL_TOKENS, PLANS } from "@/utils/constants";
 import { UseTokensSchema } from "@/utils/zod/tokens-schema";
 import { headers } from "next/headers";
 
@@ -94,7 +94,7 @@ async function handleSubscriptionUpgrade(
         create: {
           amount: tokenDifference,
           action: "subscription_upgrade",
-          metadata: metadata,
+          metadata,
         },
       },
     },
@@ -243,4 +243,43 @@ export async function getTokenInfo(userId?: string): Promise<TokenInfo> {
       recentTransactions: [],
     };
   }
+}
+
+/**
+ * Credits initial free tokens to a new user
+ */
+export async function creditInitialTokens(
+  userId: string,
+  amount: number = INITIAL_TOKENS
+) {
+  return db.userTokens.upsert({
+    where: { userId },
+    create: {
+      userId,
+      balance: amount,
+      transactions: {
+        create: {
+          amount,
+          action: "initial_credit",
+          metadata: {
+            type: "initial_credit",
+            creditDate: new Date().toISOString(),
+          },
+        },
+      },
+    },
+    update: {
+      balance: { increment: amount },
+      transactions: {
+        create: {
+          amount,
+          action: "initial_credit",
+          metadata: {
+            type: "initial_credit",
+            creditDate: new Date().toISOString(),
+          },
+        },
+      },
+    },
+  });
 }

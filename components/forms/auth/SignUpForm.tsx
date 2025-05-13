@@ -63,7 +63,7 @@ export default function SignUpForm() {
           },
           onError: (ctx) => setError(ctx.error.message),
           onSuccess: () => {
-            router.push("/sign-in");
+            router.push("/login/sign-in");
           },
         },
       });

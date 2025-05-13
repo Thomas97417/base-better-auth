@@ -35,3 +35,5 @@ export const PLANS: Plan[] = [
     description: "For large organizations with advanced needs",
   },
 ];
+
+export const INITIAL_TOKENS = 50;

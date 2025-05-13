@@ -1,3 +1,4 @@
+import { creditInitialTokens } from "@/actions/tokens";
 import { PLANS } from "@/utils/constants";
 import { stripe } from "@better-auth/stripe";
 import { betterAuth } from "better-auth";
@@ -62,7 +63,9 @@ export const auth = betterAuth({
       stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
       createCustomerOnSignUp: true,
       onCustomerCreate: async ({ customer, stripeCustomer, user }) => {
-        // Do something with the newly created customer
+        // Credit initial free tokens to the new user
+        await creditInitialTokens(user.id);
+
         console.log(
           `Customer ${customer.id} created for user ${user.id}, ${stripeCustomer.id}`
         );

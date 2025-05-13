@@ -74,7 +74,7 @@ export async function SubscriptionCard() {
                 <div className="mt-2 flex items-start gap-2 text-sm text-primary">
                   <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
                   <span>
-                    Upgrade to a paid plan to get tokens and unlock premium
+                    Upgrade to a paid plan to get more tokens and unlock premium
                     features
                   </span>
                 </div>
