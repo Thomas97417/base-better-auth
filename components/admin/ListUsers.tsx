@@ -71,7 +71,7 @@ export default function ListUsers() {
           variant={showBannedOnly ? "destructive" : "outline"}
           size="sm"
           onClick={() => setShowBannedOnly(!showBannedOnly)}
-          className={`w-[180px] min-w-[180px] justify-start gap-1 hover:cursor-pointer ${
+          className={`xs:w-[180px] justify-start gap-1 hover:cursor-pointer ${
             !showBannedOnly &&
             "hover:cursor-pointer group hover:text-primary hover:bg-primary/10 hover:border-primary/20"
           }`}
