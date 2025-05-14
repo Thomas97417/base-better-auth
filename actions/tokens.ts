@@ -8,9 +8,12 @@ import {
   TokenMetadata,
   TokenResponse,
 } from "@/types/tokens";
-import { INITIAL_TOKENS, PLANS } from "@/utils/constants";
+import { INITIAL_TOKENS, PACKAGE_TOKENS, PLANS } from "@/utils/constants";
 import { UseTokensSchema } from "@/utils/zod/tokens-schema";
 import { headers } from "next/headers";
+import Stripe from "stripe";
+
+const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 /**
  * Credits tokens for a subscription change through the API
@@ -277,6 +280,117 @@ export async function creditInitialTokens(
           metadata: {
             type: "initial_credit",
             creditDate: new Date().toISOString(),
+          },
+        },
+      },
+    },
+  });
+}
+
+/**
+ * Creates a checkout session for token package purchase
+ */
+export async function purchaseTokenPackage(packageId: number) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  const user = session.user;
+  const tokenPackage = PACKAGE_TOKENS.find((pkg) => pkg.id === packageId);
+
+  if (!tokenPackage) {
+    throw new Error("Token package not found");
+  }
+
+  try {
+    const userData = await db.user.findUnique({
+      where: { id: user.id },
+      select: { stripeCustomerId: true },
+    });
+
+    if (!userData?.stripeCustomerId) {
+      throw new Error("Stripe customer ID not found");
+    }
+
+    // Create a checkout session
+    const stripeSession = await stripeClient.checkout.sessions.create({
+      customer: userData.stripeCustomerId,
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price: tokenPackage.priceId,
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/plans?cancelled=true`,
+      metadata: {
+        userId: user.id,
+        packageId: tokenPackage.id,
+        tokens: tokenPackage.tokens,
+      },
+    });
+
+    return {
+      status: true,
+      url: stripeSession.url,
+      message: "Checkout session created",
+    };
+  } catch (error) {
+    console.error("Error creating token package checkout:", error);
+    return {
+      status: false,
+      message: "Failed to create checkout session",
+    };
+  }
+}
+
+/**
+ * Credits tokens to a user after successful token package purchase
+ * This would be called from a Stripe webhook handler
+ */
+export async function creditTokensAfterPurchase(
+  userId: string,
+  packageId: number,
+  tokensAmount: number
+) {
+  const tokenPackage = PACKAGE_TOKENS.find((pkg) => pkg.id === packageId);
+
+  if (!tokenPackage) {
+    throw new Error("Token package not found");
+  }
+
+  return db.userTokens.upsert({
+    where: { userId },
+    create: {
+      userId,
+      balance: tokensAmount,
+      transactions: {
+        create: {
+          amount: tokensAmount,
+          action: "token_purchase",
+          metadata: {
+            type: "package_purchase",
+            packageId: packageId,
+            packageName: tokenPackage.name,
+            purchaseDate: new Date().toISOString(),
+          },
+        },
+      },
+    },
+    update: {
+      balance: { increment: tokensAmount },
+      transactions: {
+        create: {
+          amount: tokensAmount,
+          action: "token_purchase",
+          metadata: {
+            type: "package_purchase",
+            packageId: packageId,
+            packageName: tokenPackage.name,
+            purchaseDate: new Date().toISOString(),
           },
         },
       },
