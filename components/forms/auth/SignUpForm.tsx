@@ -19,7 +19,6 @@ import { convertImageToBase64 } from "@/lib/convert-image";
 import { SignUpSchema } from "@/utils/zod/sign-up-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus, X } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -153,11 +152,11 @@ export default function SignUpForm() {
                 <div className="relative w-16 h-16 group/image">
                   {imagePreview ? (
                     <div className="w-full h-full overflow-hidden">
-                      <Image
+                      <img
                         src={imagePreview}
                         alt="Profile preview"
-                        fill
-                        className="rounded-full object-cover"
+                        className="rounded-full object-cover w-full h-full absolute inset-0"
+                        loading="lazy"
                       />
                     </div>
                   ) : (

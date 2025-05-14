@@ -13,7 +13,6 @@ import { ProfileInformationSchema } from "@/utils/zod/profile-information-schema
 import { Subscription } from "@better-auth/stripe";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus, Shield, Sparkles, Star, User, X } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -105,11 +104,11 @@ export default function ProfileInfoForm({
               <div className="relative w-20 h-20">
                 {imagePreview ? (
                   <div className="w-full h-full overflow-hidden">
-                    <Image
+                    <img
                       src={imagePreview}
                       alt="Profile preview"
-                      fill
-                      className="rounded-full object-cover"
+                      className="rounded-full object-cover w-full h-full absolute inset-0"
+                      loading="lazy"
                     />
                   </div>
                 ) : (
