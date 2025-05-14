@@ -191,10 +191,10 @@ export default function CreateSubscriptionButton({
         isPopular
           ? activeSubscription
             ? "bg-transparent border-primary/30 hover:border-primary hover:bg-primary/20 hover:text-primary text-primary/80 dark:text-primary/60 dark:hover:text-primary dark:hover:bg-primary/20 dark:hover:border-primary"
-            : "bg-primary hover:bg-primary/10 hover:text-primary transition-all duration-300"
+            : "bg-primary hover:bg-primary/10 hover:text-primary transition-all duration-300 border border-primary"
           : activeSubscription
           ? "bg-transparent border-primary/30 hover:border-primary hover:bg-primary/20 hover:text-primary text-primary/80 dark:text-primary/60 dark:hover:text-primary dark:hover:bg-primary/20 dark:hover:border-primary"
-          : "hover:bg-primary/10 hover:text-primary transition-all duration-300"
+          : "hover:bg-primary/10 hover:text-primary transition-all duration-300 border border-primary"
       }`}
       variant={activeSubscription ? "outline" : "default"}
       disabled={loading}

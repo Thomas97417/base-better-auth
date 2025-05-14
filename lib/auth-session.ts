@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { UserType } from "@/utils/types/UserType";
 import { headers } from "next/headers";
 
-export const getUser = async (): Promise<UserType> => {
+export const getUser = async (): Promise<UserType | undefined> => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

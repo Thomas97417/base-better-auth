@@ -79,11 +79,7 @@ export default async function PlansPage() {
           Check out our FAQ section or contact our support team for detailed
           information about our plans.
         </p>
-        <Button
-          variant="outline"
-          asChild
-          className="hover:cursor-pointer hover:bg-primary hover:text-primary-foreground"
-        >
+        <Button variant="default" asChild className="hover:scale-105">
           <Link href="/pricing/faq">View FAQ</Link>
         </Button>
       </div>
