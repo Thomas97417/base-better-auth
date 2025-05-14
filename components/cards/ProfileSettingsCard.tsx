@@ -109,7 +109,7 @@ export default async function ProfileSettingsCard() {
                 className="hover:cursor-pointer group hover:text-primary hover:bg-primary/10 hover:border-primary/20"
                 asChild
               >
-                <Link href="/plans">
+                <Link href="/pricing">
                   {activeSubscription ? (
                     <>
                       <CreditCard className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
@@ -129,7 +129,7 @@ export default async function ProfileSettingsCard() {
                   className="hover:cursor-pointer group text-destructive hover:text-destructive border-destructive/30 hover:border-destructive hover:bg-destructive/10"
                   asChild
                 >
-                  <Link href="/plans">Cancel Plan</Link>
+                  <Link href="/pricing">Cancel Plan</Link>
                 </Button>
               )}
             </div>

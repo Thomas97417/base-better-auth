@@ -84,7 +84,7 @@ export default async function PlansPage() {
           asChild
           className="hover:cursor-pointer hover:bg-primary hover:text-primary-foreground"
         >
-          <Link href="/plans/faq">View FAQ</Link>
+          <Link href="/pricing/faq">View FAQ</Link>
         </Button>
       </div>
     </div>

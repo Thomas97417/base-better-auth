@@ -325,7 +325,7 @@ export async function purchaseTokenPackage(packageId: number) {
       ],
       mode: "payment",
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/plans?cancelled=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing?cancelled=true`,
       metadata: {
         userId: user.id,
         packageId: tokenPackage.id,

@@ -84,7 +84,7 @@ export default function FAQPage() {
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
           Find answers to common questions about our services, billing, and
           features. Can&apos;t find what you&apos;re looking for?{" "}
-          <Link href="/plans/faq" className="text-primary hover:underline">
+          <Link href="/pricing/faq" className="text-primary hover:underline">
             Contact our support team
           </Link>
           .
@@ -121,7 +121,7 @@ export default function FAQPage() {
           Still have questions? We&apos;re here to help!
         </p>
         <Button asChild>
-          <Link href="/plans/faq" className="gap-2">
+          <Link href="/pricing/faq" className="gap-2">
             <MessageCircle className="w-4 h-4" />
             Contact Support
           </Link>

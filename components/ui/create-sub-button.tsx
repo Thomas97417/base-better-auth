@@ -71,7 +71,7 @@ export default function CreateSubscriptionButton({
         const { error } = await authClient.subscription.upgrade({
           plan: plan.name,
           successUrl: `${window.location.origin}`,
-          cancelUrl: `${window.location.origin}/plans`,
+          cancelUrl: `${window.location.origin}/pricing`,
         });
 
         if (error) {

@@ -31,7 +31,7 @@ export default function SubscriptionActionsButtons({
   if (!hasActiveSubscription) {
     return (
       <Button className="flex-1 hover:cursor-pointer" asChild>
-        <Link href="/plans" className="w-full hover:cursor-pointer">
+        <Link href="/pricing" className="w-full hover:cursor-pointer">
           View Plans
           <CreditCard className="ml-2 h-4 w-4" />
         </Link>
@@ -44,7 +44,7 @@ export default function SubscriptionActionsButtons({
       <>
         <div className="flex flex-col sm:flex-row gap-3">
           <Button className="flex-1 hover:cursor-pointer" asChild>
-            <Link href="/plans">
+            <Link href="/pricing">
               Choose New Plan
               <CreditCard className="ml-2 h-4 w-4" />
             </Link>
@@ -74,7 +74,7 @@ export default function SubscriptionActionsButtons({
     <>
       <div className="flex flex-col sm:flex-row gap-3">
         <Button className="flex-1 hover:cursor-pointer" asChild>
-          <Link href="/plans">
+          <Link href="/pricing">
             Change Plan
             <CreditCard className="ml-2 h-4 w-4" />
           </Link>

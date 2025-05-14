@@ -55,9 +55,9 @@ export default function Navbar({ user }: { user?: UserType }) {
           label: "Profile",
         },
         {
-          href: "/plans",
+          href: "/pricing",
           icon: <CreditCard className="w-5 h-5" />,
-          label: "Plans",
+          label: "Pricing",
         },
         ...(user.role === "admin"
           ? [
