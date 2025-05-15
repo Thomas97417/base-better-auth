@@ -2,9 +2,15 @@ import { ProfileInfoCard } from "@/components/cards/ProfileInfoCard";
 import ProfileSettingsCard from "@/components/cards/ProfileSettingsCard";
 import { getUser } from "@/lib/auth-session";
 import { User } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
   const user = await getUser();
+
+  if (!user) {
+    redirect("/login/sign-in");
+  }
+
   return (
     <div className="w-full bg-background">
       {/* Header */}
