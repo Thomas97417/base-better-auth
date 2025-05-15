@@ -14,12 +14,12 @@ import {
   UserRound,
 } from "lucide-react";
 
-interface PageProps {
+type PageProps = {
   params: {
     userId: string;
   };
-  searchParams: { [key: string]: string | string[] | undefined };
-}
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
 
 export default async function UserDetailsPage({ params }: PageProps) {
   const { userId } = params;
