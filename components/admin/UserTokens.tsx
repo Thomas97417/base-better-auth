@@ -89,7 +89,7 @@ export default async function UserTokens({ userId }: UserTokensProps) {
                   </TableRow>
                 ) : (
                   tokenInfo.recentTransactions.map((transaction) => (
-                    <TableRow key={transaction.id}>
+                    <TableRow key={transaction.createdAt.toString()}>
                       <TableCell>
                         {new Date(transaction.createdAt).toLocaleDateString()}
                       </TableCell>
