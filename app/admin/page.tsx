@@ -4,9 +4,8 @@ import { redirect } from "next/navigation";
 
 export default async function AdminPage() {
   const user = await getUser();
-  const role = user?.role;
 
-  if (role !== "admin") {
+  if (!user || user.role !== "admin") {
     redirect("/");
   }
 
