@@ -21,10 +21,7 @@ interface PageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default async function UserDetailsPage({
-  params,
-  searchParams,
-}: PageProps) {
+export default async function UserDetailsPage({ params }: PageProps) {
   const { userId } = params;
   const user = await db.user.findUnique({
     where: { id: userId },
