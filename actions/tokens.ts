@@ -9,6 +9,7 @@ import {
   TokenResponse,
 } from "@/types/tokens";
 import { INITIAL_TOKENS, PACKAGE_TOKENS, PLANS } from "@/utils/constants";
+import { getAppUrl } from "@/utils/env";
 import { UseTokensSchema } from "@/utils/zod/tokens-schema";
 import { headers } from "next/headers";
 import Stripe from "stripe";
@@ -313,6 +314,8 @@ export async function purchaseTokenPackage(packageId: number) {
       throw new Error("Stripe customer ID not found");
     }
 
+    const appUrl = getAppUrl();
+
     // Create a checkout session
     const stripeSession = await stripeClient.checkout.sessions.create({
       customer: userData.stripeCustomerId,
@@ -324,8 +327,8 @@ export async function purchaseTokenPackage(packageId: number) {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing?cancelled=true`,
+      success_url: `${appUrl}`,
+      cancel_url: `${appUrl}/pricing?cancelled=true`,
       metadata: {
         userId: user.id,
         packageId: tokenPackage.id,

@@ -135,7 +135,7 @@ export default function SignInForm() {
             <Button
               type="button"
               variant="outline"
-              className="w-full gap-2 hover:cursor-pointer"
+              className="w-full gap-2 hover:cursor-pointer hover:bg-primary/15"
               onClick={async () => {
                 await signIn.social({
                   provider: "google",
