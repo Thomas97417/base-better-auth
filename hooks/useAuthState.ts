@@ -19,11 +19,11 @@ export const useAuthState = () => {
     setState((prev) => ({ ...prev, loading }));
   }, []);
 
-  const setError = useCallback((error: string) => {
+  const setError = useCallback((error?: string) => {
     setState((prev) => ({ ...prev, error, success: "" }));
   }, []);
 
-  const setSuccess = useCallback((success: string) => {
+  const setSuccess = useCallback((success?: string) => {
     setState((prev) => ({ ...prev, success, error: "" }));
   }, []);
 

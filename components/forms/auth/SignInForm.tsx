@@ -54,7 +54,7 @@ export default function SignInForm() {
       );
 
       if (signInError) {
-        setError(signInError.message);
+        setError(signInError.message || "Authentication failed");
       }
     } catch (error) {
       console.error(error);
