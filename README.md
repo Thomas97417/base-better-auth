@@ -222,46 +222,135 @@ stripe login
 stripe listen --forward-to localhost:3000/api/stripe/webhook
 ```
 
-## 💼 Stripe Product & Pricing Setup (Subscription Tiers)
+### 💼 Stripe Subscription Setup – Creating Products and Pricing Tiers
 
-To set up subscription tiers for your app, you'll need to create a product and pricing plans in your Stripe dashboard.
+To enable **subscription-based billing** in your application, you need to create one or more **products with recurring pricing plans** in your Stripe dashboard.
 
-### 🛠️ Steps to Create a Product and Tiers in Stripe:
+These subscriptions will define the tiers your users can subscribe to (e.g., Basic, Pro, Premium).
+
+---
+
+### ➕ Create a Subscription Product
 
 1. Go to your [Stripe Dashboard](https://dashboard.stripe.com/)
 2. In the left sidebar, click on **"Products"**
 3. Click the **"Add product"** button
+4. Fill in the following details:
+   - **Name:** (e.g., `Pro Plan`, `Premium Subscription`, etc.)
+   - **Description:** Optional, but recommended to clearly describe the subscription offering
+5. During product creation, click **"Add pricing plan"**
 
-### ➕ Create a Product:
-
-- **Name:** (e.g., `Pro Plan`, `Premium Subscription`, etc.)
-- **Description:** Optional, but helpful to identify the product
-- Click **"Add pricing plan"** during product creation
-
-### 💰 Add Pricing (Tiers):
-
-For each tier you want to support, add a pricing plan:
-
-- **Type:** Recurring
-- **Billing period:** Monthly or yearly, depending on your model
-- **Price:** Set according to your tier (e.g., $10/month, $30/month, etc.)
-
-You can add multiple prices to the same product (e.g., one for monthly, one for yearly).
-
-Once created, each pricing plan will have a unique **Price ID** (looks like `price_ABC123...`).
+> 📌 Each product represents a type of **subscription** your users can sign up for.
 
 ---
 
-### 📄 Update your `constant.ts` file with the Price IDs:
+### 💰 Add Recurring Pricing (Subscription Tiers)
+
+For each subscription tier you want to offer, add a **recurring pricing plan**:
+
+- **Type:** Recurring
+- **Billing period:** Choose between Monthly or Yearly (or both)
+- **Price:** Set the cost of the subscription (e.g., $10/month, $30/month, etc.)
+
+You can add multiple prices to the same product to support both monthly and yearly billing options.
+
+After creating each pricing plan, Stripe will generate a unique **Price ID** (e.g., `price_ABC123...`) that you'll use in your code.
+
+---
+
+### 📄 Add the Price IDs to your `constant.ts` or `.env` File
+
+To connect your frontend and backend logic with Stripe, store the Price IDs in your environment variables or constants file:
 
 ```env
-STRIPE_PRICE_ID_1=price_xxxxxxxxxxxx
-STRIPE_PRICE_ID_2=price_yyyyyyyyyyyy
-STRIPE_PRICE_ID_3=price_zzzzzzzzzzzz
+STRIPE_PRICE_ID_BASIC=price_xxxxxxxxxxxx
+STRIPE_PRICE_ID_PRO=price_yyyyyyyyyyyy
+STRIPE_PRICE_ID_PREMIUM=price_zzzzzzzzzzzz
 ```
 
 > 📝 Rename the keys as needed based on your subscription logic (e.g., BASIC, PRO, PREMIUM, etc.)
 
 ---
 
+### 🪙 Stripe Token Purchase Setup – One-Time Payments
+
+In addition to subscriptions, your application can also offer users the ability to **buy tokens** via **one-time payments**. This is useful for pay-as-you-go models where users consume tokens for specific actions (e.g., API usage, content generation, etc.).
+
+---
+
+### ➕ Create a Token Purchase Product
+
+1. Go to your [Stripe Dashboard](https://dashboard.stripe.com/)
+2. In the sidebar, click on **"Products"**
+3. Click **"Add product"**
+4. Fill in the product details:
+   - **Name:** (e.g., `100 Tokens`, `500 Tokens`, `1000 Tokens`, etc.)
+   - **Description:** Optional, describe what the token package includes
+5. Under **Pricing**, choose:
+   - **Type:** One-time
+   - **Price:** Set the price based on the number of tokens (e.g., $5 for 100 tokens)
+
+Repeat this process for each token package you want to offer.
+
+After creation, Stripe will assign a unique **Price ID** to each one-time pricing option.
+
+---
+
+### 📄 Add the Token Price IDs to `constant.ts`
+
+In your codebase, you should have a `PACKAGE_TOKENS` array defined in `constant.ts`. Add the corresponding `priceId`s to this array to make the packages available in your frontend.
+
 ### ✅ You’re now ready to link your pricing tiers with your frontend/backend logic using these `priceId`s!
+
+## 🌐 Environment Variable for Production Deployment
+
+When deploying your application to a production environment—such as Vercel, Netlify, Render, or any other hosting provider; you must define the `NEXT_PUBLIC_VERCEL_URL` environment variable.
+
+### 🔧 Why this variable is important
+
+The `NEXT_PUBLIC_VERCEL_URL` environment variable represents the public URL of your deployed application. It is used for:
+
+- Generating absolute URLs (e.g., OAuth callbacks, email links)
+- Redirects and external service callbacks
+- General use in frontend components that require the site URL
+
+If not set correctly, some features like authentication, email verification links, or third-party integrations might break or behave unpredictably.
+
+### 🛠️ How to set it up
+
+You need to add the following key to your environment variables configuration on your hosting provider:
+
+```env
+NEXT_PUBLIC_VERCEL_URL=https://your-domain.com
+```
+
+## 🔐 OAuth Providers Setup for Production
+
+When moving your application to production, you **must create new OAuth applications** for both GitHub and Google. This is necessary because the redirect URIs and authorized domains must exactly match your production environment.
+
+### 🚀 GitHub OAuth – Production Setup
+
+1. Go to [GitHub Developer Settings](https://github.com/settings/developers)
+2. Click on **"New OAuth App"**
+3. Fill in the following fields:
+   - **Application name:** (e.g. Your App Name)
+   - **Homepage URL:** `https://your-domain.com`
+   - **Authorization callback URL:** `https://your-domain.com/api/auth/callback/github`
+4. After creating the app, you’ll get:
+   - `GITHUB_CLIENT_ID`
+   - `GITHUB_CLIENT_SECRET`
+
+### 🌐 Google OAuth
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project (or select an existing one)
+3. Navigate to **APIs & Services > Credentials**
+4. Click **"Create Credentials" > "OAuth 2.0 Client IDs"**
+5. Configure the OAuth consent screen if you haven’t already
+6. Fill in the following:
+   - **Application type:** Web application
+   - **Authorized JavaScript origins:** `https://your-domain.com
+   - **Authorized redirect URIs:** `https://your-domain.com/api/auth/callback/google`
+7. After creating, you’ll get:
+   - `GOOGLE_CLIENT_ID`
+   - `GOOGLE_CLIENT_SECRET`
