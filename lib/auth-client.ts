@@ -1,10 +1,9 @@
-import { getAppUrl } from "@/utils/env";
 import { stripeClient } from "@better-auth/stripe/client";
 import { adminClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 
 export const authClient = createAuthClient({
-  baseURL: getAppUrl(),
+  baseURL: process.env.NEXT_PUBLIC_VERCEL_URL,
   plugins: [
     adminClient(),
     stripeClient({
