@@ -1,12 +1,12 @@
 import Navbar from "@/components/Navbar";
-import { getUser } from "@/lib/auth-session";
+import { getUserCache } from "@/lib/cache";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getUser();
+  const user = await getUserCache();
 
   return (
     <div className="min-h-screen flex flex-col gap-4">

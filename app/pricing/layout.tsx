@@ -1,12 +1,20 @@
 import Navbar from "@/components/Navbar";
-import { getUser } from "@/lib/auth-session";
+import { getUserCache } from "@/lib/cache";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Pricing Plans | Your App Name",
+  description:
+    "Choose the perfect plan for your needs. Compare our pricing plans and features to find the best option for you.",
+  keywords: "pricing, subscription, plans, tokens, features",
+};
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getUser();
+  const user = await getUserCache();
 
   return (
     <div className="min-h-screen flex flex-col">

@@ -1,11 +1,11 @@
 import { ProfileInfoCard } from "@/components/cards/ProfileInfoCard";
 import ProfileSettingsCard from "@/components/cards/ProfileSettingsCard";
-import { getUser } from "@/lib/auth-session";
+import { getUserCache } from "@/lib/cache";
 import { User } from "lucide-react";
 import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
-  const user = await getUser();
+  const user = await getUserCache();
 
   if (!user) {
     redirect("/login/sign-in");

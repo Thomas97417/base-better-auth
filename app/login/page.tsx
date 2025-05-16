@@ -7,24 +7,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getUser } from "@/lib/auth-session";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export default async function LoginPage() {
-  const user = await getUser();
-
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar user={user} />
+      <Navbar />
       <div className="flex-1 flex flex-col items-center justify-center pb-12 px-4 sm:px-6 lg:px-8 bg-background">
         <Card className="max-w-md w-full">
           <CardHeader className="text-center space-y-2">
-            <CardTitle className="text-4xl font-extrabold">
-              Better Auth
-            </CardTitle>
+            <CardTitle className="text-4xl font-extrabold">MyApp</CardTitle>
             <CardDescription className="text-lg">
-              A secure and modern authentication solution
+              A boilerplate for creating your ideas fast
             </CardDescription>
           </CardHeader>
 

@@ -2,12 +2,12 @@ import { SubscriptionCard } from "@/components/cards/SubscriptionCard";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import CardWrapper from "@/components/ui/card-wrapper";
-import { getUser } from "@/lib/auth-session";
+import { getUserCache } from "@/lib/cache";
 import { Activity, Home, Settings, Shield, User } from "lucide-react";
 import Link from "next/link";
 
 export default async function DashboardPage() {
-  const user = await getUser();
+  const user = await getUserCache();
 
   return (
     <div className="flex w-full flex-col">
