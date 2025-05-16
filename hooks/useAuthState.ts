@@ -1,22 +1,40 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
+
+interface AuthState {
+  loading: boolean;
+  error?: string;
+  success?: string;
+}
+
+const initialState: AuthState = {
+  loading: false,
+  error: "",
+  success: "",
+};
 
 export const useAuthState = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
+  const [state, setState] = useState<AuthState>(initialState);
 
-  const resetState = () => {
-    setError("");
-    setSuccess("");
-    setLoading(false);
-  };
+  const setLoading = useCallback((loading: boolean) => {
+    setState((prev) => ({ ...prev, loading }));
+  }, []);
+
+  const setError = useCallback((error: string) => {
+    setState((prev) => ({ ...prev, error, success: "" }));
+  }, []);
+
+  const setSuccess = useCallback((success: string) => {
+    setState((prev) => ({ ...prev, success, error: "" }));
+  }, []);
+
+  const resetState = useCallback(() => {
+    setState(initialState);
+  }, []);
 
   return {
-    error,
+    ...state,
     setError,
-    success,
     setSuccess,
-    loading,
     setLoading,
     resetState,
   };
