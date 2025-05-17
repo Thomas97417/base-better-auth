@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidateUserCache } from "@/lib/cache";
 import { db } from "@/lib/prisma";
 import { ProfileInformationSchema } from "@/utils/zod/profile-information-schema";
 import { z } from "zod";
@@ -39,8 +38,6 @@ export async function updateProfile(
       },
       data: updateData,
     });
-
-    revalidateUserCache();
 
     return {
       success: true,
