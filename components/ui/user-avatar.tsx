@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type UserAvatarProps = {
   src: string | null;
   fullName: string | null;
@@ -28,11 +30,11 @@ export default function UserAvatar({
   if (src) {
     return (
       <div className="relative" style={{ width: size, height: size }}>
-        <img
+        <Image
           src={src}
           alt={fullName || "Profile"}
-          className={`rounded-full object-cover absolute w-full h-full ${className}`}
-          loading="lazy"
+          className={`rounded-full object-cover ${className}`}
+          fill
         />
       </div>
     );

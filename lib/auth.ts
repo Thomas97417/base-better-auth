@@ -20,6 +20,12 @@ export const auth = betterAuth({
     window: 10, // window of 10 seconds
     max: 3, // 3 requests per window
   },
+  // session: {
+  //   cookieCache: {
+  //     enabled: true,
+  //     maxAge: 2 * 60
+  //   }
+  // },
 
   user: {
     fields: {

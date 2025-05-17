@@ -12,6 +12,7 @@ import { useLogout } from "@/hooks/useLogout";
 import { cn } from "@/lib/utils";
 import { UserType } from "@/utils/types/UserType";
 import { CreditCard, Menu, ShieldUser, SquareUser, User } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "./theme/ThemeToggle";
@@ -80,11 +81,12 @@ export default function Navbar({ user }: { user?: UserType }) {
                 href="/"
                 className="text-xl font-semibold hover:text-primary transition-colors flex items-center"
               >
-                <img
+                <Image
                   src="/logo.png"
                   alt="logo"
-                  className="mr-2 hidden xs:block rounded-full w-[40px] h-[40px]"
-                  loading="lazy"
+                  width={40}
+                  height={40}
+                  className="mr-2 hidden xs:block rounded-full"
                 />
                 <span className="text-xl font-semibold">MyApp</span>
               </Link>
