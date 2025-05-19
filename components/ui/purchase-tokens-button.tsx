@@ -45,8 +45,9 @@ export default function PurchaseTokensButton({
   return (
     <Button
       onClick={handlePurchase}
-      className="w-full hover:cursor-pointer group bg-transparent border border-primary/30 hover:border-primary hover:bg-primary/20 hover:text-primarytext-primary/80 dark:text-primary dark:hover:text-primary dark:hover:bg-primary/20 dark:hover:border-primary"
+      className="w-full hover:cursor-pointer group bg-transparent border border-primary/30 hover:border-primary hover:bg-primary/20 hover:text-primary text-primary/80 dark:text-primary dark:hover:text-primary dark:hover:bg-primary/20 dark:hover:border-primary"
       disabled={loading}
+      variant="outline"
     >
       {loading ? (
         <>
