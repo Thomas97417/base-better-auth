@@ -155,7 +155,11 @@ export default function UserBanDialog({
                   </SelectTrigger>
                   <SelectContent>
                     {BAN_DURATIONS.map(({ label, value }) => (
-                      <SelectItem key={value} value={value}>
+                      <SelectItem
+                        key={value}
+                        value={value}
+                        className="hover:cursor-pointer"
+                      >
                         {label}
                       </SelectItem>
                     ))}

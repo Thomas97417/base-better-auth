@@ -63,7 +63,7 @@ export default function ListUsers() {
       <div className="flex items-center justify-between gap-2">
         <Input
           placeholder="Search users..."
-          className="md:max-w-sm max-w-full"
+          className="md:max-w-sm max-w-full border-input"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />

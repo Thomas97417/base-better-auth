@@ -47,39 +47,31 @@ export default function UserActions({
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => onViewDetails(user.id)}
-          className="cursor-pointer"
+          className="cursor-pointer group"
         >
-          <Eye className="mr-2 h-4 w-4" />
+          <Eye className="mr-2 h-4 w-4 group-hover:text-blue-600" />
           View details
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => onRoleChange(user)}
-          className={`cursor-pointer flex items-center ${
-            user.role === "admin"
-              ? "text-blue-600 focus:text-blue-600 dark:text-blue-400 dark:focus:text-blue-400"
-              : ""
-          }`}
+          className={`cursor-pointer flex items-center group`}
         >
-          <Shield className="mr-2 h-4 w-4" />
+          <Shield className="mr-2 h-4 w-4 group-hover:text-blue-600" />
           {user.role === "admin" ? "Remove admin rights" : "Make admin"}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => onBanAction(user)}
-          className={`cursor-pointer flex items-center ${
-            user.banned
-              ? "text-green-600 focus:text-green-600 dark:text-green-400 dark:focus:text-green-400"
-              : "text-red-600 focus:text-red-600 dark:text-red-400 dark:focus:text-red-400"
-          }`}
+          className={`cursor-pointer flex items-center group `}
         >
           {user.banned ? (
             <>
-              <CheckCircle className="mr-2 h-4 w-4" />
+              <CheckCircle className="mr-2 h-4 w-4 group-hover:text-green-600" />
               Unban user
             </>
           ) : (
             <>
-              <AlertCircle className="mr-2 h-4 w-4" />
+              <AlertCircle className="mr-2 h-4 w-4 group-hover:text-red-600" />
               Ban user
             </>
           )}

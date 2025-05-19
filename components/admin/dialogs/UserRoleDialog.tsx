@@ -106,7 +106,11 @@ export default function UserRoleDialog({
                 </SelectTrigger>
                 <SelectContent>
                   {ROLES.map(({ label, value }) => (
-                    <SelectItem key={value} value={value}>
+                    <SelectItem
+                      key={value}
+                      value={value}
+                      className="hover:cursor-pointer"
+                    >
                       <div className="flex items-center gap-2">
                         {value === "admin" ? (
                           <Shield className="h-4 w-4" />
