@@ -178,6 +178,7 @@ export default function UserBanDialog({
                   value={banReason}
                   onChange={(e) => setBanReason(e.target.value)}
                   disabled={isLoading}
+                  className="border-primary dark:border-input"
                 />
                 <p className="text-xs text-muted-foreground">
                   If no reason is provided, &quot;No reason&quot; will be used
