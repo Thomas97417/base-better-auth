@@ -142,8 +142,11 @@ export async function creditTokensForSubscription(
         upgradeDate: new Date().toISOString(),
       };
 
+      // Return here to prevent executing the code below
       return handleSubscriptionUpgrade(userId, tokenDifference, metadata);
     }
+    // Return null if previousPlan not found to prevent default credit
+    return null;
   }
 
   const metadata: TokenMetadata = {
