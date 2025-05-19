@@ -53,7 +53,7 @@ export default function ResetPasswordForm() {
           },
           onSuccess: () => {
             setSuccess("New password has been created");
-            router.replace("/sign-in");
+            router.replace("/login/sign-in");
           },
           onError: (ctx) => {
             setError(ctx.error.message);
