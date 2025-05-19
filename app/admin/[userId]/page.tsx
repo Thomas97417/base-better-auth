@@ -14,11 +14,14 @@ import {
   UserRound,
 } from "lucide-react";
 
-export default async function UserDetailsPage({
-  params: { userId },
-}: {
-  params: { userId: string };
-}) {
+interface PageProps {
+  params: {
+    userId: string;
+  };
+}
+
+export default async function UserDetailsPage({ params }: PageProps) {
+  const { userId } = await params;
   const user = await db.user.findUnique({
     where: { id: userId },
   });
