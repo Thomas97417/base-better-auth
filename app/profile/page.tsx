@@ -30,7 +30,7 @@ export default async function ProfilePage() {
 
       {/* Content */}
       <div className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-8 md:grid-cols-2">
+        <div className="grid gap-8 slg:grid-cols-2">
           <ProfileInfoCard user={user} />
           <ProfileSettingsCard user={user} />
         </div>

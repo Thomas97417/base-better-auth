@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useUsers } from "@/hooks/useUsers";
 import { cn } from "@/lib/utils";
 import { UserType } from "@/utils/types/UserType";
-import { Loader2, UserX } from "lucide-react";
+import { Loader2, Shield, UserX } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import FormError from "../forms/FormError";
@@ -18,6 +18,7 @@ export default function ListUsers() {
   const { users, isLoading, error, mutate } = useUsers();
   const [search, setSearch] = useState("");
   const [showBannedOnly, setShowBannedOnly] = useState(false);
+  const [showAdminsOnly, setShowAdminsOnly] = useState(false);
   const [isBanDialogOpen, setIsBanDialogOpen] = useState(false);
   const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
@@ -29,6 +30,10 @@ export default function ListUsers() {
 
     if (showBannedOnly) {
       return matchesSearch && user.banned;
+    }
+
+    if (showAdminsOnly) {
+      return matchesSearch && user.role === "admin";
     }
 
     return matchesSearch;
@@ -48,6 +53,17 @@ export default function ListUsers() {
     setIsRoleDialogOpen(true);
   };
 
+  // Reset other filter when one is selected
+  const handleFilterChange = (filterType: "banned" | "admin") => {
+    if (filterType === "banned") {
+      setShowBannedOnly(!showBannedOnly);
+      setShowAdminsOnly(false);
+    } else {
+      setShowAdminsOnly(!showAdminsOnly);
+      setShowBannedOnly(false);
+    }
+  };
+
   if (isLoading) {
     return <Loader2 className="animate-spin" />;
   }
@@ -57,6 +73,7 @@ export default function ListUsers() {
   }
 
   const bannedCount = users?.filter((user) => user.banned).length || 0;
+  const adminCount = users?.filter((user) => user.role === "admin").length || 0;
 
   return (
     <div className="space-y-4">
@@ -67,24 +84,45 @@ export default function ListUsers() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Button
-          variant={showBannedOnly ? "destructive" : "outline"}
-          size="sm"
-          onClick={() => setShowBannedOnly(!showBannedOnly)}
-          className={`xs:w-[180px] justify-start gap-1 hover:cursor-pointer ${
-            !showBannedOnly &&
-            "hover:cursor-pointer group hover:text-primary hover:bg-primary/10 hover:border-primary/20"
-          }`}
-        >
-          <UserX
-            className={cn("xs:mr-2 h-4 w-4", showBannedOnly && "text-white")}
-          />
-          <span className="hidden xs:block">
-            {showBannedOnly
-              ? `Banned Users (${bannedCount})`
-              : "View Banned Users"}
-          </span>
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant={showAdminsOnly ? "default" : "outline"}
+            size="sm"
+            onClick={() => handleFilterChange("admin")}
+            className={`slg:w-[180px] justify-center items-center slg:justify-start gap-1 hover:cursor-pointer ${
+              !showAdminsOnly &&
+              "hover:cursor-pointer group hover:text-primary hover:bg-primary/10 hover:border-primary/20"
+            }`}
+          >
+            <Shield
+              className={cn("h-4 w-4 slg:mr-2", showAdminsOnly && "text-white")}
+            />
+            <span className="hidden slg:block">
+              {showAdminsOnly
+                ? `Admin Users (${adminCount})`
+                : "View Admin Users"}
+            </span>
+          </Button>
+
+          <Button
+            variant={showBannedOnly ? "destructive" : "outline"}
+            size="sm"
+            onClick={() => handleFilterChange("banned")}
+            className={`slg:w-[180px] justify-center items-center slg:justify-start gap-1 hover:cursor-pointer ${
+              !showBannedOnly &&
+              "hover:cursor-pointer group hover:text-primary hover:bg-primary/10 hover:border-primary/20"
+            }`}
+          >
+            <UserX
+              className={cn("h-4 w-4 slg:mr-2", showBannedOnly && "text-white")}
+            />
+            <span className="hidden slg:block">
+              {showBannedOnly
+                ? `Banned Users (${bannedCount})`
+                : "View Banned Users"}
+            </span>
+          </Button>
+        </div>
       </div>
 
       {filteredUsers && (

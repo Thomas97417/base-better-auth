@@ -33,9 +33,8 @@ export default function UserAvatar({
         <Image
           src={src}
           alt={fullName || "Profile"}
-          width={size}
-          height={size}
           className={`rounded-full object-cover ${className}`}
+          fill
         />
       </div>
     );
