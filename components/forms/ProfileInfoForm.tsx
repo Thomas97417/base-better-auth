@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Avatar from "@/components/ui/user-avatar";
-import { useAuthState } from "@/hooks/useAuthState";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { convertImageToBase64 } from "@/lib/convert-image";
 import { UserType } from "@/utils/types/UserType";
@@ -14,7 +13,9 @@ import { Subscription } from "@better-auth/stripe";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus, Shield, Sparkles, Star, User, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import {
   Form,
@@ -24,8 +25,6 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import FormError from "./FormError";
-import { FormSuccess } from "./FormSuccess";
 
 interface ProfileInfoFormProps {
   user: UserType;
@@ -37,15 +36,7 @@ export default function ProfileInfoForm({
   activeSubscription,
 }: ProfileInfoFormProps) {
   const router = useRouter();
-  const {
-    loading,
-    setLoading,
-    error,
-    setError,
-    success,
-    setSuccess,
-    resetState,
-  } = useAuthState();
+  const [loading, setLoading] = useState(false);
 
   const { image, imagePreview, handleImageChange, resetImage } = useImageUpload(
     {
@@ -65,7 +56,6 @@ export default function ProfileInfoForm({
   const onSubmit = async (values: z.infer<typeof ProfileInformationSchema>) => {
     try {
       setLoading(true);
-      resetState();
 
       const updateData: z.infer<typeof ProfileInformationSchema> & {
         image?: string;
@@ -80,14 +70,24 @@ export default function ProfileInfoForm({
       const result = await updateProfile(user.id, updateData);
 
       if (result.success) {
-        setSuccess(result.message || "Profile information updated.");
+        toast("Profile updated successfully", {
+          icon: "🎉",
+          description:
+            result.message || "Your profile information has been updated.",
+        });
         router.refresh();
       } else {
-        throw new Error(result.error || "Failed to update profile");
+        toast("Failed to update profile", {
+          icon: "❌",
+          description: result.error || "Please try again.",
+        });
       }
     } catch (error) {
       console.error(error);
-      setError("Failed to update profile information");
+      toast("An unexpected error occurred", {
+        icon: "❌",
+        description: "Please try again later.",
+      });
     } finally {
       setLoading(false);
     }
@@ -197,7 +197,6 @@ export default function ProfileInfoForm({
                   <Input
                     placeholder="Your name"
                     disabled={loading}
-                    className="bg-background"
                     {...field}
                   />
                 </FormControl>
@@ -218,7 +217,6 @@ export default function ProfileInfoForm({
                     type="email"
                     placeholder="your@email.com"
                     disabled={loading}
-                    className="bg-background"
                     {...field}
                   />
                 </FormControl>
@@ -226,12 +224,6 @@ export default function ProfileInfoForm({
               </FormItem>
             )}
           />
-        </div>
-
-        {/* Fixed height container for error/success messages */}
-        <div className="h-[48px] flex flex-col justify-center">
-          <FormError message={error} />
-          <FormSuccess message={success} />
         </div>
 
         {/* Save Button */}
