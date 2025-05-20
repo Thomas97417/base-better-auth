@@ -2,19 +2,62 @@ import { getActiveSubscription } from "@/actions/sub";
 import { getTokenInfo } from "@/actions/tokens";
 import { Badge } from "@/components/ui/badge";
 import CardWrapper from "@/components/ui/card-wrapper";
-import { Progress } from "@/components/ui/progress";
 import { PLANS } from "@/utils/constants";
 import { formatNumber } from "@/utils/format";
 import {
   AlertCircle,
   Calendar,
-  Check,
   Clock,
+  CreditCard,
   History,
-  X,
+  LucideIcon,
+  Package,
+  Sparkles,
   Zap,
 } from "lucide-react";
 import { default as SubscriptionActions } from "./SubscriptionActions";
+
+// Composant pour les statistiques de tokens
+interface TokenStatCardProps {
+  title: string;
+  value: number;
+  icon: LucideIcon;
+  className?: string;
+}
+
+function TokenStatCard({
+  title,
+  value,
+  icon: Icon,
+  className = "",
+}: TokenStatCardProps) {
+  return (
+    <div
+      className={`p-4 bg-muted/30 rounded-lg text-center border border-primary/10 ${className}`}
+    >
+      <p className="text-sm text-muted-foreground mb-2">{title}</p>
+      <div className="flex items-center justify-center gap-2">
+        <Icon className="h-4 w-4 text-primary" />
+        <p className="text-xl font-semibold">{formatNumber(value)}</p>
+      </div>
+    </div>
+  );
+}
+
+// Composant pour les sections avec titre
+interface SectionTitleProps {
+  icon: LucideIcon;
+  title: string;
+}
+
+function SectionTitle({ icon: Icon, title }: SectionTitleProps) {
+  return (
+    <div className="flex items-center gap-2 mb-4 pb-2 border-b border-muted">
+      <Icon className="h-5 w-5 text-primary" />
+      <h3 className="font-medium">{title}</h3>
+    </div>
+  );
+}
 
 export async function SubscriptionCard() {
   const { subscription: activeSubscription } = await getActiveSubscription();
@@ -22,269 +65,215 @@ export async function SubscriptionCard() {
   const planName = activeSubscription?.plan;
   const { balance } = await getTokenInfo(activeSubscription?.referenceId);
 
-  if (!activeSubscription) {
-    return (
+  const currentPlan = activeSubscription
+    ? PLANS.find((plan) => plan.name === activeSubscription.plan)
+    : null;
+
+  return (
+    <div className="grid gap-6 md:grid-cols-2">
+      {/* Plan Information Card */}
       <CardWrapper
-        cardTitle="Subscription Plan"
-        cardDescription="Your current plan and usage"
-        className="w-full"
+        cardTitle="Subscription"
+        cardDescription="Your current plan details"
+        className="w-full h-full"
       >
-        <div className="space-y-4">
-          {/* Plan Header */}
+        <div className="space-y-6 h-full flex flex-col">
+          <SectionTitle icon={CreditCard} title="Plan Details" />
+
+          {/* Current Plan Status */}
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <h3 className="text-lg font-semibold">Free Plan</h3>
-                <Badge variant="secondary" className="capitalize">
-                  Current
-                </Badge>
+                <h3 className="text-lg font-semibold capitalize">
+                  {activeSubscription ? activeSubscription.plan : "Free Plan"}
+                </h3>
+                {activeSubscription ? (
+                  <Badge
+                    variant={
+                      activeSubscription.status === "active"
+                        ? "default"
+                        : "secondary"
+                    }
+                    className="capitalize"
+                  >
+                    {activeSubscription.status}
+                  </Badge>
+                ) : (
+                  <Badge variant="secondary" className="capitalize">
+                    Current
+                  </Badge>
+                )}
               </div>
-              <p className="text-sm text-muted-foreground">
-                Limited features and usage
-              </p>
+
+              {activeSubscription && (
+                <>
+                  <p className="text-sm text-muted-foreground flex items-center gap-1">
+                    <Calendar className="h-4 w-4" />
+                    Current Period:{" "}
+                    {new Date(
+                      activeSubscription.periodStart || ""
+                    ).toLocaleDateString()}{" "}
+                    -{" "}
+                    {new Date(
+                      activeSubscription.periodEnd || ""
+                    ).toLocaleDateString()}
+                  </p>
+                </>
+              )}
             </div>
-            <div className="text-2xl font-bold flex items-baseline gap-1">
-              <span>€0</span>
-              <span className="text-sm font-normal text-muted-foreground">
-                /mo
-              </span>
+            <div className="text-2xl font-bold">
+              {activeSubscription ? `${currentPlan?.price || 0}€` : "0€"}
+              <span className="text-sm text-muted-foreground"> /month</span>
             </div>
           </div>
 
-          {/* Usage Section */}
-          <div className="space-y-4">
-            <div className="p-4 bg-muted/30 rounded-lg space-y-4">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-primary" />
-                  <span className="font-medium">Token Allowance</span>
-                </div>
-                <span className="text-sm text-muted-foreground">Free Plan</span>
-              </div>
-              <Progress value={0} className="h-2" />
-              <div className="flex flex-col gap-2">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-muted-foreground">
-                    Available Tokens
-                  </span>
-                  <span className="font-medium">
-                    {formatNumber(balance)} tokens
-                  </span>
-                </div>
-                <div className="mt-2 flex items-start gap-2 text-sm text-primary">
-                  <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                  <span>
-                    Upgrade to a paid plan to get more tokens and unlock premium
-                    features
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Free Plan Features */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 text-sm">
-              <Check className="h-4 w-4 text-primary flex-shrink-0" />
-              <span>Basic features access</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <Check className="h-4 w-4 text-primary flex-shrink-0" />
-              <span>Community support</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <X className="h-4 w-4 flex-shrink-0" />
-              <span>Monthly Token Allowance</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <X className="h-4 w-4 flex-shrink-0" />
-              <span>Advanced features</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <X className="h-4 w-4 flex-shrink-0" />
-              <span>Priority support</span>
-            </div>
-          </div>
-
-          {/* Subscription Actions */}
-          <SubscriptionActions
-            hasActiveSubscription={false}
-            planName={planName ?? ""}
-          />
-        </div>
-      </CardWrapper>
-    );
-  }
-
-  const currentPlan = PLANS.find(
-    (plan) => plan.name === activeSubscription.plan
-  );
-
-  // Safely handle dates with null checks
-  const periodStart = activeSubscription.periodStart
-    ? new Date(activeSubscription.periodStart).toLocaleDateString()
-    : "N/A";
-  const periodEnd = activeSubscription.periodEnd
-    ? new Date(activeSubscription.periodEnd).toLocaleDateString()
-    : "N/A";
-
-  // Handle token usage statistics
-  const usedTokens = tokenInfo.usedTotal;
-  const availableTokens = tokenInfo.balance;
-  const maxTokens = currentPlan?.limits.tokens || 0;
-  const tokenPercentage = Math.min((usedTokens / maxTokens) * 100, 100);
-  const recentTransactions = tokenInfo.recentTransactions;
-
-  // Calculate days remaining if subscription is cancelled
-  const daysRemaining =
-    activeSubscription.cancelAtPeriodEnd && activeSubscription.periodEnd
-      ? Math.ceil(
-          (new Date(activeSubscription.periodEnd).getTime() -
-            new Date().getTime()) /
-            (1000 * 60 * 60 * 24)
-        )
-      : null;
-
-  return (
-    <CardWrapper
-      cardTitle="Subscription Plan"
-      cardDescription="Your current plan and usage"
-      className="w-full"
-    >
-      <div className="space-y-6">
-        {/* Current Plan Status */}
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <h3 className="text-lg font-semibold capitalize">
-                {activeSubscription.plan}
-              </h3>
-              <Badge
-                variant={
-                  activeSubscription.status === "active"
-                    ? "default"
-                    : "secondary"
-                }
-                className="capitalize"
-              >
-                {activeSubscription.status}
-              </Badge>
-              {activeSubscription.cancelAtPeriodEnd && (
+          {activeSubscription?.cancelAtPeriodEnd && (
+            <div className="flex flex-col gap-1 bg-destructive/10 p-3 rounded-md">
+              <div className="flex items-center gap-1">
                 <Badge variant="destructive" className="gap-1">
                   <AlertCircle className="h-3.5 w-3.5" />
                   Cancels Soon
                 </Badge>
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              Current Period: {periodStart} - {periodEnd}
-            </p>
-            {activeSubscription.cancelAtPeriodEnd && daysRemaining !== null && (
-              <div className="flex flex-col gap-1 mt-2 bg-destructive/10 p-3 rounded-md">
-                <p className="text-sm text-destructive flex items-center gap-1">
-                  <AlertCircle className="h-4 w-4" />
-                  Your subscription will end on {periodEnd}
-                </p>
-                <p className="text-sm text-muted-foreground flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
-                  {daysRemaining} {daysRemaining === 1 ? "day" : "days"}{" "}
-                  remaining with premium features
-                </p>
               </div>
-            )}
-          </div>
-          <div className="text-2xl font-bold">
-            {currentPlan?.price}
-            <span>€</span>
-            <span className="text-sm text-muted-foreground"> /month</span>
-          </div>
-        </div>
+              <p className="text-sm text-destructive flex items-center gap-1">
+                <AlertCircle className="h-4 w-4" />
+                Your subscription will end on{" "}
+                {new Date(
+                  activeSubscription.periodEnd || ""
+                ).toLocaleDateString()}
+              </p>
+              <p className="text-sm text-muted-foreground flex items-center gap-1">
+                <Clock className="h-4 w-4" />
+                {Math.ceil(
+                  (new Date(activeSubscription.periodEnd || "").getTime() -
+                    new Date().getTime()) /
+                    (1000 * 60 * 60 * 24)
+                )}{" "}
+                days remaining with premium features
+              </p>
+            </div>
+          )}
 
-        {/* Token Usage Stats */}
-        <div className="space-y-4">
-          {/* Monthly Token Usage */}
-          <div className="p-4 bg-muted/30 rounded-lg space-y-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <Zap className="h-5 w-5 text-primary" />
-                <span className="font-medium">Monthly Token Usage</span>
-              </div>
-              <span className="text-sm text-muted-foreground">
-                {formatNumber(usedTokens)} / {formatNumber(maxTokens)}
-              </span>
-            </div>
-            <Progress value={tokenPercentage} className="h-2" />
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-muted-foreground">
-                {tokenPercentage >= 80 ? (
-                  <span className="text-yellow-500 font-medium">
-                    You are approaching your token limit
-                  </span>
-                ) : (
-                  <span>
-                    {Math.round(100 - tokenPercentage)}% of monthly tokens
-                    remaining
-                  </span>
-                )}
-              </span>
-              <span className="font-medium">
-                {formatNumber(availableTokens)} tokens available
-              </span>
-            </div>
-          </div>
-
-          {/* Recent Token Transactions */}
-          {recentTransactions.length > 0 && (
-            <div className="p-4 bg-muted/30 rounded-lg space-y-3">
-              <div className="flex items-center gap-2 mb-3">
-                <History className="h-5 w-5 text-primary" />
-                <span className="font-medium">Recent Token Activity</span>
-              </div>
-              <div className="space-y-2">
-                {recentTransactions.slice(0, 3).map((transaction) => (
-                  <div
-                    key={transaction.createdAt.toString()}
-                    className="flex justify-between items-center text-sm"
-                  >
-                    <span className="text-muted-foreground capitalize">
-                      {transaction.action.replace(/_/g, " ")}
-                    </span>
-                    <span
-                      className={
-                        transaction.amount > 0
-                          ? "text-green-500 font-medium"
-                          : "text-red-500 font-medium"
-                      }
-                    >
-                      {transaction.amount > 0 ? "+" : ""}
-                      {formatNumber(transaction.amount)}
-                    </span>
+          {/* Plan Features */}
+          {currentPlan ? (
+            <div className="space-y-4 flex-grow">
+              <SectionTitle icon={Package} title="Plan Features" />
+              <div className="grid grid-cols-1 gap-3 bg-muted/20 p-4 rounded-lg border border-primary/10">
+                {currentPlan.features.map((feature, index) => (
+                  <div key={index} className="flex items-center text-sm gap-2">
+                    <Sparkles className="h-4 w-4 text-primary flex-shrink-0" />
+                    <span>{feature}</span>
                   </div>
                 ))}
               </div>
             </div>
-          )}
-        </div>
-
-        {/* Plan Features */}
-        <div className="space-y-3">
-          {currentPlan?.features.map((feature, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <Check className="h-5 w-5 text-primary flex-shrink-0" />
-              <span>{feature}</span>
+          ) : (
+            <div className="flex-grow flex items-center justify-center">
+              <div className="bg-muted/20 p-4 rounded-lg border border-primary/10 text-center max-w-sm">
+                <p className="text-sm text-muted-foreground">
+                  You&apos;re currently on the Free plan with limited features.
+                  Upgrade to unlock premium features and get more tokens.
+                </p>
+              </div>
             </div>
-          ))}
-        </div>
+          )}
 
-        {/* Subscription Actions */}
-        <SubscriptionActions
-          hasActiveSubscription={true}
-          planName={activeSubscription.plan}
-          isCancelled={activeSubscription.cancelAtPeriodEnd}
-          subscription={activeSubscription}
-        />
-      </div>
-    </CardWrapper>
+          {/* Subscription Actions */}
+          <div className="mt-auto pt-4">
+            <SubscriptionActions planName={planName ?? ""} />
+          </div>
+        </div>
+      </CardWrapper>
+
+      {/* Tokens Card */}
+      <CardWrapper
+        cardTitle="Tokens"
+        cardDescription="Your token balance and usage"
+        className="w-full h-full"
+      >
+        <div className="space-y-6 h-full flex flex-col">
+          <SectionTitle icon={Zap} title="Token Balance" />
+
+          {/* Token Balance - Highlighted */}
+          <div className="p-2 bg-primary/5 rounded-lg space-y-2 text-center border border-primary/20">
+            <h3 className="text-lg font-medium text-muted-foreground">
+              Available Balance
+            </h3>
+            <div className="text-4xl font-bold text-primary flex items-center justify-center gap-2">
+              <Zap className="h-6 w-6" />
+              {formatNumber(balance)}
+            </div>
+            <p className="text-sm text-muted-foreground">tokens</p>
+          </div>
+
+          {/* Token Stats */}
+          {activeSubscription && (
+            <div className="grid grid-cols-2 gap-4">
+              <TokenStatCard
+                title="Monthly Limit"
+                value={currentPlan?.limits.tokens || 0}
+                icon={Package}
+              />
+              <TokenStatCard
+                title="Used"
+                value={tokenInfo.usedTotal}
+                icon={History}
+              />
+            </div>
+          )}
+
+          {/* Recent Token Transactions - Flexbox pour remplir l'espace restant */}
+          <div className="flex-grow overflow-hidden flex flex-col">
+            {tokenInfo.recentTransactions.length > 0 ? (
+              <div className="space-y-3 h-full flex flex-col">
+                <SectionTitle icon={History} title="Recent Activity" />
+                <div className="space-y-2 overflow-y-auto flex-grow max-h-[160px] border border-muted/40 rounded-md bg-muted/10 p-2 pr-1">
+                  {tokenInfo.recentTransactions
+                    .slice(0, 8)
+                    .map((transaction) => (
+                      <div
+                        key={transaction.createdAt.toString()}
+                        className={`flex justify-between items-center text-sm p-2 rounded border `}
+                      >
+                        <span className="text-muted-foreground capitalize">
+                          {transaction.action.replace(/_/g, " ")}
+                        </span>
+                        <span
+                          className={
+                            transaction.amount > 0
+                              ? "text-green-500 font-medium"
+                              : "text-red-500 font-medium"
+                          }
+                        >
+                          {transaction.amount > 0 ? "+" : ""}
+                          {formatNumber(transaction.amount)}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            ) : !activeSubscription ? (
+              <div className="flex-grow flex items-center justify-center">
+                <div className="p-4 text-sm border border-primary/10 rounded bg-primary/5 text-center">
+                  <AlertCircle className="h-4 w-4 mx-auto mb-2 text-primary" />
+                  <p>
+                    Upgrade to a paid plan to get more tokens and access premium
+                    features
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="flex-grow flex items-center justify-center">
+                <div className="p-4 text-sm border border-muted rounded bg-muted/20 text-center">
+                  <p className="text-muted-foreground">
+                    No recent token activity to display
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </CardWrapper>
+    </div>
   );
 }
