@@ -18,7 +18,6 @@ import {
   CreditCard,
   KeyRound,
   Mail,
-  Package,
   ShieldCheck,
   Sparkles,
   Star,
@@ -244,31 +243,6 @@ export default async function ProfileSettingsCard({
                   </div>
                 </div>
               </div>
-
-              {/* Plan Features */}
-              {currentPlan && (
-                <div className="flex items-start gap-3 p-4 bg-primary/5 rounded-lg border border-primary/10">
-                  <div className="p-2 rounded-full bg-primary/10 shrink-0">
-                    <Package className="w-4 h-4 text-primary" />
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    <p className="font-medium">Plan Features</p>
-                    <div className="grid grid-cols-1 gap-2">
-                      {currentPlan.features.map((feature, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center text-sm gap-2"
-                        >
-                          <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
-                          <span className="text-muted-foreground">
-                            {feature}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
