@@ -74,7 +74,7 @@ const faqCategories = [
 
 export default function FAQPage() {
   return (
-    <div className="w-full mx-auto px-4 py-8 max-w-3xl">
+    <div className="w-full py-8">
       {/* Title Section */}
       <div className="text-center mb-12">
         <div className="inline-block p-2 bg-primary/5 rounded-full mb-4">

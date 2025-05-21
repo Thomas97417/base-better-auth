@@ -50,7 +50,7 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
   ];
 
   return (
-    <div className="w-full px-4 max-w-5xl mx-auto space-y-8">
+    <div className="w-full space-y-8">
       {/* Header */}
       <div className="py-8">
         <div className="flex items-center gap-2 mb-2">
