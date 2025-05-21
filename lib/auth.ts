@@ -16,9 +16,15 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
   rateLimit: {
-    enabled: true, // Enable rate limiting for development mode
+    enabled: false, // Enable rate limiting for development mode
     window: 10, // window of 10 seconds
-    max: 3, // 3 requests per window
+    max: 3, // number of requests per window
+    customRules: {
+      "/api/auth/admin/*": {
+        window: 10,
+        max: 20,
+      },
+    },
   },
   // session: {
   //   cookieCache: {

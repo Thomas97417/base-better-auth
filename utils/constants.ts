@@ -75,4 +75,8 @@ export const PACKAGE_TOKENS = [
   },
 ];
 
+// User
 export const INITIAL_TOKENS = 50;
+
+// Admin
+export const PAGE_SIZE = 10;

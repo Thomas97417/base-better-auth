@@ -18,7 +18,7 @@ interface StatCardProps {
 }
 
 export default function AdminDashboard({ user }: AdminDashboardProps) {
-  const { users } = useUsers();
+  const { users } = useUsers(1, { fetchAll: true });
 
   const totalUsers = users?.length || 0;
   const verifiedUsers = users?.filter((u) => u.emailVerified).length || 0;
