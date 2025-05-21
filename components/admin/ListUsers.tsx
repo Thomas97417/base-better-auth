@@ -122,10 +122,6 @@ export default function ListUsers() {
     ];
   };
 
-  if (isLoading && !users.length) {
-    return <Loader2 className="animate-spin" />;
-  }
-
   if (error) {
     return <FormError message={error.message} />;
   }
@@ -138,6 +134,7 @@ export default function ListUsers() {
           className="md:max-w-sm max-w-full border-input"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          autoFocus
         />
         <div className="flex gap-2">
           <Button
@@ -176,15 +173,20 @@ export default function ListUsers() {
         </div>
       </div>
 
-      {/* Users table */}
-      {users && (
+      {/* Users table with loading state */}
+      <div className="relative">
+        {isLoading && (
+          <div className="absolute inset-0 bg-background/50 flex items-center justify-center z-50">
+            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+          </div>
+        )}
         <UsersDataTable
-          users={users}
+          users={users || []}
           onViewDetails={handleViewDetails}
           onRoleChange={handleUserRole}
           onBanAction={handleUserBan}
         />
-      )}
+      </div>
 
       {/* Pagination */}
       <Pagination className="mt-4">
