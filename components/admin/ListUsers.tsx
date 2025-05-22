@@ -13,13 +13,7 @@ import {
 import { useUsers } from "@/hooks/useUsers";
 import { cn } from "@/lib/utils";
 import { UserType } from "@/utils/types/UserType";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Loader2,
-  Shield,
-  UserX,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Shield, UserX } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import FormError from "../forms/FormError";
@@ -40,14 +34,11 @@ export default function ListUsers() {
     setCurrentPage(1);
   }, [search, showBannedOnly, showAdminsOnly]);
 
-  const { users, totalPages, isLoading, error, mutate } = useUsers(
-    currentPage,
-    {
-      search: search || undefined,
-      showBannedOnly,
-      showAdminsOnly,
-    }
-  );
+  const { users, totalPages, error, mutate } = useUsers(currentPage, {
+    search: search || undefined,
+    showBannedOnly,
+    showAdminsOnly,
+  });
 
   const handleViewDetails = (userId: string) => {
     router.push(`/admin/${userId}`);
@@ -174,12 +165,7 @@ export default function ListUsers() {
       </div>
 
       {/* Users table with loading state */}
-      <div className="relative">
-        {isLoading && (
-          <div className="absolute inset-0 bg-background/50 flex items-center justify-center z-50">
-            <Loader2 className="h-6 w-6 animate-spin text-primary" />
-          </div>
-        )}
+      <div>
         <UsersDataTable
           users={users || []}
           onViewDetails={handleViewDetails}
