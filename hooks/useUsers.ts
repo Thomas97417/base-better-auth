@@ -25,15 +25,12 @@ const fetcher = async ([key, filters]: [
   const page = parseInt(key.split("-")[1] || "1", 10);
   const searchValue = filters.search?.toLowerCase();
 
-  // Fetch all users when searching to enable client-side search
+  // Fetch all users when searching or when fetchAll is true
   const response = await authClient.admin.listUsers({
     query: {
-      limit: searchValue ? undefined : filters.fetchAll ? undefined : PAGE_SIZE,
-      offset: searchValue
-        ? undefined
-        : filters.fetchAll
-        ? undefined
-        : (page - 1) * PAGE_SIZE,
+      limit: searchValue || filters.fetchAll ? undefined : PAGE_SIZE,
+      offset:
+        searchValue || filters.fetchAll ? undefined : (page - 1) * PAGE_SIZE,
       filterField: filters.showBannedOnly
         ? "banned"
         : filters.showAdminsOnly
@@ -65,11 +62,21 @@ const fetcher = async ([key, filters]: [
     );
   }
 
-  // Apply pagination to filtered results
+  // For fetchAll, return all users without pagination
+  if (filters.fetchAll) {
+    return {
+      users,
+      totalPages: 1,
+      totalUsers: users.length,
+      currentPage: 1,
+    };
+  }
+
+  // Apply pagination to filtered results if searching
   const totalUsers = users.length;
   const totalPages = Math.ceil(totalUsers / PAGE_SIZE);
 
-  if (!searchValue && !filters.fetchAll) {
+  if (!searchValue) {
     return {
       users,
       totalPages: Math.ceil(response.data.total / PAGE_SIZE),
@@ -78,7 +85,7 @@ const fetcher = async ([key, filters]: [
     };
   }
 
-  // For search results or fetchAll, paginate manually
+  // For search results, paginate manually
   const start = (page - 1) * PAGE_SIZE;
   const paginatedUsers = users.slice(start, start + PAGE_SIZE);
 
